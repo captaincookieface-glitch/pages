@@ -1,37 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Theory Proof-of-Work Checker</title>
-<script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
-<style>
-body { font-family: sans-serif; margin: 20px; }
-textarea { width: 100%; height: 150px; }
-input { width: 400px; padding: 5px; }
-button { padding: 5px 10px; }
-#result { margin-top: 10px; font-weight: bold; }
-</style>
+  <meta charset="UTF-8">
+  <title>CCFU – Theory 1 Hash Verification</title>
+  <style>
+    body {
+      font-family: monospace;
+      background: #111;
+      color: #eee;
+      padding: 20px;
+    }
+    pre {
+      white-space: pre-wrap;
+      background: #1e1e1e;
+      padding: 15px;
+      border: 1px solid #333;
+    }
+    .hash {
+      word-break: break-all;
+      color: #7CFF7C;
+    }
+  </style>
 </head>
 <body>
 
-<h1>Theory Proof-of-Work Checker</h1>
+<h1>CCFU – Theory 1</h1>
+<h2>Canonical Hash Verification</h2>
 
-<pre id="display"></pre>
+<pre id="canonicalText"></pre>
 
-<label for="hashInput">Enter SHA-256 Hash to Unlock:</label><br>
-<input type="text" id="hashInput" placeholder="paste hash here">
-<button onclick="checkHash()">Check</button>
-
-<div id="result"></div>
+<p>SHA-256:</p>
+<pre class="hash" id="hashResult"></pre>
 
 <script>
-// האובייקט של התיאוריה (דוגמה ראשונה מה-DB)
-const theory = {
-  "id": "2512264115201",
-  "safecreative_url": "https://www.safecreative.org/work/2512264115201-universal-stability-pattern",
-  "date": "12/26/2025",
-  "title": "Universal Stability Pattern",
-  "text": `Universal Stability Pattern Across Cultures
+(async () => {
+
+  // ===== STATIC OBJECT (SOURCE OF TRUTH) =====
+  const theory = {
+    id: "2512264115201",
+    safecreative_url: "https://www.safecreative.org/work/2512264115201-universal-stability-pattern",
+    title: "Universal Stability Pattern",
+    date: "12/26/2025",
+    text: `Universal Stability Pattern Across Cultures
+
 I believe there is a shared pattern across many different cultures in the world.
 Even though the words are different, the idea is always the same:
 
@@ -136,37 +147,35 @@ Conflicting forces → chaos
 Final Universal Rule
 
 Every culture uses different words, but all of them describe the same universal stability rule: two different forces must pull in the same direction — that’s what creates a strong family, a stable group, or a healthy society.`,
-  "twitter_url": "",
-  "nft_url": "https://og.rarible.com/token/polygon/0x35f8aee672cde8e5fd09c93d2bfe4ff5a9cf0756:54563394983082294023723203677514925242911692977273068555123379805042499387393"
-};
+    nft_url: "https://og.rarible.com/token/polygon/0x35f8aee672cde8e5fd09c93d2bfe4ff5a9cf0756:54563394983082294023723203677514925242911692977273068555123379805042499387393",
+    tweet_url: ""
+  };
 
-// הצגת כל התיאוריה
-document.getElementById('display').innerText = JSON.stringify(theory, null, 2);
+  // ===== CANONICAL STRING (ORDER IS LAW) =====
+  const canonicalString = [
+    theory.id,
+    theory.safecreative_url,
+    theory.title,
+    theory.date,
+    theory.text,
+    theory.nft_url,
+    theory.tweet_url
+  ].join('\n---\n');
 
-// חישוב hash לפי סדר ממויין של השדות
-const sortedKeys = Object.keys(theory).sort(); // sort alphabetically
-let combinedValues = "";
-sortedKeys.forEach(k => {
-  combinedValues += theory[k];
-});
+  // show canonical input (human readable)
+  document.getElementById('canonicalText').textContent = canonicalString;
 
-// חישוב SHA-256
-const hash = CryptoJS.SHA256(combinedValues).toString(CryptoJS.enc.Hex);
+  // ===== SHA-256 =====
+  const data = new TextEncoder().encode(canonicalString);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashHex = [...new Uint8Array(hashBuffer)]
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
 
-// פונקציה לבדיקה
-function checkHash() {
-  const input = document.getElementById('hashInput').value.trim();
-  const result = document.getElementById('result');
-  if(input === hash) {
-    result.innerText = "✅ Hash נכון! הדף שוחרר.";
-    result.style.color = "green";
-  } else {
-    result.innerText = "❌ Hash לא נכון, נסה שוב.";
-    result.style.color = "red";
-  }
-}
+  document.getElementById('hashResult').textContent = hashHex;
+
+})();
 </script>
 
 </body>
 </html>
-  

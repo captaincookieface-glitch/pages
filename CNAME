@@ -1,1 +1,4 @@
-www.captaincookieface.com
+Type: CNAME
+Name: www
+Value: captaincookieface-glitch.github.io
+TTL: 3600 (או אוטומטי)

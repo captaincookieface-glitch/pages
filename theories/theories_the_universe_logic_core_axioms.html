@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Universe Logic — Core Axioms</title>
+  <style>
+    body {
+      font-family:
+        Arial,
+        "Helvetica Neue",
+        Helvetica,
+        system-ui,
+        sans-serif;
+      background: #fff;
+    }
+    .block {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #fff;
+      border: 1px solid #eee;
+      word-wrap: break-word;
+    }
+    .key {
+      color: #000;
+      font-size: 2em !important;
+      text-transform: capitalize;
+      font-weight: bold;
+    }
+    .hash {
+      word-break: break-all;
+      color: #4287f5;
+    }
+    a {
+      color: #4287f5;
+      text-decoration: underline;
+    }
+    pre {
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+<article itemscope itemtype="https://schema.org/CreativeWork">
+  <meta itemprop="identifier" content="2512264119667">
+  <meta itemprop="dateCreated" content="2025-12-26">
+
+  <h1>Captain Cookie Face Universe – The Universe Logic — Core Axioms</h1>
+
+  <div class="block" id="rendered"></div>
+
+  <div class="block">
+    <div class="key">SHA-256</div>
+    <div class="hash" id="hashResult"></div>
+  </div>
+</article>
+
+<script>
+(async () => {
+  // ===== SOURCE OBJECT (DISPLAY ONLY) =====
+  const theory = {
+    id: "2512264119667",
+    safecreative_url: "https://www.safecreative.org/work/2512264119667-the-universe-logic-core-axioms",
+    title: "The Universe Logic — Core Axioms",
+    date: "12/26/2025",
+    text: `THE UNIVERSE LOGIC — CORE AXIOMS
+
+WHO THIS IS FOR
+This document explains the Universe Logic.
+It is structured for approximately 1% of the population — individuals who naturally process
+multi-layered abstraction and structural logic without guidance.
+
+PREAMBLE
+This Constitution defines the logical structure of reality.
+It formalizes the principles by which truth is understood, consciousness stabilizes, and rational
+action emerges.
+All laws derive from a single governing hierarchy:
+truth precedes interpretation, clarity precedes stability, and value precedes cost.
+
+ARTICLE I — THE SUPREME LAW
+1. Truth > justice.
+Truth is the highest measurable constant.
+Justice, being a human interpretation, cannot supersede truth.
+All reasoning, stability, and action must orient themselves along the vector of truth.
+
+ARTICLE II — THE NATURE OF THE UNIVERSE
+2. The universe is everything ever said about it — all at once.
+Reality is not a single narrative but the aggregate of all possible narratives, perceptions, symbols,
+and interpretations coexisting simultaneously.
+A mind perceives only one layer at a time, but the universe contains them all.
+
+ARTICLE III — THE FOUNDATION OF STABILITY
+3. Clarity is the purest form of stability.
+In a universe composed of infinite interpretations, clarity becomes the only reliable anchor.
+Stability is achieved not by control, but by understanding.
+
+ARTICLE IV — THE LAW OF OPTIMAL ACTION
+4. Utilitarianism: maximize value, minimize cost.
+Once clarity is established, rational action follows a single rule:
+increase what matters, reduce what doesn’t.
+All efficient systems obey this principle, consciously or unconsciously.
+
+ARTICLE V — OPTIONAL METAPHYSICAL INTERPRETATION
+5. God is human conscience. (Optional)
+If one chooses to interpret the universe spiritually, the closest functional definition of “God” is the
+human moral compass.
+This law does not determine the structure of reality; it provides meaning within it.
+
+CLOSING ARTICLE
+These laws form the backbone of The Universe Logic.
+They are self-consistent, non-contradictory, and derive from observable patterns in
+consciousness and behavior.
+Any additional principles must align with these foundational axioms.
+
+DISTRIBUTION NOTE
+Cognitive research indicates that structural-logical models resonate with approximately 20% of the
+population.
+The remaining 80% process information through different cognitive pathways.
+Neither approach is superior — they reflect different modes of cognition, not differences in human
+value.`,
+    nft_url: "https://og.rarible.com/token/polygon/0x35f8aee672cde8e5fd09c93d2bfe4ff5a9cf0756:54563394983082294023723203677514925242911692977273068555123379805042499387395",
+    tweet_url: ""
+  };
+
+  // ===== CANONICAL STRING (FOR HASH ONLY) =====
+  const canonicalString = [
+    theory.id,
+    theory.safecreative_url,
+    theory.title,
+    theory.date,
+    theory.text,
+    theory.nft_url,
+    theory.tweet_url
+  ].join('\n---\n');
+
+  // ===== HASH =====
+  const data = new TextEncoder().encode(canonicalString);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashHex = [...new Uint8Array(hashBuffer)]
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+
+  document.getElementById('hashResult').textContent = hashHex;
+
+  // ===== RENDER (DOES NOT AFFECT HASH) =====
+  const container = document.getElementById('rendered');
+
+  for (const [key, value] of Object.entries(theory)) {
+    const div = document.createElement('div');
+    div.className = 'block';
+
+    const label = document.createElement('div');
+    label.className = 'key';
+    label.textContent = key;
+    div.appendChild(label);
+
+    if (key.endsWith('_url') && value) {
+      const a = document.createElement('a');
+      a.href = value;
+      a.textContent = value;
+      a.target = '_blank';
+      div.appendChild(a);
+    } else {
+      const pre = document.createElement('pre');
+      pre.textContent = value;
+      div.appendChild(pre);
+    }
+
+    container.appendChild(div);
+  }
+})();
+</script>
+
+</body>
+</html>

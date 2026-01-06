@@ -119,19 +119,34 @@ Every culture uses different words, but all of them describe the same universal 
 
 <p id="hash"></p>
 
+<script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
 <script>
+(function() {
+    const hashElement = document.getElementById('hash');
 
-    function waitForBody(cb) {
-    if (document.body && document.body.innerText.trim().length > 0) {
-        cb(document.body.innerText);
-    } else {
-        setTimeout(() => waitForBody(cb), 100);
+    function computeHash() {
+        const text = document.body.innerText.trim();
+        const hash = CryptoJS.SHA256(text).toString(CryptoJS.enc.Hex);
+        hashElement.innerText = "SHA-256 Hash: " + hash;
+        console.log("SHA-256 Hash:", hash);
     }
-}
 
-waitForBody(text => {
-    completion(text);
-});
+    // מחכה שהדף יטען
+    document.addEventListener('DOMContentLoaded', () => {
+        computeHash(); // hash ראשוני
+
+        // מאזין לשינויים ב-body
+        const observer = new MutationObserver(() => {
+            computeHash(); // מחשב מחדש אם התוכן משתנה
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            characterData: true
+        });
+    });
+})();
 </script>
 </body>
 </html>

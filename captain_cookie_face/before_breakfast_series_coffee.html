@@ -47,48 +47,40 @@
     button:hover {
       background: #eee;
     }
-
     h1 {
       margin-bottom: 10px;
-	  font-size: 32px;
+      font-size: 32px;
     }
-
-
     nav {
-	background-color:#e1e1e1;
-	padding: 10px;
-}
-
-nav > ul {
-	display: flex;
-	flex-wrap: wrap;
-	flex-direction: row;
-	list-style: none;
-	padding:0;
-	margin: 0;
-	
-}   
-
-nav > ul > li, nav > ul > li > a{
-	display: flex;
-	flex-direction: column;
-	flex-wrap: wrap;
-	text-align:center;
-	margin: 0;
-}   
-
+      background-color:#e1e1e1;
+      padding: 10px;
+    }
+    nav > ul {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      list-style: none;
+      padding:0;
+      margin: 0;
+    }
+    nav > ul > li, nav > ul > li > a{
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      text-align:center;
+      margin: 0;
+    }
     nav ul li img {
       max-width: 80px;
       width: 100%;
       height: auto;
       border-radius: 40px;
     }
-
-	.arrow {
+    .arrow {
       width: 50px;
       height: 80px;
-	  font-size: 38px;
-	}
+      font-size: 38px;
+    }
   </style>
 </head>
 <body>
@@ -140,35 +132,29 @@ nav > ul > li, nav > ul > li > a{
     </div>
   </div>
 
- <div class="block">
-      <img src="https://indigo-managerial-opossum-856.mypinata.cloud/ipfs/bafybeicn5k6cxd3wnv2kb7fegg2e74d5rpdketiefhaogqyu4mmwynga2i/image.png" 
-     alt="Before Breakfast Series – Coffee" 
-     style="max-width: 100%; height: auto;" />
-  </div>
-
 </article>
 
 <script>
 (async () => {
 
-  const theory = {
+  const entry = {
     id: "2511103645107",
     safecreative_url: "https://www.safecreative.org/work/2511103645107-before-breakfast-series-coffee",
     title: "Before Breakfast Series – Coffee",
     date: "11/10/2025",
-    text: `If you had your first coffee before breakfast, you already know you’ll have one after lunch.`,
+    text: "If you had your first coffee before breakfast, you already know you’ll have one after lunch.",
     nft_url: "https://og.rarible.com/token/polygon/0x35f8aee672cde8e5fd09c93d2bfe4ff5a9cf0756:35217764257041821129612382974364344714071826739048644696460290739576330256385",
     tweet_url: ""
   };
 
   const canonicalString = [
-    theory.id,
-    theory.safecreative_url,
-    theory.title,
-    theory.date,
-    theory.text,
-    theory.nft_url,
-    theory.tweet_url
+    entry.id,
+    entry.safecreative_url,
+    entry.title,
+    entry.date,
+    entry.text,
+    entry.nft_url,
+    entry.tweet_url
   ].join('\n---\n');
 
   const data = new TextEncoder().encode(canonicalString);
@@ -181,7 +167,7 @@ nav > ul > li, nav > ul > li > a{
 
   const container = document.getElementById('rendered');
 
-  for (const [key, value] of Object.entries(theory)) {
+  for (const [key, value] of Object.entries(entry)) {
     const div = document.createElement('div');
     div.className = 'block';
 

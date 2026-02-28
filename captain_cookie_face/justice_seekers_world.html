@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -90,7 +89,7 @@
 
   <meta itemprop="identifier" content="2511263845782">
   <meta itemprop="dateCreated" content="11/26/2025">
-
+	
 <h1 itemprop="name">Justice-seekers world</h1>
 <nav aria-label="Breadcrumb" class="breadcrumb">
    <ul>
@@ -133,35 +132,29 @@
     </div>
   </div>
 
- <div class="block">
-      <img src="https://indigo-managerial-opossum-856.mypinata.cloud/ipfs/bafybeidxkny75n6rxysaumrp7wqicj6zls5a2kqiblc635zot7cftjt2be/image.png" 
-     alt="Justice-seekers world" 
-     style="max-width: 100%; height: auto;" />
-  </div>
-
 </article>
 
 <script>
 (async () => {
 
-  const theory = {
+  const entry = {
     id: "2511263845782",
     safecreative_url: "https://www.safecreative.org/work/2511263845782-justice-seekers-world",
     title: "Justice-seekers world",
     date: "11/26/2025",
-    text: `Justice-seekers rarely find a world that welcomes them.`,
+    text: "Justice-seekers rarely find a world that welcomes them.",
     nft_url: "https://og.rarible.com/token/polygon/0x35f8aee672cde8e5fd09c93d2bfe4ff5a9cf0756:35217764257041821129612382974364344714071826739048644696460290739576330256404",
     tweet_url: ""
   };
 
   const canonicalString = [
-    theory.id,
-    theory.safecreative_url,
-    theory.title,
-    theory.date,
-    theory.text,
-    theory.nft_url,
-    theory.tweet_url
+    entry.id,
+    entry.safecreative_url,
+    entry.title,
+    entry.date,
+    entry.text,
+    entry.nft_url,
+    entry.tweet_url
   ].join('\n---\n');
 
   const data = new TextEncoder().encode(canonicalString);
@@ -174,7 +167,7 @@
 
   const container = document.getElementById('rendered');
 
-  for (const [key, value] of Object.entries(theory)) {
+  for (const [key, value] of Object.entries(entry)) {
     const div = document.createElement('div');
     div.className = 'block';
 

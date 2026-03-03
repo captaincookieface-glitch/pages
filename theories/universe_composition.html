@@ -47,48 +47,40 @@
     button:hover {
       background: #eee;
     }
-
     h1 {
       margin-bottom: 10px;
-	  font-size: 32px;
+      font-size: 32px;
     }
-
-
     nav {
-	background-color:#e1e1e1;
-	padding: 10px;
-}
-
-nav > ul {
-	display: flex;
-	flex-wrap: wrap;
-	flex-direction: row;
-	list-style: none;
-	padding:0;
-	margin: 0;
-	
-}   
-
-nav > ul > li, nav > ul > li > a{
-	display: flex;
-	flex-direction: column;
-	flex-wrap: wrap;
-	text-align:center;
-	margin: 0;
-}   
-
+      background-color: #e1e1e1;
+      padding: 10px;
+    }
+    nav > ul {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    nav > ul > li, nav > ul > li > a {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      text-align: center;
+      margin: 0;
+    }
     nav ul li img {
       max-width: 80px;
       width: 100%;
       height: auto;
       border-radius: 40px;
     }
-
-	.arrow {
+    .arrow {
       width: 50px;
       height: 80px;
-	  font-size: 38px;
-	}
+      font-size: 38px;
+    }
   </style>
 </head>
 <body>
@@ -97,12 +89,12 @@ nav > ul > li, nav > ul > li > a{
 
   <meta itemprop="identifier" content="2512294140808">
   <meta itemprop="dateCreated" content="12/29/2025">
-	
+
 <h1 itemprop="name">Universe Composition</h1>
 <nav aria-label="Breadcrumb" class="breadcrumb">
    <ul>
     <li>
-      <a  href="../">
+      <a href="../">
           <img max-width="80%" src="../assets/images/AFB9C382-3B34-4925-B318-E7083E758055.png" alt="Captain Cookie Face Universe" />
 		  <span>Home</span>
       </a>      
@@ -113,7 +105,7 @@ nav > ul > li, nav > ul > li > a{
 		</a>   
 	</li>
 	<li>
-	  <a  href="./">
+	  <a href="./">
       <img src="../assets/images/0DB0891F-5BB7-4D51-BF28-F67AF05197CE.png" alt="Avatar" >
       <span>Theories</span>
       </a>
@@ -130,7 +122,114 @@ nav > ul > li, nav > ul > li > a{
   </ul>
 </nav>
 
-  <div class="block" id="rendered"></div>
+  <div class="block" id="rendered">
+
+    <div class="block">
+      <div class="key">id</div>
+      <pre>2512294140808</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">safecreative_url</div>
+      <a href="https://www.safecreative.org/work/2512294140808-universe-composition" target="_blank">https://www.safecreative.org/work/2512294140808-universe-composition</a>
+    </div>
+
+    <div class="block">
+      <div class="key">title</div>
+      <pre>Universe Composition</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">date</div>
+      <pre>12/29/2025</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">text</div>
+      <pre>Universe Composition
+
+Methodological Note (December 2025)
+
+The Universe Logic was intentionally presented using object-oriented metaphors — constructors, instances, and internal references — not because the universe is object-oriented, but because human cognition is.
+
+Object-oriented language provides a familiar entry point:
+- it introduces hierarchy,
+- implies causality,
+- and allows step-by-step reasoning.
+
+This makes it suitable for explanatory clarity, not for ontological accuracy.
+
+Why OOP Is a Cognitive Convenience
+
+Humans naturally think in terms of:
+- entities,
+- beginnings,
+- creators,
+- and ownership.
+
+The OOP framing mirrors this bias:
+
+class Universe {
+    constructor() {
+        this.inner = Universe;
+    }
+}
+
+This model is didactically effective, but ontologically misleading.
+It implies instantiation, temporal creation, and separation between form and instance — none of which are supported empirically.
+
+The Empirical Model: Pure Composition
+
+When the structure is examined without cognitive scaffolding, the universe resolves into a compositional fixed structure:
+
+const Universe = {};
+Universe.inner = Universe;
+
+This model contains:
+- no constructor,
+- no instance,
+- no creation event,
+- no hierarchy.
+
+Only self-containment through reference.
+
+Universe.inner === Universe
+Universe.inner.inner === Universe
+Universe.inner.inner.inner === Universe
+
+This is not recursion over time, but a topological fixed point.
+There is no “deeper level” to reach — every traversal resolves to the same structure.
+
+Interpretation
+
+- The universe is not instantiated
+- It is not created
+- It does not “contain itself” metaphorically
+- It is self-containment
+
+OOP describes how the mind approaches the universe.
+Composition describes how the universe behaves.
+
+Conclusion
+
+Object-orientation is a language of understanding.
+Composition is the language of reality.
+
+The Universe Logic is therefore written in OOP form for accessibility,
+but must be interpreted compositionally for any empirical or structural analysis.</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">nft_url</div>
+      <a href="https://og.rarible.com/token/polygon/0x35f8aee672cde8e5fd09c93d2bfe4ff5a9cf0756:54563394983082294023723203677514925242911692977273068555123379805042499387400" target="_blank">https://og.rarible.com/token/polygon/0x35f8aee672cde8e5fd09c93d2bfe4ff5a9cf0756:54563394983082294023723203677514925242911692977273068555123379805042499387400</a>
+    </div>
+
+    <div class="block">
+      <div class="key">tweet_url</div>
+      <pre></pre>
+    </div>
+
+  </div>
 
   <div class="block">
     <div class="key">SHA-256</div>
@@ -146,10 +245,10 @@ nav > ul > li, nav > ul > li > a{
 (async () => {
 
   const theory = {
-    id: "2512294140808",
-    safecreative_url: "https://www.safecreative.org/work/2512294140808-universe-composition",
-    title: "Universe Composition",
-    date: "12/29/2025",
+    id: `2512294140808`,
+    safecreative_url: `https://www.safecreative.org/work/2512294140808-universe-composition`,
+    title: `Universe Composition`,
+    date: `12/29/2025`,
     text: `Universe Composition
 
 Methodological Note (December 2025)
@@ -221,8 +320,8 @@ Composition is the language of reality.
 
 The Universe Logic is therefore written in OOP form for accessibility,
 but must be interpreted compositionally for any empirical or structural analysis.`,
-    nft_url: "https://og.rarible.com/token/polygon/0x35f8aee672cde8e5fd09c93d2bfe4ff5a9cf0756:54563394983082294023723203677514925242911692977273068555123379805042499387400",
-    tweet_url: ""
+    nft_url: `https://og.rarible.com/token/polygon/0x35f8aee672cde8e5fd09c93d2bfe4ff5a9cf0756:54563394983082294023723203677514925242911692977273068555123379805042499387400`,
+    tweet_url: ``
   };
 
   const canonicalString = [
@@ -242,32 +341,6 @@ but must be interpreted compositionally for any empirical or structural analysis
     .join('');
 
   document.getElementById('hashResult').textContent = hashHex;
-
-  const container = document.getElementById('rendered');
-
-  for (const [key, value] of Object.entries(theory)) {
-    const div = document.createElement('div');
-    div.className = 'block';
-
-    const label = document.createElement('div');
-    label.className = 'key';
-    label.textContent = key;
-    div.appendChild(label);
-
-    if (key.endsWith('_url') && value) {
-      const a = document.createElement('a');
-      a.href = value;
-      a.textContent = value;
-      a.target = '_blank';
-      div.appendChild(a);
-    } else {
-      const pre = document.createElement('pre');
-      pre.textContent = value;
-      div.appendChild(pre);
-    }
-
-    container.appendChild(div);
-  }
 
   document.getElementById('copyHashBtn').addEventListener('click', () => {
     navigator.clipboard.writeText(hashHex);

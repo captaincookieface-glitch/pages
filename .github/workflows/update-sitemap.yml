@@ -1,0 +1,79 @@
+name: Update Sitemap
+
+on:
+  push:
+    paths:
+      - 'captain_cookie_face/index.html'
+      - 'theories/index.html'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-sitemap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build sitemap.xml from index files
+        run: |
+          set -euo pipefail
+
+          BASE_URL="https://www.captaincookieface.com"
+          SITEMAP_FILE="sitemap.xml"
+
+          CCF_INDEX="captain_cookie_face/index.html"
+          THEORIES_INDEX="theories/index.html"
+
+          # ── Extract hrefs preserving order, no duplicates ──
+          extract_urls() {
+            local index_file="$1"
+            local section="$2"
+            if [ ! -f "$index_file" ]; then
+              echo "WARNING: $index_file not found, skipping" >&2
+              return
+            fi
+            grep -oP 'href="\./\K[^"]+\.html' "$index_file" | awk '!seen[$0]++'| while IFS= read -r file; do
+              echo "${BASE_URL}/${section}/${file}"
+            done
+          }
+
+          # ── Collect all URLs in order ──
+          {
+            # 1. Homepage
+            echo "${BASE_URL}/"
+
+            # 2. CCF section
+            echo "${BASE_URL}/captain_cookie_face/"
+            echo "${BASE_URL}/captain_cookie_face/index.html"
+            extract_urls "$CCF_INDEX" "captain_cookie_face"
+
+            # 3. Theories section
+            echo "${BASE_URL}/theories/"
+            echo "${BASE_URL}/theories/index.html"
+            extract_urls "$THEORIES_INDEX" "theories"
+          } > /tmp/all_urls.txt
+
+          # ── Build sitemap XML ──
+          {
+            echo '<?xml version="1.0" encoding="UTF-8"?>'
+            echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+            while IFS= read -r url; do
+              echo "<url><loc>${url}</loc></url>"
+            done < /tmp/all_urls.txt
+            echo '</urlset>'
+          } > "$SITEMAP_FILE"
+
+          echo "Sitemap generated with $(wc -l < /tmp/all_urls.txt) URLs:"
+          cat "$SITEMAP_FILE"
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --quiet sitemap.xml && echo "No changes to sitemap.xml" && exit 0
+          git add sitemap.xml
+          git commit -m "Auto-update sitemap.xml from index files"
+          git push

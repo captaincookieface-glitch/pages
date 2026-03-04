@@ -318,7 +318,7 @@
       "text": "“this.inner = this”\n\nclass Universe {\n    constructor() {\n        this.inner = Universe;  // instance holds the class-definition\n    }\n}\n\nconst U = new Universe();\n\nconsole.log(U.inner === Universe); // true ",
       "nft_url": "https://og.rarible.com/token/polygon/0x35f8aee672cde8e5fd09c93d2bfe4ff5a9cf0756:35217764257041821129612382974364344714071826739048644696460290739576330256419",
       "tweet_url": "",
-      "image_url": "https://indigo-managerial-opossum-856.mypinata.cloud/ipfs/bafybeidi3mpriug6qnmn27g36ypczkxueaihn3qjheaiqeacqoehn4d4ru/image.png"
+      "image_url": "https://indigo-managerial-opossum-856.mypinata.cloud/ipfs/bafybeih64tpdzhxwsxoobayj54ra7jkpqr5wl3hqofp2es5qghh5gwtovi/image.png"
     },
     {
       "id": "2512073956149",

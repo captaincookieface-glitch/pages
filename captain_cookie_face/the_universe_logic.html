@@ -52,7 +52,7 @@
       font-size: 32px;
     }
     nav {
-      background-color:#e1e1e1;
+      background-color: #e1e1e1;
       padding: 10px;
     }
     nav > ul {
@@ -60,14 +60,14 @@
       flex-wrap: wrap;
       flex-direction: row;
       list-style: none;
-      padding:0;
+      padding: 0;
       margin: 0;
     }
-    nav > ul > li, nav > ul > li > a{
+    nav > ul > li, nav > ul > li > a {
       display: flex;
       flex-direction: column;
       flex-wrap: wrap;
-      text-align:center;
+      text-align: center;
       margin: 0;
     }
     nav ul li img {
@@ -89,12 +89,12 @@
 
   <meta itemprop="identifier" content="2512204074711">
   <meta itemprop="dateCreated" content="12/20/2025">
-	
+
 <h1 itemprop="name">The Universe Logic</h1>
 <nav aria-label="Breadcrumb" class="breadcrumb">
    <ul>
     <li>
-      <a  href="../">
+      <a href="../">
           <img max-width="80%" src="../assets/images/AFB9C382-3B34-4925-B318-E7083E758055.png" alt="Captain Cookie Face Universe" />
 		  <span>Home</span>
       </a>      
@@ -122,7 +122,53 @@
   </ul>
 </nav>
 
-  <div class="block" id="rendered"></div>
+  <div class="block" id="rendered">
+
+    <div class="block">
+      <div class="key">id</div>
+      <pre>2512204074711</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">safecreative_url</div>
+      <a href="https://www.safecreative.org/work/2512204074711-the-universe-logic" target="_blank">https://www.safecreative.org/work/2512204074711-the-universe-logic</a>
+    </div>
+
+    <div class="block">
+      <div class="key">title</div>
+      <pre>The Universe Logic</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">date</div>
+      <pre>12/20/2025</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">text</div>
+      <pre>1. Truth &gt; justice. =&gt;
+2. The secret of the universe
+   is that it is everything ever
+   said about it — all at once. =&gt;
+3. Clarity is the purest form
+   of stability. =&gt;
+4. Utilitarianism: maximize
+   value, minimize cost.
+
+- God is human conscience?</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">nft_url</div>
+      <a href="https://og.rarible.com/token/polygon/0x35f8aee672cde8e5fd09c93d2bfe4ff5a9cf0756:35217764257041821129612382974364344714071826739048644696460290739576330256451" target="_blank">https://og.rarible.com/token/polygon/0x35f8aee672cde8e5fd09c93d2bfe4ff5a9cf0756:35217764257041821129612382974364344714071826739048644696460290739576330256451</a>
+    </div>
+
+    <div class="block">
+      <div class="key">tweet_url</div>
+      <pre></pre>
+    </div>
+
+  </div>
 
   <div class="block">
     <div class="key">SHA-256</div>
@@ -132,8 +178,8 @@
     </div>
   </div>
 
- <div class="block">
-      <img src="https://indigo-managerial-opossum-856.mypinata.cloud/ipfs/bafybeie6snzuyreeomxcpcgjtn7p26zvc77d5oc5r62m4zi27xohfq2p6u/image.png" 
+  <div class="block">
+    <img src="https://indigo-managerial-opossum-856.mypinata.cloud/ipfs/bafybeie6snzuyreeomxcpcgjtn7p26zvc77d5oc5r62m4zi27xohfq2p6u/image.png" 
      alt="The Universe Logic" 
      style="max-width: 100%; height: auto;" />
   </div>
@@ -144,13 +190,22 @@
 (async () => {
 
   const entry = {
-    id: "2512204074711",
-    safecreative_url: "https://www.safecreative.org/work/2512204074711-the-universe-logic",
-    title: "The Universe Logic",
-    date: "12/20/2025",
-    text: "1. Truth > justice. =>\n2. The secret of the universe\n   is that it is everything ever\n   said about it — all at once. =>\n3. Clarity is the purest form\n   of stability. =>\n4. Utilitarianism: maximize\n   value, minimize cost.\n\n- God is human conscience?",
-    nft_url: "https://og.rarible.com/token/polygon/0x35f8aee672cde8e5fd09c93d2bfe4ff5a9cf0756:35217764257041821129612382974364344714071826739048644696460290739576330256451",
-    tweet_url: ""
+    id: `2512204074711`,
+    safecreative_url: `https://www.safecreative.org/work/2512204074711-the-universe-logic`,
+    title: `The Universe Logic`,
+    date: `12/20/2025`,
+    text: `1. Truth > justice. =>
+2. The secret of the universe
+   is that it is everything ever
+   said about it — all at once. =>
+3. Clarity is the purest form
+   of stability. =>
+4. Utilitarianism: maximize
+   value, minimize cost.
+
+- God is human conscience?`,
+    nft_url: `https://og.rarible.com/token/polygon/0x35f8aee672cde8e5fd09c93d2bfe4ff5a9cf0756:35217764257041821129612382974364344714071826739048644696460290739576330256451`,
+    tweet_url: ``
   };
 
   const canonicalString = [
@@ -170,32 +225,6 @@
     .join('');
 
   document.getElementById('hashResult').textContent = hashHex;
-
-  const container = document.getElementById('rendered');
-
-  for (const [key, value] of Object.entries(entry)) {
-    const div = document.createElement('div');
-    div.className = 'block';
-
-    const label = document.createElement('div');
-    label.className = 'key';
-    label.textContent = key;
-    div.appendChild(label);
-
-    if (key.endsWith('_url') && value) {
-      const a = document.createElement('a');
-      a.href = value;
-      a.textContent = value;
-      a.target = '_blank';
-      div.appendChild(a);
-    } else {
-      const pre = document.createElement('pre');
-      pre.textContent = value;
-      div.appendChild(pre);
-    }
-
-    container.appendChild(div);
-  }
 
   document.getElementById('copyHashBtn').addEventListener('click', () => {
     navigator.clipboard.writeText(hashHex);

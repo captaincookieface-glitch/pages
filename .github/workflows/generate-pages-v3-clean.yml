@@ -1,0 +1,29 @@
+name: Generate CCF Pages (v3 - Recess Support)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate CCF pages
+        run: node .github/scripts/generate-ccf-pages.js .
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add captain_cookie_face/
+          git diff --cached --quiet || git commit -m "Auto-generate CCF pages (v3 recess support)"
+          git push

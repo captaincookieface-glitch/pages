@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Descent-Return Theorem</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #fff; }
+    .block { margin-bottom: 20px; padding: 15px; border: 1px solid #eee; word-wrap: break-word; }
+    .key { color: #000; font-size: 2em !important; text-transform: capitalize; font-weight: bold; }
+    .hash { word-break: break-all; color: #4287f5; }
+    a { color: #4287f5; text-decoration: underline; }
+    pre { white-space: pre-wrap; }
+    button { font-family: inherit; padding: 6px 10px; border: 1px solid #ccc; background: #f9f9f9; cursor: pointer; }
+    h1 { margin-bottom: 10px; font-size: 32px; }
+    nav { background-color: #e1e1e1; padding: 10px; }
+    nav > ul { display: flex; flex-wrap: wrap; list-style: none; padding: 0; margin: 0; }
+    nav > ul > li, nav > ul > li > a { display: flex; flex-direction: column; text-align: center; margin: 0; }
+    nav ul li img { max-width: 80px; width: 100%; height: auto; border-radius: 40px; }
+    .arrow { width: 50px; height: 80px; font-size: 38px; }
+  </style>
+</head>
+<body>
+<article itemscope itemtype="https://schema.org/CreativeWork">
+  <meta itemprop="identifier" content="2603164949161">
+  <meta itemprop="dateCreated" content="03/16/2026">
+<h1 itemprop="name">The Descent-Return Theorem</h1>
+<nav aria-label="Breadcrumb" class="breadcrumb">
+  <ul>
+    <li><a href="../"><img src="../assets/images/AFB9C382-3B34-4925-B318-E7083E758055.png" alt="Home"/><span>Home</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><a href="./"><img src="../assets/images/EEC475CE-9849-4816-ABC5-7BB5525C6D28.png" alt="CCF"/><span>CCF</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><img src="../assets/images/EEC475CE-9849-4816-ABC5-7BB5525C6D28.png" alt="CCF"/><span>The Descent-Return Theorem</span></li>
+  </ul>
+</nav>
+  <div class="block" id="rendered">
+
+    <div class="block">
+      <div class="key">id</div>
+      <pre>2603164949161</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">safecreative_url</div>
+      <a href="https://www.safecreative.org/work/2603164949161-the-descent-return-theorem" target="_blank">https://www.safecreative.org/work/2603164949161-the-descent-return-theorem</a>
+    </div>
+
+    <div class="block">
+      <div class="key">title</div>
+      <pre>The Descent-Return Theorem</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">date</div>
+      <pre>03/16/2026</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">text</div>
+      <pre>In a dual-memory system under C₂ symmetry, descent converges to 1/φ and return converges to φ. These are not two attractors — they are one attractor viewed from two directions. 1/φ + 1 = φ.</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">nft_url</div>
+      <a href="https://opensea.io/item/base/0xfa583a819f70dd23213384b50ee1a20a5f083fa6/9" target="_blank">https://opensea.io/item/base/0xfa583a819f70dd23213384b50ee1a20a5f083fa6/9</a>
+    </div>
+
+    <div class="block">
+      <div class="key">tweet_url</div>
+      <a href="https://x.com/captaincoo39471/status/2033631978285895897" target="_blank">https://x.com/captaincoo39471/status/2033631978285895897</a>
+    </div>
+
+  </div>
+  <div class="block">
+    <div class="key">SHA-256</div>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <div class="hash" id="hashResult"></div>
+      <button id="copyHashBtn" type="button">Copy</button>
+    </div>
+  </div>
+
+  <div class="block">
+    <img src="https://6uqllh6bkgdwoy25krdbolsgss5zl2dqamf7zkrwfls3hdvj5cga.turbo-gateway.com/9SC1n8FRh2djXVRGFy5GlLuV6HADC_yqNirls46p6Iw" 
+     alt="The Descent-Return Theorem" 
+     style="max-width: 100%; height: auto;" />
+  </div>
+
+</article>
+<script>
+(async () => {
+  const entry = {
+    id: `2603164949161`,
+    safecreative_url: `https://www.safecreative.org/work/2603164949161-the-descent-return-theorem`,
+    title: `The Descent-Return Theorem`,
+    date: `03/16/2026`,
+    text: `In a dual-memory system under C₂ symmetry, descent converges to 1/φ and return converges to φ. These are not two attractors — they are one attractor viewed from two directions. 1/φ + 1 = φ.`,
+    nft_url: `https://opensea.io/item/base/0xfa583a819f70dd23213384b50ee1a20a5f083fa6/9`,
+    tweet_url: `https://x.com/captaincoo39471/status/2033631978285895897`
+  };
+  const canonicalString = [entry.id, entry.safecreative_url, entry.title, entry.date, entry.text, entry.nft_url, entry.tweet_url].join('\n---\n');
+  const data = new TextEncoder().encode(canonicalString);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashHex = [...new Uint8Array(hashBuffer)].map(b => b.toString(16).padStart(2, '0')).join('');
+  document.getElementById('hashResult').textContent = hashHex;
+  document.getElementById('copyHashBtn').addEventListener('click', () => { navigator.clipboard.writeText(hashHex); alert('Hash copied'); });
+})();
+</script>
+</body></html>

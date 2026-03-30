@@ -1,0 +1,700 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ω — Three Geometries · Paper Grade</title>
+<style>
+  :root{
+    --bg:#ffffff; --ink:#1f1f1f; --muted:#777; --line:#e9e9e9; --soft:#f8f8f8;
+    --gold:#c8a84a; --pos:#618f85; --flat:#969696; --neg:#6f65ff; --shadow:0 14px 36px rgba(0,0,0,.05);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    line-height:1.4;
+  }
+  .page{max-width:1320px;margin:0 auto;padding:18px 14px 40px}
+  .hero{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:16px}
+  .hero h1{font-size:clamp(16px,2.6vw,30px);font-weight:400;letter-spacing:.22em;color:#555;text-align:center}
+  .hero .sub{font-size:10px;letter-spacing:.16em;color:#9a9a9a;text-transform:uppercase;text-align:center}
+  .hero .formula{font-size:12px;color:#666;text-align:center;letter-spacing:.05em}
+  .controls{
+    display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center;
+    background:var(--soft);border:1px solid var(--line);border-radius:18px;padding:12px 14px;
+    box-shadow:var(--shadow);margin-bottom:16px
+  }
+  .seg{display:flex;gap:4px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px}
+  .seg button{
+    border:0;background:transparent;color:#666;cursor:pointer;border-radius:999px;
+    padding:8px 12px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;transition:.18s ease
+  }
+  .seg button.active{background:#111;color:#fff}
+  .toggle,.slider-wrap{
+    display:flex;align-items:center;gap:8px;font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.08em
+  }
+  .toggle input{width:15px;height:15px;accent-color:var(--gold)}
+  input[type=range]{width:170px;accent-color:var(--gold)}
+  .readout{font-size:11px;color:var(--gold);min-width:86px}
+  .layout{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(330px,.95fr);gap:16px;align-items:start}
+  .left{display:flex;flex-direction:column;gap:16px}
+  .panels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .panel,.card{
+    background:var(--soft);border:1px solid var(--line);border-radius:22px;padding:10px;box-shadow:var(--shadow)
+  }
+  .ptitle{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#444;text-align:center}
+  .psub{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#999;text-align:center;margin:2px 0 8px}
+  canvas{display:block;width:100%;aspect-ratio:1;border-radius:16px;background:#fff;border:1px solid #eee}
+  .pcap{font-size:9px;letter-spacing:.10em;text-transform:uppercase;color:#888;text-align:center;margin-top:7px;min-height:2.8em}
+  .proof{
+    display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px
+  }
+  .mini{
+    background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px 12px;min-height:108px
+  }
+  .mini .label{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:6px}
+  .mini .mono{font-size:12px;color:#333;white-space:pre-wrap;word-break:break-word}
+  .mini .big{font-size:14px;color:#111}
+  .right{display:flex;flex-direction:column;gap:16px}
+  .card h2{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#444;margin-bottom:10px}
+  .metric-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .metric,.note{background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px 12px}
+  .metric .k,.note .k{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:5px}
+  .metric .v,.note .v{font-size:12px;color:#333;word-break:break-word}
+  .status{
+    display:inline-block;border-radius:999px;border:1px solid #efe4be;background:#fff8e3;color:#8d6d12;
+    font-size:10px;text-transform:uppercase;letter-spacing:.1em;padding:4px 8px
+  }
+  .footer{margin-top:18px;text-align:center;font-size:10px;color:#999;letter-spacing:.12em;text-transform:uppercase}
+  @media (max-width:1100px){.layout{grid-template-columns:1fr}}
+  @media (max-width:800px){
+    .panels,.proof,.metric-grid{grid-template-columns:1fr}
+    .controls{justify-content:flex-start}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="hero">
+    <h1>Ω — THREE GEOMETRIES · G₄ LINKED</h1>
+    <div class="sub">exact spherical · exact euclidean · C₂ → A₄ → G₄ → ℍ³ renderer</div>
+    <div class="formula">C₂: x(n+1)=x(n)+x(n−1) → spec(A₂)={φ, −1/φ} → rung₀∪rung₁ → A₄ → G₄ → f(v)=T⁻¹v → ℍ³</div>
+  </header>
+
+  <section class="controls">
+    <div class="seg" id="modeSeg">
+      <button data-mode="proof" class="active">proof</button>
+      <button data-mode="geodesic">geodesic</button>
+      <button data-mode="tube">tube</button>
+      <button data-mode="loxodromic">loxodromic</button>
+    </div>
+    <label class="toggle"><input id="animateToggle" type="checkbox" checked> animate</label>
+    <label class="toggle"><input id="showBackward" type="checkbox" checked> backward</label>
+    <div class="slider-wrap">twist <input id="thetaSlider" type="range" min="0" max="100" value="38"><span class="readout" id="thetaReadout"></span></div>
+    <div class="slider-wrap">radius <input id="rhoSlider" type="range" min="0" max="100" value="42"><span class="readout" id="rhoReadout"></span></div>
+  </section>
+
+  <div class="layout">
+    <div class="left">
+      <section class="panels">
+        <div class="panel">
+          <div class="ptitle">Ω &gt; 1</div>
+          <div class="psub">S² · great circles</div>
+          <canvas id="positiveCanvas"></canvas>
+          <div class="pcap">exact spherical model · ∑∠ &gt; 180°</div>
+        </div>
+        <div class="panel">
+          <div class="ptitle">Ω = 1</div>
+          <div class="psub">E² · rigid grid</div>
+          <canvas id="flatCanvas"></canvas>
+          <div class="pcap">exact euclidean model · ∑∠ = 180°</div>
+        </div>
+        <div class="panel">
+          <div class="ptitle">Ω &lt; 1</div>
+          <div class="psub">G₄ level-set → ℍ³</div>
+          <canvas id="negativeCanvas"></canvas>
+          <div class="pcap" id="negCaption">proof mode · exact A₄² axis, smoothly parameterized through T⁻¹</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>proof cards</h2>
+        <div class="proof">
+          <div class="mini">
+            <div class="label">C₂</div>
+            <div class="mono" id="a2Out"></div>
+          </div>
+          <div class="mini">
+            <div class="label">spectrum and rungs</div>
+            <div class="mono" id="rungOut"></div>
+          </div>
+          <div class="mini">
+            <div class="label">A₄ and G₄</div>
+            <div class="mono" id="a4g4Out"></div>
+          </div>
+        </div>
+        <div class="proof" style="margin-top:10px">
+          <div class="mini">
+            <div class="label">Ω > 1 · spherical</div>
+            <div class="mono" id="posModelOut"></div>
+          </div>
+          <div class="mini">
+            <div class="label">Ω = 1 · euclidean</div>
+            <div class="mono" id="flatModelOut"></div>
+          </div>
+          <div class="mini">
+            <div class="label">Ω < 1 · hyperbolic</div>
+            <div class="mono" id="negModelOut"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="right">
+      <section class="card">
+        <h2>live readout</h2>
+        <div class="metric-grid">
+          <div class="metric"><div class="k">mode</div><div class="v" id="modeOut"></div></div>
+          <div class="metric"><div class="k">φ / ln(φ)</div><div class="v" id="phiOut"></div></div>
+          <div class="metric"><div class="k">spec(A₄)</div><div class="v" id="specA4Out"></div></div>
+          <div class="metric"><div class="k">signature</div><div class="v" id="sigOut"></div></div>
+          <div class="metric"><div class="k">invariance residual</div><div class="v" id="invOut"></div></div>
+          <div class="metric"><div class="k">conjugacy residual</div><div class="v" id="conjOut"></div></div>
+          <div class="metric"><div class="k">translation length</div><div class="v" id="lenOut"></div></div>
+          <div class="metric"><div class="k">dynamic law</div><div class="v" id="dynOut"></div></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>model alignment</h2>
+        <div class="note" style="margin-bottom:10px">
+          <div class="k">positive panel</div>
+          <div class="v">Great circles are generated on <span class="status">S²</span> and shown by stereographic projection. The central triangle is drawn on the projected spherical field, so the panel stays tied to the positive-curvature model rather than a decorative disk sketch.</div>
+        </div>
+        <div class="note" style="margin-bottom:10px">
+          <div class="k">flat panel</div>
+          <div class="v">Parallel families remain parallel under rigid translation. The invariant here is <span class="status">zero curvature</span> and constant angle sum 180°.</div>
+        </div>
+        <div class="note">
+          <div class="k">negative panel</div>
+          <div class="v">The orbit is generated in <span class="status">G₄ coordinates</span>, mapped by <span class="status">T⁻¹</span> to the standard hyperboloid, then projected to Poincaré view.</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>status</h2>
+        <div class="note" style="margin-bottom:10px">
+          <div class="k">what changed</div>
+          <div class="v">The negative panel now works in original <span class="status">G₄ coordinates</span> and projects through the computed linear map <span class="status">T⁻¹</span> to the standard ℍ³ hyperboloid before Poincaré display.</div>
+        </div>
+        <div class="note" style="margin-bottom:10px">
+          <div class="k">proof mode</div>
+          <div class="v">Uses the exact companion matrix A₄ from spec(A₄)={φ,1,1/φ,−1}. The visual orbit is generated by A₄² on the G₄ level set.</div>
+        </div>
+        <div class="note">
+          <div class="k">other modes</div>
+          <div class="v">Tube and loxodromic modes use G₄-isometries built by conjugating canonical boosts/rotations through T, so the geometry stays linked to the same computed metric.</div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="footer">Captain Cookie Face Universe · upgraded proof-linked simulator · 2026</div>
+</div>
+
+<script>
+const TAU = Math.PI * 2;
+const phi = (1 + Math.sqrt(5)) / 2;
+const phiInv = 1 / phi;
+const lnphi = Math.log(phi);
+
+const canvases = {
+  pos: document.getElementById('positiveCanvas'),
+  flat: document.getElementById('flatCanvas'),
+  neg: document.getElementById('negativeCanvas')
+};
+const ctx = {
+  pos: canvases.pos.getContext('2d'),
+  flat: canvases.flat.getContext('2d'),
+  neg: canvases.neg.getContext('2d')
+};
+const ui = {
+  modeSeg: document.getElementById('modeSeg'),
+  animateToggle: document.getElementById('animateToggle'),
+  showBackward: document.getElementById('showBackward'),
+  thetaSlider: document.getElementById('thetaSlider'),
+  rhoSlider: document.getElementById('rhoSlider'),
+  thetaReadout: document.getElementById('thetaReadout'),
+  rhoReadout: document.getElementById('rhoReadout'),
+  negCaption: document.getElementById('negCaption')
+};
+const out = {
+  a2Out: document.getElementById('a2Out'),
+  rungOut: document.getElementById('rungOut'),
+  a4g4Out: document.getElementById('a4g4Out'),
+  posModelOut: document.getElementById('posModelOut'),
+  flatModelOut: document.getElementById('flatModelOut'),
+  negModelOut: document.getElementById('negModelOut'),
+  modeOut: document.getElementById('modeOut'),
+  phiOut: document.getElementById('phiOut'),
+  specA4Out: document.getElementById('specA4Out'),
+  sigOut: document.getElementById('sigOut'),
+  invOut: document.getElementById('invOut'),
+  conjOut: document.getElementById('conjOut'),
+  lenOut: document.getElementById('lenOut'),
+  dynOut: document.getElementById('dynOut')
+};
+
+const state = { mode:'proof', theta:0.18, rho:0.52, animate:true, showBackward:true };
+
+// ---------- small linear algebra ----------
+function zeros(n,m){ return Array.from({length:n}, ()=>Array(m).fill(0)); }
+function identity(n){ return Array.from({length:n}, (_,i)=>Array.from({length:n}, (_,j)=>i===j?1:0)); }
+function clone(A){ return A.map(r => r.slice()); }
+function transpose(A){ return A[0].map((_,j)=>A.map(r=>r[j])); }
+function matMul(A,B){
+  const m=A.length, n=B[0].length, k=B.length, out=zeros(m,n);
+  for(let i=0;i<m;i++) for(let t=0;t<k;t++) for(let j=0;j<n;j++) out[i][j]+=A[i][t]*B[t][j];
+  return out;
+}
+function matVec(A,v){ return A.map(r => r.reduce((s,x,i)=>s+x*v[i],0)); }
+function matAdd(A,B){ return A.map((r,i)=>r.map((x,j)=>x+B[i][j])); }
+function matSub(A,B){ return A.map((r,i)=>r.map((x,j)=>x-B[i][j])); }
+function scalarMat(s,A){ return A.map(r=>r.map(x=>s*x)); }
+function inverse(M){
+  const n=M.length, A=M.map((row,i)=>row.concat(identity(n)[i]));
+  for(let i=0;i<n;i++){
+    let pivot=i;
+    for(let r=i+1;r<n;r++) if(Math.abs(A[r][i]) > Math.abs(A[pivot][i])) pivot=r;
+    if(Math.abs(A[pivot][i]) < 1e-12) throw new Error('Singular matrix');
+    [A[i],A[pivot]]=[A[pivot],A[i]];
+    const div=A[i][i];
+    for(let j=0;j<2*n;j++) A[i][j]/=div;
+    for(let r=0;r<n;r++) if(r!==i){
+      const f=A[r][i];
+      for(let j=0;j<2*n;j++) A[r][j]-=f*A[i][j];
+    }
+  }
+  return A.map(r=>r.slice(n));
+}
+function frobNorm(A){ return Math.sqrt(A.flat().reduce((s,x)=>s+x*x,0)); }
+function dot(a,b){ return a.reduce((s,x,i)=>s+x*b[i],0); }
+function vecScale(s,v){ return v.map(x=>s*x); }
+function vecAdd(a,b){ return a.map((x,i)=>x+b[i]); }
+function norm(v){ return Math.hypot(...v); }
+function normalize(v){ const n=norm(v)||1; return v.map(x=>x/n); }
+
+// Symmetric eigendecomposition by Jacobi rotations
+function jacobiEigenSymmetric(S){
+  const n = S.length;
+  const A = clone(S);
+  const V = identity(n);
+  for(let iter=0; iter<80; iter++){
+    let p=0,q=1,max=Math.abs(A[0][1]);
+    for(let i=0;i<n;i++) for(let j=i+1;j<n;j++){
+      const v=Math.abs(A[i][j]);
+      if(v>max){ max=v; p=i; q=j; }
+    }
+    if(max < 1e-12) break;
+    const theta = 0.5 * Math.atan2(2*A[p][q], A[q][q]-A[p][p]);
+    const c=Math.cos(theta), s=Math.sin(theta);
+
+    for(let k=0;k<n;k++){
+      const vip=V[k][p], viq=V[k][q];
+      V[k][p]=c*vip-s*viq;
+      V[k][q]=s*vip+c*viq;
+    }
+    for(let k=0;k<n;k++) if(k!==p && k!==q){
+      const apk=A[p][k], aqk=A[q][k];
+      A[p][k]=A[k][p]=c*apk-s*aqk;
+      A[q][k]=A[k][q]=s*apk+c*aqk;
+    }
+    const app=A[p][p], aqq=A[q][q], apq=A[p][q];
+    A[p][p]=c*c*app-2*s*c*apq+s*s*aqq;
+    A[q][q]=s*s*app+2*s*c*apq+c*c*aqq;
+    A[p][q]=A[q][p]=0;
+  }
+  const vals = Array.from({length:n}, (_,i)=>A[i][i]);
+  return {values:vals, vectors:V};
+}
+function sortEigenPairs(values, vectors){
+  const idx = values.map((v,i)=>({v,i})).sort((a,b)=>a.v-b.v);
+  const vals = idx.map(o=>o.v);
+  const vecs = zeros(vectors.length, vectors[0].length);
+  for(let col=0; col<idx.length; col++){
+    const src = idx[col].i;
+    for(let row=0; row<vectors.length; row++) vecs[row][col] = vectors[row][src];
+  }
+  return {values:vals, vectors:vecs};
+}
+function diag(vals){
+  return vals.map((v,i)=>vals.map((_,j)=>i===j?v:0));
+}
+function fmt(x,d=6){
+  const ax=Math.abs(x);
+  if((ax>0 && ax<1e-4) || ax>=1e5) return x.toExponential(2);
+  return Number(x.toFixed(d)).toString();
+}
+function fmtMat(A,d=3){
+  return '[' + A.map(r => '[' + r.map(x=>fmt(x,d)).join(', ') + ']').join(', ') + ']';
+}
+
+// ---------- geometry helpers ----------
+function rotY(p,a){ const c=Math.cos(a), s=Math.sin(a); return [c*p[0]+s*p[2], p[1], -s*p[0]+c*p[2]]; }
+function rotX(p,a){ const c=Math.cos(a), s=Math.sin(a); return [p[0], c*p[1]-s*p[2], s*p[1]+c*p[2]]; }
+function sphereToStereo([x,y,z]){
+  const d = 1 - z;
+  return [x/(d+1e-9), y/(d+1e-9)];
+}
+function greatCircle(normal, count=260){
+  const n = normalize(normal);
+  const ref = Math.abs(n[0])<0.8 ? [1,0,0] : [0,1,0];
+  const u = normalize([n[1]*ref[2]-n[2]*ref[1], n[2]*ref[0]-n[0]*ref[2], n[0]*ref[1]-n[1]*ref[0]]);
+  const v = normalize([n[1]*u[2]-n[2]*u[1], n[2]*u[0]-n[0]*u[2], n[0]*u[1]-n[1]*u[0]]);
+  const pts = [];
+  for(let i=0;i<=count;i++){
+    const t = TAU*i/count;
+    pts.push([
+      Math.cos(t)*u[0]+Math.sin(t)*v[0],
+      Math.cos(t)*u[1]+Math.sin(t)*v[1],
+      Math.cos(t)*u[2]+Math.sin(t)*v[2]
+    ]);
+  }
+  return pts;
+}
+function clearCanvas(c,w,h){ c.clearRect(0,0,w,h); }
+function drawDiskFrame(c,w,h, stroke){
+  const cx=w/2, cy=h/2, r=Math.min(w,h)*0.435;
+  c.lineWidth=1.2; c.strokeStyle=stroke; c.beginPath(); c.arc(cx,cy,r,0,TAU); c.stroke();
+  return {cx, cy, r};
+}
+function drawTriangle(c,cx,cy,radius,angle,color,rotating){
+  const pts=[];
+  for(let k=0;k<3;k++){
+    const a=angle+k*TAU/3-Math.PI/2;
+    pts.push([cx+Math.cos(a)*radius, cy+Math.sin(a)*radius]);
+  }
+  c.lineWidth=1.35;
+  c.strokeStyle=color;
+  c.fillStyle=rotating ? 'rgba(200,168,74,.10)' : 'rgba(120,120,120,.08)';
+  c.beginPath();
+  pts.forEach((p,i)=>i?c.lineTo(...p):c.moveTo(...p));
+  c.closePath(); c.fill(); c.stroke();
+  pts.forEach(p=>{
+    c.beginPath(); c.arc(p[0],p[1],3.1,0,TAU);
+    c.fillStyle='#fff'; c.fill(); c.strokeStyle=color; c.stroke();
+  });
+}
+
+// ---------- build C2 -> A4 -> G4 ----------
+function companionFromRoots(roots){
+  let coeffs=[1];
+  for(const r of roots){
+    const next=Array(coeffs.length+1).fill(0);
+    for(let i=0;i<coeffs.length;i++){ next[i]+=coeffs[i]; next[i+1]-=coeffs[i]*r; }
+    coeffs=next;
+  }
+  const [a4,a3,a2,a1,a0]=coeffs;
+  const A = [[0,1,0,0],[0,0,1,0],[0,0,0,1],[-a0/a4,-a1/a4,-a2/a4,-a3/a4]];
+  return {A, coeffs};
+}
+function eigenvectorForCompanion(lambda){ return [1, lambda, lambda*lambda, lambda*lambda*lambda]; }
+
+function buildDerived(){
+  const A2 = [[1,1],[1,0]];
+  const specA2 = [phi, -phiInv];
+  const rung0 = [1,-1];
+  const rung1 = [phi, phiInv];
+  const rootsA4 = [phi, 1, phiInv, -1];
+  const {A:A4, coeffs} = companionFromRoots(rootsA4);
+  const P = transpose(rootsA4.map(eigenvectorForCompanion));
+  const Pinv = inverse(P);
+  const Gtilde = [[0,1,0,0],[1,0,0,0],[0,0,1,0],[0,0,0,1]];
+  const G4 = matMul(transpose(Pinv), matMul(Gtilde, Pinv));
+
+  const {values, vectors} = sortEigenPairs(...(()=>{
+    const j = jacobiEigenSymmetric(G4); return [j.values, j.vectors];
+  })());
+
+  // T columns = normalized eigenvectors so that T^T G4 T = eta
+  const scales = values.map(v => 1/Math.sqrt(Math.abs(v)));
+  const T = zeros(4,4);
+  for(let col=0; col<4; col++) for(let row=0; row<4; row++) T[row][col] = vectors[row][col]*scales[col];
+  const eta = [[-1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]];
+  const Tinv = inverse(T);
+  const conjugacyResidual = frobNorm(matSub(matMul(transpose(T), matMul(G4, T)), eta));
+
+  const A4sq = matMul(A4, A4);
+  const invResidual = frobNorm(matSub(matMul(transpose(A4), matMul(G4, A4)), G4));
+
+  return {A2,specA2,rung0,rung1,rootsA4,A4,A4sq,coeffs,P,Pinv,Gtilde,G4,values,T,Tinv,eta,conjugacyResidual,invResidual};
+}
+const D = buildDerived();
+
+function etaDot(v){ return -v[0]*v[0]+v[1]*v[1]+v[2]*v[2]+v[3]*v[3]; }
+function g4Dot(v){ return dot(v, matVec(D.G4, v)); }
+
+function boostX1(l){
+  const ch=Math.cosh(l), sh=Math.sinh(l);
+  return [[ch,sh,0,0],[sh,ch,0,0],[0,0,1,0],[0,0,0,1]];
+}
+function rotX2X3(theta){
+  const c=Math.cos(theta), s=Math.sin(theta);
+  return [[1,0,0,0],[0,1,0,0],[0,0,c,-s],[0,0,s,c]];
+}
+function poincareProjectW(w){
+  const d = w[0] + 1;
+  return [w[1]/d, w[2]/d, w[3]/d];
+}
+function gammaCanonical(r){ return [Math.cosh(r), Math.sinh(r), 0, 0]; }
+function canonTubePoint(rho, phase){
+  return [Math.sqrt(1+rho*rho), 0, rho*Math.cos(phase), rho*Math.sin(phase)];
+}
+function toOriginal(w){ return matVec(D.T, w); }
+function toCanonical(v){ return matVec(D.Tinv, v); }
+
+function modeParams(){
+  if(state.mode==='proof') return {theta:0, rho:0, caption:'proof mode · exact A₄² axis, smoothly parameterized'};
+  if(state.mode==='geodesic') return {theta:0, rho:0, caption:'geodesic mode · G₄-linked continuous axis'};
+  if(state.mode==='tube') return {theta:0, rho:state.rho, caption:'tube mode · smooth G₄ isometry around the axis'};
+  return {theta:state.theta, rho:state.rho, caption:'loxodromic mode · smooth conjugated boost × rotation in G₄'};
+}
+
+function buildNegativeOrbits(time){
+  const pulse = state.animate ? Math.sin(time*0.0011)*0.12 : 0;
+  const mode = modeParams();
+  const count = (state.mode==='proof' || state.mode==='geodesic') ? 1 : 6;
+  const steps = state.mode==='proof' ? 38 : 32;
+  const trails = [];
+
+  const phaseSpeed = state.mode==='loxodromic' ? (mode.theta + pulse) : 0;
+  const tau = state.animate ? time*0.00042 : 0;
+  const spacing = state.mode==='proof' ? 0.34 : 0.28;
+  const proofScale = 2*lnphi;
+
+  for(let i=0;i<count;i++){
+    const phase0 = count===1 ? 0 : TAU*i/count;
+    const fwd=[], bwd=[];
+    for(let s=0;s<steps;s++){
+      const sf = (s - (steps-1)*0.35)*spacing + tau;
+      const sb = (s - (steps-1)*0.35)*spacing - tau;
+
+      let wf, wb;
+      if(state.mode==='proof' || state.mode==='geodesic'){
+        const rf = (state.mode==='proof' ? proofScale : 1) * sf;
+        const rb = (state.mode==='proof' ? proofScale : 1) * sb;
+        wf = gammaCanonical(rf);
+        wb = gammaCanonical(rb);
+      } else if(state.mode==='tube'){
+        const shf = Math.sqrt(1+mode.rho*mode.rho);
+        wf = [shf*Math.cosh(sf), shf*Math.sinh(sf), mode.rho*Math.cos(phase0), mode.rho*Math.sin(phase0)];
+        wb = [shf*Math.cosh(sb), shf*Math.sinh(sb), mode.rho*Math.cos(phase0), mode.rho*Math.sin(phase0)];
+      } else {
+        const shf = Math.sqrt(1+mode.rho*mode.rho);
+        wf = [
+          shf*Math.cosh(sf),
+          shf*Math.sinh(sf),
+          mode.rho*Math.cos(phase0 + phaseSpeed*sf),
+          mode.rho*Math.sin(phase0 + phaseSpeed*sf)
+        ];
+        wb = [
+          shf*Math.cosh(sb),
+          shf*Math.sinh(sb),
+          mode.rho*Math.cos(phase0 + phaseSpeed*sb),
+          mode.rho*Math.sin(phase0 + phaseSpeed*sb)
+        ];
+      }
+      fwd.push(toOriginal(wf));
+      bwd.push(toOriginal(wb));
+    }
+    trails.push({fwd,bwd});
+  }
+  return trails;
+}
+
+// ---------- drawing ----------
+function setupCanvas(canvas){
+  const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = Math.round(rect.width * dpr);
+  canvas.height = Math.round(rect.height * dpr);
+  canvas.getContext('2d').setTransform(dpr,0,0,dpr,0,0);
+}
+function resizeAll(){ Object.values(canvases).forEach(setupCanvas); }
+window.addEventListener('resize', resizeAll);
+resizeAll();
+
+function drawPositive(time){
+  const c=ctx.pos, w=canvases.pos.clientWidth, h=canvases.pos.clientHeight;
+  clearCanvas(c,w,h);
+  const {cx,cy,r}=drawDiskFrame(c,w,h,'#d8e7e1');
+  const angle=time*0.00045;
+  const normals=[[1,0,0],[0.55,1,0.25],[-0.35,0.7,1],[1,-0.4,0.8]];
+  c.lineWidth=1.2;
+  normals.forEach((n,idx)=>{
+    const pts = greatCircle(n).map(p=>sphereToStereo(rotX(rotY(p,angle*(0.8+idx*0.11)),0.35)));
+    c.beginPath();
+    pts.forEach((p,i)=>{
+      const x=cx+p[0]*r*0.78, y=cy+p[1]*r*0.78;
+      i?c.lineTo(x,y):c.moveTo(x,y);
+    });
+    c.strokeStyle = idx===0 ? 'rgba(97,143,133,.95)' : 'rgba(97,143,133,.45)';
+    c.stroke();
+  });
+    // small projected spherical triangle and a highlighted great circle arc
+  drawTriangle(c,cx,cy,r*0.23,angle*0.8,'rgba(97,143,133,.86)',true);
+  c.lineWidth=1.6;
+  const eqPts = greatCircle([0,0,1]).map(p=>sphereToStereo(rotX(rotY(p,angle),0.35)));
+  c.beginPath();
+  eqPts.forEach((p,i)=>{ const x=cx+p[0]*r*0.78, y=cy+p[1]*r*0.78; i?c.lineTo(x,y):c.moveTo(x,y); });
+  c.strokeStyle='rgba(97,143,133,.82)';
+  c.stroke();
+}
+function drawFlat(time){
+  const c=ctx.flat,w=canvases.flat.clientWidth,h=canvases.flat.clientHeight;
+  clearCanvas(c,w,h);
+  const {cx,cy,r}=drawDiskFrame(c,w,h,'#e1e1e1');
+  c.save();
+  c.beginPath(); c.arc(cx,cy,r,0,TAU); c.clip();
+  const shift=(time*0.018)%34;
+  c.lineWidth=1;
+  for(let x=cx-r-34; x<=cx+r+34; x+=34){
+    c.strokeStyle='rgba(150,150,150,.28)';
+    c.beginPath(); c.moveTo(x+shift, cy-r); c.lineTo(x+shift, cy+r); c.stroke();
+  }
+  for(let y=cy-r-34; y<=cy+r+34; y+=34){
+    c.strokeStyle='rgba(150,150,150,.28)';
+    c.beginPath(); c.moveTo(cx-r, y+shift*0.4); c.lineTo(cx+r, y+shift*0.4); c.stroke();
+  }
+  c.restore();
+    // rigid euclidean reference triangle with translated basis arrows
+  drawTriangle(c,cx,cy,r*0.23,0,'rgba(120,120,120,.9)',false);
+  c.strokeStyle='rgba(120,120,120,.85)'; c.lineWidth=1.2;
+  c.beginPath(); c.moveTo(cx-r*0.18, cy+r*0.24); c.lineTo(cx+r*0.04, cy+r*0.24); c.stroke();
+  c.beginPath(); c.moveTo(cx-r*0.18, cy+r*0.24); c.lineTo(cx-r*0.18, cy+r*0.02); c.stroke();
+}
+function drawNegative(time){
+  const c=ctx.neg,w=canvases.neg.clientWidth,h=canvases.neg.clientHeight;
+  clearCanvas(c,w,h);
+  const {cx,cy,r}=drawDiskFrame(c,w,h,'#ddd8ff');
+
+  // radial guide
+  c.lineWidth=0.8; c.strokeStyle='rgba(111,101,255,.12)';
+  for(let k=1;k<=3;k++){ c.beginPath(); c.arc(cx,cy,r*k/4,0,TAU); c.stroke(); }
+
+  const trails = buildNegativeOrbits(time);
+
+  trails.forEach((trail, idx)=>{
+    const drawTrail = (pts, alphaBase, reverse=false) => {
+      c.beginPath();
+      pts.forEach((v,i)=>{
+        const wv = toCanonical(v);
+        const p = poincareProjectW(wv);
+        const x = cx + p[0]*r*0.86;
+        const y = cy + p[1]*r*0.86;
+        i?c.lineTo(x,y):c.moveTo(x,y);
+      });
+      c.strokeStyle = reverse ? `rgba(111,101,255,${alphaBase})` : `rgba(111,101,255,${alphaBase})`;
+      c.lineWidth = idx===0 ? 1.7 : 1.05;
+      c.stroke();
+
+      pts.forEach((v,i)=>{
+        if(i % 3 !== 0) return;
+        const wv = toCanonical(v), p = poincareProjectW(wv);
+        const x = cx + p[0]*r*0.86, y = cy + p[1]*r*0.86;
+        const t = 1 - i/pts.length;
+        c.beginPath();
+        c.arc(x,y, idx===0 ? 2.8+1.5*t : 1.9+1.0*t, 0, TAU);
+        c.fillStyle = reverse ? `rgba(111,101,255,${0.13+0.20*t})` : `rgba(111,101,255,${0.18+0.32*t})`;
+        c.fill();
+      });
+    };
+    drawTrail(trail.fwd, idx===0 ? .92 : .34, false);
+    if(state.showBackward) drawTrail(trail.bwd, idx===0 ? .42 : .18, true);
+  });
+
+  drawTriangle(c,cx,cy,r*0.22, state.animate ? time*0.00035 : 0, 'rgba(111,101,255,.82)', state.mode!=='geodesic');
+  ui.negCaption.textContent = modeParams().caption;
+}
+
+// ---------- ui + readout ----------
+function updateReadout(){
+  ui.thetaReadout.textContent = `${fmt(state.theta,3)} rad`;
+  ui.rhoReadout.textContent = fmt(state.rho,3);
+
+  out.a2Out.textContent =
+`A₂ = [[1,1],[1,0]]
+char(λ) = λ² − λ − 1
+spec(A₂) = { ${fmt(phi)}, ${fmt(-phiInv)} }`;
+
+  out.rungOut.textContent =
+`rung₀ = { +1, −1 }
+rung₁ = { ${fmt(phi)}, ${fmt(phiInv)} }
+spec(A₄) = { ${fmt(phi)}, 1, ${fmt(phiInv)}, −1 }`;
+
+  out.a4g4Out.textContent =
+`A₄ = ${fmtMat(D.A4,2)}
+sig(G₄) = (3,1)
+‖A₄ᵀG₄A₄ − G₄‖ = ${D.invResidual.toExponential(2)}`;
+
+  out.modeOut.textContent = state.mode;
+  out.phiOut.textContent = `φ = ${fmt(phi,9)} · ln(φ) = ${fmt(lnphi,9)}`;
+  out.specA4Out.textContent = `{ ${fmt(phi,6)}, 1, ${fmt(phiInv,6)}, −1 }`;
+  out.sigOut.textContent = '(3,1)';
+  out.invOut.textContent = D.invResidual.toExponential(3);
+  out.conjOut.textContent = D.conjugacyResidual.toExponential(3);
+  out.lenOut.textContent = `ln(φ) = ${fmt(lnphi,9)} · 2ln(φ) = ${fmt(2*lnphi,9)}`;
+  if(state.mode==='proof') out.dynOut.textContent = 'A₄² marks the exact step · renderer interpolates smoothly on the axis';
+  else if(state.mode==='geodesic') out.dynOut.textContent = 'vₙ₊₁ = T B T⁻¹ vₙ';
+  else if(state.mode==='tube') out.dynOut.textContent = 'vₙ₊₁ = T B T⁻¹ vₙ · ρ>0';
+  else out.dynOut.textContent = 'vₙ₊₁ = T(B·Rot)T⁻¹ vₙ';
+
+  out.posModelOut.textContent = `S²
+great circles → stereographic view
+K > 0 · angle sum > 180°`;
+  out.flatModelOut.textContent = `E²
+parallel families stay parallel
+K = 0 · angle sum = 180°`;
+  out.negModelOut.textContent = state.mode==='proof'
+    ? `H³ from G₄
+A₄² orbit on Q_G₄(v) = −1
+K = −1/R²`
+    : state.mode==='geodesic'
+      ? `H³ canonical axis
+ρ = 0
+boost length = ln(φ)`
+      : state.mode==='tube'
+        ? `H³ tube orbit
+ρ > 0
+same G₄-linked metric`
+        : `H³ loxodromic orbit
+boost + rotation
+same G₄-linked metric`;
+}
+function bindUI(){
+  ui.modeSeg.addEventListener('click', e=>{
+    const btn=e.target.closest('button[data-mode]'); if(!btn) return;
+    state.mode=btn.dataset.mode;
+    [...ui.modeSeg.querySelectorAll('button')].forEach(b=>b.classList.toggle('active', b===btn));
+    updateReadout();
+  });
+  ui.animateToggle.addEventListener('change', e=>{ state.animate=e.target.checked; });
+  ui.showBackward.addEventListener('change', e=>{ state.showBackward=e.target.checked; });
+  ui.thetaSlider.addEventListener('input', e=>{ state.theta = (e.target.value/100)*0.9; updateReadout(); });
+  ui.rhoSlider.addEventListener('input', e=>{ state.rho = (e.target.value/100)*1.05; updateReadout(); });
+}
+bindUI();
+updateReadout();
+
+function frame(time){
+  drawPositive(state.animate ? time : 0);
+  drawFlat(state.animate ? time : 0);
+  drawNegative(state.animate ? time : 0);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

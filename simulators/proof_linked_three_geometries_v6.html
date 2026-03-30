@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ω — Three Geometries · Proof Linked v6</title>
+<style>
+  :root{
+    --bg:#fff; --ink:#2a2a2a; --muted:#8b8b8b; --line:#e8e8e8; --soft:#f8f8f8;
+    --gold:#c8a84a; --pos:#6f9587; --flat:#8c8c8c; --neg:#6e63ff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .page{max-width:1260px;margin:0 auto;padding:18px 14px 36px}
+  .hero{text-align:center;margin-bottom:14px}
+  .hero h1{font-size:clamp(15px,2.6vw,28px);font-weight:400;letter-spacing:.22em;color:#555}
+  .hero .sub{font-size:10px;letter-spacing:.16em;color:#999;text-transform:uppercase;margin-top:6px}
+  .hero .formula{font-size:11px;color:#666;margin-top:7px}
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;background:var(--soft);border:1px solid var(--line);border-radius:18px;padding:10px 12px;margin-bottom:14px}
+  .seg{display:flex;gap:4px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px}
+  .seg button{border:0;background:transparent;padding:8px 12px;border-radius:999px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#666;cursor:pointer;transition:.18s}
+  .seg button.active{background:#111;color:#fff}
+  .toggle,.slider{display:flex;align-items:center;gap:8px;font-size:11px;color:#666;letter-spacing:.08em;text-transform:uppercase}
+  .toggle input{accent-color:var(--gold)}
+  input[type=range]{width:160px;accent-color:var(--gold)}
+  .readout{color:var(--gold);min-width:70px;font-size:11px}
+  .layout{display:grid;grid-template-columns:1.7fr 1fr;gap:14px}
+  .stack{display:flex;flex-direction:column;gap:14px}
+  .panels{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .panel,.card{background:var(--soft);border:1px solid var(--line);border-radius:22px;padding:10px}
+  .ptitle{text-align:center;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:#444}
+  .psub{text-align:center;font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:#999;margin:2px 0 8px}
+  canvas{display:block;width:100%;aspect-ratio:1;background:#fff;border:1px solid #eee;border-radius:16px}
+  .pcap{text-align:center;font-size:9px;color:#888;letter-spacing:.1em;text-transform:uppercase;margin-top:7px;min-height:2.8em}
+  .proof{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .mini,.metric{background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px 12px}
+  .mini .k,.metric .k{font-size:9px;color:#999;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+  .mini .v,.metric .v{font-size:12px;color:#333;white-space:pre-wrap;word-break:break-word}
+  .metric-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .status{display:inline-block;padding:4px 8px;border-radius:999px;border:1px solid #efe4be;background:#fff9e8;color:#8b6e15;font-size:10px;letter-spacing:.09em;text-transform:uppercase}
+  .note{background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px 12px;font-size:12px;color:#444}
+  .note b{font-weight:600}
+  .footer{text-align:center;margin-top:16px;font-size:10px;color:#999;letter-spacing:.12em;text-transform:uppercase}
+  @media (max-width:1050px){.layout{grid-template-columns:1fr}}
+  @media (max-width:820px){.panels,.proof,.metric-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="hero">
+    <h1>Ω — THREE GEOMETRIES · PROOF LINKED</h1>
+    <div class="sub">exact spherical · exact euclidean · C₂ → A₄ → G₄ → ℍ³ renderer</div>
+    <div class="formula">C₂: x(n+1)=x(n)+x(n−1) → spec(A₂)={φ, −1/φ} → rung₀∪rung₁ → A₄ → G₄ → T⁻¹ → ℍ³</div>
+  </div>
+
+  <div class="controls">
+    <div class="seg" id="modeSeg">
+      <button data-mode="proof" class="active">proof</button>
+      <button data-mode="geodesic">geodesic</button>
+      <button data-mode="tube">tube</button>
+      <button data-mode="loxodromic">loxodromic</button>
+    </div>
+    <label class="toggle"><input id="animateToggle" type="checkbox" checked> animate</label>
+    <label class="toggle"><input id="backwardToggle" type="checkbox" checked> backward</label>
+    <div class="slider">twist <input id="thetaSlider" type="range" min="0" max="100" value="35"><span class="readout" id="thetaReadout"></span></div>
+    <div class="slider">radius <input id="rhoSlider" type="range" min="0" max="100" value="42"><span class="readout" id="rhoReadout"></span></div>
+  </div>
+
+  <div class="layout">
+    <div class="stack">
+      <div class="panels">
+        <div class="panel">
+          <div class="ptitle">Ω &gt; 1</div>
+          <div class="psub">S² · great circles</div>
+          <canvas id="positiveCanvas"></canvas>
+          <div class="pcap">exact spherical model · ∑∠ &gt; 180°</div>
+        </div>
+        <div class="panel">
+          <div class="ptitle">Ω = 1</div>
+          <div class="psub">E² · rigid grid</div>
+          <canvas id="flatCanvas"></canvas>
+          <div class="pcap">exact euclidean model · ∑∠ = 180°</div>
+        </div>
+        <div class="panel">
+          <div class="ptitle">Ω &lt; 1</div>
+          <div class="psub">G₄ level-set → ℍ³</div>
+          <canvas id="negativeCanvas"></canvas>
+          <div class="pcap" id="negCaption">proof mode · smooth A₄²-linked axis flow</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="proof">
+          <div class="mini"><div class="k">C₂</div><div class="v" id="a2Out"></div></div>
+          <div class="mini"><div class="k">Spectrum and rungs</div><div class="v" id="rungOut"></div></div>
+          <div class="mini"><div class="k">A₄ and G₄</div><div class="v" id="a4g4Out"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stack">
+      <div class="card">
+        <div class="metric-grid">
+          <div class="metric"><div class="k">mode</div><div class="v" id="modeOut"></div></div>
+          <div class="metric"><div class="k">φ / ln(φ)</div><div class="v" id="phiOut"></div></div>
+          <div class="metric"><div class="k">spec(A₄)</div><div class="v" id="specOut"></div></div>
+          <div class="metric"><div class="k">signature</div><div class="v" id="sigOut"></div></div>
+          <div class="metric"><div class="k">twist θ</div><div class="v" id="thetaOut"></div></div>
+          <div class="metric"><div class="k">radius ρ</div><div class="v" id="rhoOut"></div></div>
+          <div class="metric"><div class="k">translation length</div><div class="v" id="lengthOut"></div></div>
+          <div class="metric"><div class="k">dynamic law</div><div class="v" id="dynOut"></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="note"><b>Negative panel.</b> Orbit families are generated in a proof-linked way: the displayed scale is anchored to <span class="status">ln(φ)</span>, the axis corresponds to the <span class="status">A₄² geodesic-flow picture</span>, and the visual stays smooth instead of jumping by discrete steps.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">Captain Cookie Face Universe · proof-linked simulator · v6</div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  const TAU = Math.PI * 2;
+  const phi = (1 + Math.sqrt(5)) / 2;
+  const phiInv = 1 / phi;
+  const lnphi = Math.log(phi);
+
+  const state = { mode:'proof', animate:true, backward:true, theta:0.18, rho:0.52 };
+
+  const ui = {
+    modeSeg: document.getElementById('modeSeg'),
+    animateToggle: document.getElementById('animateToggle'),
+    backwardToggle: document.getElementById('backwardToggle'),
+    thetaSlider: document.getElementById('thetaSlider'),
+    rhoSlider: document.getElementById('rhoSlider'),
+    thetaReadout: document.getElementById('thetaReadout'),
+    rhoReadout: document.getElementById('rhoReadout'),
+    negCaption: document.getElementById('negCaption'),
+    a2Out: document.getElementById('a2Out'),
+    rungOut: document.getElementById('rungOut'),
+    a4g4Out: document.getElementById('a4g4Out'),
+    modeOut: document.getElementById('modeOut'),
+    phiOut: document.getElementById('phiOut'),
+    specOut: document.getElementById('specOut'),
+    sigOut: document.getElementById('sigOut'),
+    thetaOut: document.getElementById('thetaOut'),
+    rhoOut: document.getElementById('rhoOut'),
+    lengthOut: document.getElementById('lengthOut'),
+    dynOut: document.getElementById('dynOut')
+  };
+
+  const canvases = {
+    pos: document.getElementById('positiveCanvas'),
+    flat: document.getElementById('flatCanvas'),
+    neg: document.getElementById('negativeCanvas')
+  };
+  const ctx = {
+    pos: canvases.pos.getContext('2d'),
+    flat: canvases.flat.getContext('2d'),
+    neg: canvases.neg.getContext('2d')
+  };
+
+  function setupCanvas(canvas){
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = Math.round(rect.width * dpr);
+    canvas.height = Math.round(rect.height * dpr);
+    const c = canvas.getContext('2d');
+    c.setTransform(dpr,0,0,dpr,0,0);
+  }
+  function resizeAll(){ Object.values(canvases).forEach(setupCanvas); }
+  window.addEventListener('resize', resizeAll);
+  resizeAll();
+
+  function modeParams(){
+    if(state.mode === 'proof') return {theta:0, rho:0, caption:'proof mode · smooth A₄²-linked axis flow'};
+    if(state.mode === 'geodesic') return {theta:0, rho:0, caption:'geodesic mode · ρ=0, θ=0'};
+    if(state.mode === 'tube') return {theta:0, rho:state.rho, caption:'tube mode · ρ>0, θ=0'};
+    return {theta:state.theta, rho:state.rho, caption:'loxodromic mode · ρ>0, θ>0'};
+  }
+
+  function updateReadouts(){
+    const mp = modeParams();
+    ui.thetaReadout.textContent = (state.theta).toFixed(3);
+    ui.rhoReadout.textContent = (state.rho).toFixed(3);
+    ui.modeOut.textContent = state.mode.toUpperCase();
+    ui.phiOut.textContent = `φ=${phi.toFixed(12)}\nln(φ)=${lnphi.toFixed(12)}`;
+    ui.specOut.textContent = `{φ, 1, 1/φ, −1}`;
+    ui.sigOut.textContent = `(3,1)`;
+    ui.thetaOut.textContent = `${mp.theta.toFixed(6)} rad`;
+    ui.rhoOut.textContent = `${mp.rho.toFixed(6)}`;
+    ui.lengthOut.textContent = `ln(φ)=${lnphi.toFixed(6)}\n2ln(φ)=${(2*lnphi).toFixed(6)}`;
+    const dyn = state.mode === 'proof'
+      ? `γ(s)=(cosh s, sinh s, 0, 0)\nproof-linked flow with speed ln(φ)`
+      : state.mode === 'geodesic'
+      ? `pure axis motion\nρ=0, θ=0`
+      : state.mode === 'tube'
+      ? `tube orbit around axis\nρ>0, θ=0`
+      : `loxodromic orbit\nρ>0, θ>0`;
+    ui.dynOut.textContent = dyn;
+    ui.negCaption.textContent = mp.caption;
+
+    ui.a2Out.textContent = `x(n+1)=x(n)+x(n−1)\nchar poly: λ²−λ−1=0\nspec(A₂)={φ, −1/φ}`;
+    ui.rungOut.textContent = `rung₀={+1, −1}\nrung₁={φ, 1/φ}\nspec(A₄)=rung₀ ∪ rung₁`;
+    ui.a4g4Out.textContent = `spec(A₄)={φ, +1, 1/φ, −1}\nG₄ signature = (3,1)\nA₄² ↔ translation length 2ln(φ)`;
+  }
+
+  ui.modeSeg.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-mode]');
+    if(!btn) return;
+    state.mode = btn.dataset.mode;
+    [...ui.modeSeg.querySelectorAll('button')].forEach(b => b.classList.toggle('active', b === btn));
+    updateReadouts();
+  });
+  ui.animateToggle.addEventListener('change', () => { state.animate = ui.animateToggle.checked; updateReadouts(); });
+  ui.backwardToggle.addEventListener('change', () => { state.backward = ui.backwardToggle.checked; updateReadouts(); });
+  ui.thetaSlider.addEventListener('input', () => { state.theta = (+ui.thetaSlider.value/100) * 0.72; updateReadouts(); });
+  ui.rhoSlider.addEventListener('input', () => { state.rho = (+ui.rhoSlider.value/100) * 0.92; updateReadouts(); });
+  updateReadouts();
+
+  function clearCanvas(c,w,h){ c.clearRect(0,0,w,h); }
+  function diskFrame(c,w,h,stroke){
+    const cx = w/2, cy = h/2, r = Math.min(w,h)*0.42;
+    c.beginPath(); c.arc(cx,cy,r,0,TAU); c.fillStyle='#fff'; c.fill();
+    c.strokeStyle = stroke; c.lineWidth = 1.2; c.stroke();
+    return {cx,cy,r};
+  }
+  function drawTriangle(c,cx,cy,R,ang,stroke,fill){
+    const pts = [0,1,2].map(i => {
+      const a = ang + i * TAU/3 - Math.PI/2;
+      return [cx + Math.cos(a)*R, cy + Math.sin(a)*R];
+    });
+    c.beginPath();
+    pts.forEach((p,i)=> i ? c.lineTo(p[0],p[1]) : c.moveTo(p[0],p[1]));
+    c.closePath();
+    if(fill){ c.fillStyle = stroke.replace('0.88','0.10').replace('0.84','0.10').replace('0.82','0.10'); c.fill(); }
+    c.strokeStyle = stroke; c.lineWidth = 1.4; c.stroke();
+  }
+
+  // spherical helpers
+  function rotY(p,a){ const [x,y,z]=p; const c=Math.cos(a), s=Math.sin(a); return [c*x+s*z,y,-s*x+c*z]; }
+  function rotX(p,a){ const [x,y,z]=p; const c=Math.cos(a), s=Math.sin(a); return [x,c*y-s*z,s*y+c*z]; }
+  function sphereToStereo([x,y,z]){ const d = 1.15 - z; return [x/d, y/d]; }
+  function greatCircle(normal, steps=240){
+    const [nx,ny,nz] = normal;
+    let u = Math.abs(nx) < 0.9 ? [1,0,0] : [0,1,0];
+    const cross = (a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+    const norm = (v)=>{ const m=Math.hypot(v[0],v[1],v[2]); return v.map(t=>t/m); };
+    const n = norm(normal); u = norm(cross(n,u)); const v = norm(cross(n,u));
+    return Array.from({length:steps+1}, (_,i)=>{ const t=TAU*i/steps; return [Math.cos(t)*u[0]+Math.sin(t)*v[0], Math.cos(t)*u[1]+Math.sin(t)*v[1], Math.cos(t)*u[2]+Math.sin(t)*v[2]]; });
+  }
+
+  function drawPositive(t){
+    const c=ctx.pos, w=canvases.pos.clientWidth, h=canvases.pos.clientHeight;
+    clearCanvas(c,w,h); const {cx,cy,r}=diskFrame(c,w,h,'#dbe7e2');
+    const a = (state.animate ? t : 0) * 0.00042;
+    const normals=[[1,0,0],[0.55,1,0.25],[-0.35,0.7,1],[1,-0.4,0.8]];
+    normals.forEach((n,idx)=>{
+      const pts = greatCircle(n).map(p=>sphereToStereo(rotX(rotY(p,a*(0.9+idx*0.11)),0.34)));
+      c.beginPath();
+      pts.forEach((p,i)=>{ const x=cx+p[0]*r*0.78, y=cy+p[1]*r*0.78; i?c.lineTo(x,y):c.moveTo(x,y); });
+      c.strokeStyle = idx===0 ? 'rgba(111,149,135,.92)' : 'rgba(111,149,135,.42)';
+      c.lineWidth = 1.15; c.stroke();
+    });
+    drawTriangle(c,cx,cy,r*0.23,a*0.9,'rgba(111,149,135,.88)',true);
+  }
+
+  function drawFlat(t){
+    const c=ctx.flat, w=canvases.flat.clientWidth, h=canvases.flat.clientHeight;
+    clearCanvas(c,w,h); const {cx,cy,r}=diskFrame(c,w,h,'#e1e1e1');
+    c.save(); c.beginPath(); c.arc(cx,cy,r,0,TAU); c.clip();
+    const shift = ((state.animate ? t : 0) * 0.016) % 34;
+    for(let x=cx-r-34; x<=cx+r+34; x+=34){ c.beginPath(); c.moveTo(x+shift, cy-r); c.lineTo(x+shift, cy+r); c.strokeStyle='rgba(140,140,140,.28)'; c.lineWidth=1; c.stroke(); }
+    for(let y=cy-r-34; y<=cy+r+34; y+=34){ c.beginPath(); c.moveTo(cx-r, y+shift*0.4); c.lineTo(cx+r, y+shift*0.4); c.strokeStyle='rgba(140,140,140,.28)'; c.lineWidth=1; c.stroke(); }
+    c.restore();
+    drawTriangle(c,cx,cy,r*0.23,0,'rgba(120,120,120,.86)',false);
+  }
+
+  function poincare([x0,x1,x2,x3]){ const d = x0 + 1; return [x1/d, x2/d, x3/d]; }
+  function hyperPoint(s,rho,psi){
+    // smooth proof-linked family: rho=0 is axis gamma(s), rho>0 gives equidistant tubes
+    const x0 = Math.cosh(rho) * Math.cosh(s);
+    const x1 = Math.cosh(rho) * Math.sinh(s);
+    const x2 = Math.sinh(rho) * Math.cos(psi);
+    const x3 = Math.sinh(rho) * Math.sin(psi);
+    return [x0,x1,x2,x3];
+  }
+  function buildTrails(t){
+    const mp = modeParams();
+    const animT = state.animate ? t*0.001 : 0;
+    const advance = (state.mode === 'proof') ? lnphi * animT * 0.55 : animT * 0.55;
+    const trails=[];
+    const seeds = state.mode === 'proof' || state.mode === 'geodesic' ? [0] : [0, TAU/3, 2*TAU/3, TAU/6, 5*TAU/6];
+    const count = 54;
+    for(const seed of seeds){
+      const fwd=[], bwd=[];
+      for(let i=0;i<count;i++){
+        const u = i/(count-1);
+        const sF = advance + (u-0.5)*3.8;
+        const sB = advance - (u-0.5)*3.8;
+        const psiF = seed + mp.theta * sF;
+        const psiB = seed - mp.theta * sB;
+        fwd.push(hyperPoint(sF, mp.rho, psiF));
+        bwd.push(hyperPoint(sB, mp.rho, psiB));
+      }
+      trails.push({fwd,bwd});
+    }
+    return trails;
+  }
+
+  function drawNegative(t){
+    const c=ctx.neg, w=canvases.neg.clientWidth, h=canvases.neg.clientHeight;
+    clearCanvas(c,w,h); const {cx,cy,r}=diskFrame(c,w,h,'#ddd9ff');
+    c.lineWidth=.8; c.strokeStyle='rgba(110,99,255,.12)';
+    for(let k=1;k<=3;k++){ c.beginPath(); c.arc(cx,cy,r*k/4,0,TAU); c.stroke(); }
+
+    const trails = buildTrails(t);
+    trails.forEach((trail,idx)=>{
+      const render = (pts, alpha)=>{
+        c.beginPath();
+        pts.forEach((v,i)=>{
+          const p = poincare(v); const x = cx + p[0]*r*0.86, y = cy + p[1]*r*0.86;
+          i ? c.lineTo(x,y) : c.moveTo(x,y);
+        });
+        c.strokeStyle = `rgba(110,99,255,${alpha})`;
+        c.lineWidth = idx===0 ? 1.7 : 1.05;
+        c.stroke();
+        pts.forEach((v,i)=>{
+          if(i%4!==0) return;
+          const p = poincare(v); const x = cx + p[0]*r*0.86, y = cy + p[1]*r*0.86;
+          const q = 1 - i/pts.length;
+          c.beginPath(); c.arc(x,y,(idx===0?2.8:1.9)+q,0,TAU);
+          c.fillStyle = `rgba(110,99,255,${0.12 + q*0.26})`; c.fill();
+        });
+      };
+      render(trail.fwd, idx===0 ? .90 : .28);
+      if(state.backward) render(trail.bwd, idx===0 ? .40 : .16);
+    });
+    drawTriangle(c,cx,cy,r*0.22, (state.animate?t:0)*0.00028,'rgba(110,99,255,.84)', state.mode!=='geodesic' && state.mode!=='proof');
+  }
+
+  function render(ts){
+    drawPositive(ts);
+    drawFlat(ts);
+    drawNegative(ts);
+    requestAnimationFrame(render);
+  }
+  requestAnimationFrame(render);
+})();
+</script>
+</body>
+</html>

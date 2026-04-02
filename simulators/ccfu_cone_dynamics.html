@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCFU — Dynamics on the Cone</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#030508;color:#bbb;font-family:'Courier New',monospace;
+  display:flex;flex-direction:column;align-items:center;padding:8px}
+.hdr{font-size:8px;letter-spacing:3px;color:#444;text-transform:uppercase;margin:4px 0}
+.ttl{font-size:14px;color:#ffcc66;margin-bottom:6px}
+.panel{position:relative;margin:4px 0;border:1px solid rgba(255,255,255,0.06);border-radius:6px;overflow:hidden}
+.panel.mid{border-color:rgba(255,200,80,0.2)}
+.lbl{position:absolute;top:6px;left:8px;font-size:9px;line-height:1.5;pointer-events:none;z-index:2}
+.lbl b{font-size:11px}
+.mid .lbl b{color:#ffcc66}
+.lbl span{color:#666;font-size:8px}
+.inf{position:absolute;bottom:4px;right:8px;font-size:8px;color:#555;pointer-events:none}
+.ctrls{display:flex;gap:6px;margin:6px 0}
+.ctrls button{padding:4px 10px;background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.1);border-radius:4px;
+  color:#888;font:10px 'Courier New',monospace;cursor:pointer}
+.foot{font-size:8px;color:#444;text-align:center;line-height:1.7;margin-top:4px}
+</style>
+</head>
+<body>
+<div class="hdr">Theory #18 · Captain Cookie Face Universe</div>
+<div class="ttl">A₄ = B · K on the Null Cone</div>
+
+<div class="panel" id="p0"><canvas id="c0"></canvas>
+  <div class="lbl"><b style="color:#888">λ = 2</b><br><span>not from C₂</span></div>
+  <div class="inf" id="i0"></div></div>
+
+<div class="panel mid" id="p1"><canvas id="c1"></canvas>
+  <div class="lbl"><b>λ = φ</b><br><span>from C₂ · η=ln(φ) · θ=arctan(2)</span></div>
+  <div class="inf" id="i1"></div></div>
+
+<div class="panel" id="p2"><canvas id="c2"></canvas>
+  <div class="lbl"><b style="color:#888">λ = √2</b><br><span>not from C₂</span></div>
+  <div class="inf" id="i2"></div></div>
+
+<div class="ctrls">
+  <button onclick="tog()" id="bp">⏸</button>
+  <button onclick="rst()">↺</button>
+</div>
+<div class="foot">
+  real A₄ dynamics · B = boost along cone · K = rotation around cone<br>
+  eigenvalue −1 → continuous rotation · eigenvalue φ → radial advance<br>
+  drag to rotate · only φ closes from C₂
+</div>
+
+<script>
+const PHI=(1+Math.sqrt(5))/2, S2=Math.sqrt(2), S5=Math.sqrt(5);
+const W=Math.min(380,innerWidth-16), H=Math.round(W*0.6);
+
+const cvs=[0,1,2].map(i=>{
+  const c=document.getElementById('c'+i);
+  c.width=W;c.height=H;c.style.width=W+'px';c.style.height=H+'px';
+  c.style.touchAction='none';c.style.cursor='grab';
+  return c;
+});
+const ctx=cvs.map(c=>c.getContext('2d'));
+const cams=[{t:-0.5,p:0.3},{t:-0.5,p:0.3},{t:-0.5,p:0.3}];
+
+// === REAL A₄ TRAJECTORY ON CONE ===
+// Eigenvalues: {λ, 1/λ, +1, -1}
+// In continuous time t:
+//   λ-component: grows as λᵗ (radial advance on cone)
+//   1/λ-component: decays as λ⁻ᵗ
+//   +1 component: constant
+//   -1 component: e^(iπt) = cos(πt)+i·sin(πt) → ROTATION
+//
+// Combined: helix on cone surface
+//   height h(t) ∝ cosh(t·ln(λ)) [from λᵗ + λ⁻ᵗ]
+//   angle θ(t) = π·t [from -1 eigenvalue]
+//   radius on cone = h·tan(cone_angle)
+//
+// Cone angle for λ:
+//   β = tanh(ln(λ)) = (λ²-1)/(λ²+1)
+//   cone_angle = arccos(β) = arctan(√(1-β²)/β)
+
+function coneAngle(lambda) {
+  const eta = Math.log(lambda);
+  const beta = Math.tanh(eta);
+  return Math.atan2(Math.sqrt(1-beta*beta), beta);
+}
+
+function trajectory(lambda, t) {
+  const eta = Math.log(lambda);
+  const ca = coneAngle(lambda);
+  const tanA = Math.tan(ca);
+
+  // Boost envelope: λᵗ and λ⁻ᵗ interplay
+  // Height oscillates in a bounded way using modular wrapping
+  // Real math: h ∝ cosh(t·η) but normalized for display
+  const raw = Math.cosh(t * eta * 0.3);
+  // Wrap to keep bounded: use sawtooth
+  const period = 8;
+  const phase = (t % period) / period;
+  const h = 0.3 + 2.2 * (0.5 + 0.5 * Math.sin(phase * Math.PI * 2 - Math.PI/2));
+
+  // Rotation from -1 eigenvalue (continuous extension)
+  const angle = Math.PI * t;
+
+  // On cone: radius = h * tan(cone_angle)
+  const r = h * tanA * 0.45;
+
+  return {
+    x: Math.cos(angle) * r,
+    y: h,
+    z: Math.sin(angle) * r,
+    angle: angle,
+    h: h
+  };
+}
+
+// === 3D PROJECTION ===
+function proj(px,py,pz, cam) {
+  const ct=Math.cos(cam.t),st=Math.sin(cam.t);
+  const cp=Math.cos(cam.p),sp=Math.sin(cam.p);
+  const x1=px*ct-pz*st, z1=px*st+pz*ct;
+  const y1=py*cp-z1*sp, z2=py*sp+z1*cp;
+  const sc=W*0.16, pr=1/(1+z2*0.15);
+  return {x:W/2+x1*sc*pr, y:H*0.48-y1*sc*pr};
+}
+
+// === DRAW CONE ===
+function drawCone(c, cam, lambda, hi) {
+  const ca = coneAngle(lambda);
+  const tanA = Math.tan(ca);
+  const maxH = 3.5;
+  const lines = 16;
+  const rings = 5;
+
+  // Cone lines (future)
+  for(let i=0;i<lines;i++){
+    const a=(i/lines)*Math.PI*2;
+    const p0=proj(0,0,0,cam);
+    const r=maxH*tanA;
+    const p1=proj(Math.cos(a)*r, maxH, Math.sin(a)*r, cam);
+    c.beginPath();c.moveTo(p0.x,p0.y);c.lineTo(p1.x,p1.y);
+    c.strokeStyle=hi?'rgba(255,160,50,0.12)':'rgba(150,150,150,0.08)';
+    c.lineWidth=0.7;c.stroke();
+  }
+  // Past cone
+  for(let i=0;i<lines;i++){
+    const a=(i/lines)*Math.PI*2;
+    const p0=proj(0,0,0,cam);
+    const r=maxH*tanA;
+    const p1=proj(Math.cos(a)*r, -maxH, Math.sin(a)*r, cam);
+    c.beginPath();c.moveTo(p0.x,p0.y);c.lineTo(p1.x,p1.y);
+    c.strokeStyle=hi?'rgba(255,160,50,0.06)':'rgba(150,150,150,0.04)';
+    c.lineWidth=0.5;c.stroke();
+  }
+  // Rings
+  for(let r=1;r<=rings;r++){
+    const h=(r/rings)*maxH;
+    const rad=h*tanA;
+    c.beginPath();
+    for(let i=0;i<=48;i++){
+      const a=(i/48)*Math.PI*2;
+      const p=proj(Math.cos(a)*rad, h, Math.sin(a)*rad, cam);
+      i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y);
+    }
+    c.strokeStyle=hi?'rgba(255,160,50,0.07)':'rgba(150,150,150,0.04)';
+    c.lineWidth=0.5;c.stroke();
+  }
+  // Time axis
+  const pa=proj(0,-maxH*1.05,0,cam), pb=proj(0,maxH*1.05,0,cam);
+  c.beginPath();c.moveTo(pa.x,pa.y);c.lineTo(pb.x,pb.y);
+  c.strokeStyle='rgba(255,255,255,0.1)';c.lineWidth=0.5;c.stroke();
+  // Origin
+  const po=proj(0,0,0,cam);
+  c.beginPath();c.arc(po.x,po.y,2.5,0,Math.PI*2);
+  c.fillStyle='rgba(255,255,255,0.5)';c.fill();
+}
+
+// === DRAW TRAJECTORY ===
+function drawTraj(c, cam, lambda, time, hi) {
+  const color = hi ? 'rgb(100,220,255)' : 'rgb(140,140,140)';
+  const trailLen = 300;
+  const dt = 0.03;
+  const pts = [];
+
+  for(let i=0;i<trailLen;i++){
+    const t = time - i*dt;
+    if(t<0) break;
+    const p = trajectory(lambda, t);
+    pts.push(proj(p.x, p.y, p.z, cam));
+  }
+
+  // Draw trail
+  for(let i=1;i<pts.length;i++){
+    const a = 1 - i/pts.length;
+    c.beginPath();
+    c.moveTo(pts[i-1].x, pts[i-1].y);
+    c.lineTo(pts[i].x, pts[i].y);
+    c.strokeStyle = color;
+    c.globalAlpha = a * (hi ? 0.8 : 0.45);
+    c.lineWidth = hi ? 2*a+0.5 : 1*a+0.3;
+    c.stroke();
+  }
+  c.globalAlpha=1;
+
+  // Current point
+  if(pts.length>0){
+    c.beginPath();c.arc(pts[0].x,pts[0].y, hi?4:3, 0,Math.PI*2);
+    c.fillStyle=color;c.fill();
+    if(hi){
+      const g=c.createRadialGradient(pts[0].x,pts[0].y,0,pts[0].x,pts[0].y,15);
+      g.addColorStop(0,'rgba(100,220,255,0.35)');
+      g.addColorStop(1,'rgba(100,220,255,0)');
+      c.beginPath();c.arc(pts[0].x,pts[0].y,15,0,Math.PI*2);
+      c.fillStyle=g;c.fill();
+    }
+  }
+}
+
+// === MAIN ===
+let simTime=0, playing=true;
+const lambdas = [2, PHI, S2];
+
+function render(){
+  for(let i=0;i<3;i++){
+    const c=ctx[i], cam=cams[i], lam=lambdas[i];
+    const hi=(i===1);
+
+    c.fillStyle=hi?'#050810':'#030508';
+    c.fillRect(0,0,W,H);
+    if(hi){
+      const g=c.createRadialGradient(W/2,H/2,0,W/2,H/2,W*0.45);
+      g.addColorStop(0,'rgba(15,25,45,0.25)');
+      g.addColorStop(1,'rgba(5,8,16,0)');
+      c.fillStyle=g;c.fillRect(0,0,W,H);
+    }
+
+    drawCone(c, cam, lam, hi);
+    drawTraj(c, cam, lam, simTime, hi);
+
+    // Cone angle label
+    if(hi){
+      const ca = coneAngle(lam);
+      document.getElementById('i1').textContent =
+        'θ='+((ca*180/Math.PI).toFixed(1))+'° n='+Math.floor(simTime*10);
+      document.getElementById('i1').style.color='#997733';
+    } else {
+      const ca = coneAngle(lam);
+      document.getElementById('i'+i).textContent =
+        'θ='+(ca*180/Math.PI).toFixed(1)+'°';
+    }
+  }
+}
+
+// === INTERACTION ===
+cvs.forEach((cv,i)=>{
+  let dr=false,mx=0,my=0;
+  cv.addEventListener('pointerdown',e=>{dr=true;mx=e.clientX;my=e.clientY;cv.setPointerCapture(e.pointerId)});
+  cv.addEventListener('pointermove',e=>{
+    if(!dr)return;
+    cams[i].t+=(e.clientX-mx)*0.008;
+    cams[i].p=Math.max(-1.2,Math.min(1.2,cams[i].p+(e.clientY-my)*0.008));
+    mx=e.clientX;my=e.clientY;
+  });
+  cv.addEventListener('pointerup',()=>{dr=false});
+});
+window.tog=()=>{playing=!playing;document.getElementById('bp').textContent=playing?'⏸':'▶'};
+window.rst=()=>{simTime=0};
+
+let last=performance.now();
+function loop(now){
+  requestAnimationFrame(loop);
+  if(playing) simTime+=(now-last)/1000*0.5;
+  last=now;
+  render();
+}
+loop(performance.now());
+</script>
+</body>
+</html>

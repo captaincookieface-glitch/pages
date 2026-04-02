@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCFU — Three Dynamics</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #030508;
+  color: #bbb;
+  font-family: 'Courier New', monospace;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 10px;
+}
+.panel {
+  position: relative;
+  margin: 6px 0;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 6px;
+}
+.panel.active { border-color: rgba(255,200,80,0.25); }
+.label {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  font-size: 10px;
+  line-height: 1.6;
+  pointer-events: none;
+  z-index: 2;
+}
+.label .name { font-size: 13px; font-weight: bold; }
+.label .eq { color: #777; font-size: 9px; }
+.phi .name { color: #ffcc66; }
+.other .name { color: #888; }
+.status {
+  position: absolute;
+  bottom: 6px;
+  right: 10px;
+  font-size: 9px;
+  color: #555;
+  pointer-events: none;
+}
+#title {
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: #444;
+  text-transform: uppercase;
+  margin: 4px 0;
+}
+#subtitle {
+  font-size: 14px;
+  color: #ffcc66;
+  margin-bottom: 8px;
+}
+#controls {
+  display: flex;
+  gap: 6px;
+  margin: 8px 0;
+}
+#controls button {
+  padding: 4px 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 4px;
+  color: #888;
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  cursor: pointer;
+}
+#footer {
+  font-size: 9px;
+  color: #444;
+  margin-top: 6px;
+  text-align: center;
+  line-height: 1.8;
+}
+#footer span { color: #666; }
+</style>
+</head>
+<body>
+
+<div id="title">Theory #18 · Captain Cookie Face Universe</div>
+<div id="subtitle">A₄ = B · K — Real Dynamics</div>
+
+<div class="panel other" id="panel-top">
+  <canvas id="c-top"></canvas>
+  <div class="label other">
+    <div class="name">λ = 2</div>
+    <div class="eq">s = λ+1/λ = 2.5</div>
+    <div class="eq">Not from C₂</div>
+  </div>
+  <div class="status" id="status-top"></div>
+</div>
+
+<div class="panel active" id="panel-mid">
+  <canvas id="c-mid"></canvas>
+  <div class="label phi">
+    <div class="name">λ = φ = 1.6180...</div>
+    <div class="eq">s = √5 — forced by C₂</div>
+    <div class="eq">η = ln(φ) = 0.4812</div>
+  </div>
+  <div class="status" id="status-mid"></div>
+</div>
+
+<div class="panel other" id="panel-bot">
+  <canvas id="c-bot"></canvas>
+  <div class="label other">
+    <div class="name">λ = √2 = 1.4142...</div>
+    <div class="eq">s = λ+1/λ = 2.1213</div>
+    <div class="eq">Not from C₂</div>
+  </div>
+  <div class="status" id="status-bot"></div>
+</div>
+
+<div id="controls">
+  <button onclick="togglePlay()" id="btn-play">⏸</button>
+  <button onclick="resetAll()">↺ reset</button>
+  <button onclick="toggleNorm()" id="btn-norm">normalized</button>
+</div>
+
+<div id="footer">
+  drag to rotate · real A₄ⁿ · v₀ dynamics<br>
+  <span>only φ closes from C₂ · all others need external input</span>
+</div>
+
+<script>
+// === CONSTANTS ===
+const PHI = (1 + Math.sqrt(5)) / 2;
+const SQRT5 = Math.sqrt(5);
+const SQRT2 = Math.sqrt(2);
+
+// === MATRIX MATH ===
+function makeCompanion(s) {
+  // Eigenvalues {λ, 1/λ, +1, -1} where s = λ + 1/λ
+  // Characteristic polynomial: x⁴ - s·x³ + s·x - 1
+  return [
+    [0, 0, 0, 1],
+    [1, 0, 0, -s],
+    [0, 1, 0, 0],
+    [0, 0, 1, s]
+  ];
+}
+
+function matVec(A, v) {
+  const r = [0, 0, 0, 0];
+  for (let i = 0; i < 4; i++)
+    for (let j = 0; j < 4; j++)
+      r[i] += A[i][j] * v[j];
+  return r;
+}
+
+function vecNorm(v) {
+  let s = 0;
+  for (let i = 0; i < 4; i++) s += v[i] * v[i];
+  return Math.sqrt(s);
+}
+
+function vecScale(v, s) {
+  return v.map(x => x * s);
+}
+
+// === SIMULATION ===
+function createSim(lambda) {
+  const s = lambda + 1 / lambda;
+  const A = makeCompanion(s);
+  let v = [1, 0.5, 0.2, 0.1]; // initial condition
+  const trail = [];
+  const maxTrail = 500;
+  let step = 0;
+
+  return {
+    lambda, s, A, v, trail, maxTrail, step,
+    reset() {
+      this.v = [1, 0.5, 0.2, 0.1];
+      this.trail = [];
+      this.step = 0;
+    },
+    advance() {
+      this.v = matVec(this.A, this.v);
+      this.step++;
+
+      // Normalize to keep on unit sphere (shows direction only)
+      const n = vecNorm(this.v);
+      const dir = n > 0 ? vecScale(this.v, 1 / n) : this.v;
+
+      // Project 4D → 3D: take components 0,1,2
+      this.trail.push([dir[0], dir[1], dir[2]]);
+      if (this.trail.length > this.maxTrail) this.trail.shift();
+    }
+  };
+}
+
+// Three simulations
+const sims = [
+  createSim(2),           // top: λ = 2
+  createSim(PHI),         // mid: λ = φ (C₂)
+  createSim(SQRT2)        // bot: λ = √2
+];
+
+// === RENDERING ===
+const W = Math.min(380, window.innerWidth - 20);
+const H = Math.floor(W * 0.65);
+
+const canvases = [
+  document.getElementById('c-top'),
+  document.getElementById('c-mid'),
+  document.getElementById('c-bot')
+];
+const ctxs = canvases.map(c => {
+  c.width = W;
+  c.height = H;
+  c.style.width = W + 'px';
+  c.style.height = H + 'px';
+  return c.getContext('2d');
+});
+
+// Camera per panel
+const cameras = [
+  { theta: -0.6, phi: 0.3 },
+  { theta: -0.6, phi: 0.3 },
+  { theta: -0.6, phi: 0.3 }
+];
+
+function project3D(p, cam) {
+  const ct = Math.cos(cam.theta), st = Math.sin(cam.theta);
+  const cp = Math.cos(cam.phi), sp = Math.sin(cam.phi);
+  let x = p[0], y = p[1], z = p[2];
+  // Rotate around Y
+  const x1 = x * ct - z * st;
+  const z1 = x * st + z * ct;
+  // Rotate around X
+  const y1 = y * cp - z1 * sp;
+  const z2 = y * sp + z1 * cp;
+  const scale = W * 0.35;
+  const persp = 1 / (1 + z2 * 0.3);
+  return {
+    sx: W / 2 + x1 * scale * persp,
+    sy: H / 2 - y1 * scale * persp,
+    d: z2
+  };
+}
+
+function drawAxes(ctx, cam, color) {
+  const axes = [
+    [[1.2,0,0], [-1.2,0,0]],
+    [[0,1.2,0], [0,-1.2,0]],
+    [[0,0,1.2], [0,0,-1.2]]
+  ];
+  ctx.globalAlpha = 0.1;
+  axes.forEach(([a, b]) => {
+    const pa = project3D(a, cam);
+    const pb = project3D(b, cam);
+    ctx.beginPath();
+    ctx.moveTo(pa.sx, pa.sy);
+    ctx.lineTo(pb.sx, pb.sy);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  });
+  ctx.globalAlpha = 1;
+}
+
+function drawTrail(ctx, trail, cam, color, isMain) {
+  if (trail.length < 2) return;
+
+  for (let i = 1; i < trail.length; i++) {
+    const alpha = i / trail.length;
+    const p1 = project3D(trail[i - 1], cam);
+    const p2 = project3D(trail[i], cam);
+    ctx.beginPath();
+    ctx.moveTo(p1.sx, p1.sy);
+    ctx.lineTo(p2.sx, p2.sy);
+    ctx.strokeStyle = color;
+    ctx.globalAlpha = alpha * (isMain ? 0.8 : 0.5);
+    ctx.lineWidth = isMain ? 1.5 * alpha + 0.5 : 1 * alpha + 0.3;
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+
+  // Current point
+  if (trail.length > 0) {
+    const last = project3D(trail[trail.length - 1], cam);
+    ctx.beginPath();
+    ctx.arc(last.sx, last.sy, isMain ? 4 : 3, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+
+    if (isMain) {
+      // Glow
+      const g = ctx.createRadialGradient(last.sx, last.sy, 0, last.sx, last.sy, 12);
+      g.addColorStop(0, color.replace(')', ',0.4)').replace('rgb', 'rgba'));
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.beginPath();
+      ctx.arc(last.sx, last.sy, 12, 0, Math.PI * 2);
+      ctx.fillStyle = g;
+      ctx.fill();
+    }
+  }
+}
+
+// Draw eigenvector directions (for φ panel)
+function drawEigenvectors(ctx, cam) {
+  // In the companion basis, eigenvectors project to specific directions
+  // We show the dominant eigenvector direction as a guide
+  // v_φ direction (normalized) - approximate projection
+  const dirs = [
+    { p: [0.7, 0.5, 0.3], color: 'rgba(255,100,100,0.3)', label: 'v_φ' },
+    { p: [-0.3, -0.5, 0.7], color: 'rgba(100,100,255,0.3)', label: 'v_{1/φ}' }
+  ];
+  // These are illustrative of the eigenvector directions in the projected space
+}
+
+function render() {
+  const colors = ['#888888', '#ffcc66', '#888888'];
+  const trailColors = ['rgba(150,150,150', 'rgba(100,220,255', 'rgba(150,150,150'];
+
+  for (let i = 0; i < 3; i++) {
+    const ctx = ctxs[i];
+    const sim = sims[i];
+    const cam = cameras[i];
+    const isMain = (i === 1);
+
+    // Clear
+    ctx.fillStyle = isMain ? '#050810' : '#030508';
+    ctx.fillRect(0, 0, W, H);
+
+    // Subtle bg
+    if (isMain) {
+      const g = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, W*0.5);
+      g.addColorStop(0, 'rgba(20,30,50,0.3)');
+      g.addColorStop(1, 'rgba(5,8,16,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    // Axes
+    drawAxes(ctx, cam, isMain ? '#335' : '#222');
+
+    // Unit sphere hint (wire circle)
+    ctx.globalAlpha = 0.05;
+    ctx.beginPath();
+    for (let j = 0; j <= 64; j++) {
+      const a = (j / 64) * Math.PI * 2;
+      const p = project3D([Math.cos(a), Math.sin(a), 0], cam);
+      j === 0 ? ctx.moveTo(p.sx, p.sy) : ctx.lineTo(p.sx, p.sy);
+    }
+    ctx.strokeStyle = isMain ? '#446' : '#333';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+
+    // Trail
+    const tc = isMain ? 'rgb(100,220,255)' : 'rgb(150,150,150)';
+    drawTrail(ctx, sim.trail, cam, tc, isMain);
+
+    // Origin
+    const o = project3D([0,0,0], cam);
+    ctx.beginPath();
+    ctx.arc(o.sx, o.sy, 2, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.fill();
+
+    // Step info
+    const statusEl = document.getElementById(
+      i === 0 ? 'status-top' : i === 1 ? 'status-mid' : 'status-bot'
+    );
+    statusEl.textContent = `n = ${sim.step}`;
+    if (isMain) {
+      statusEl.style.color = '#ffcc66';
+      const D = Math.pow(PHI, sim.step).toFixed(1);
+      statusEl.textContent = `n=${sim.step}  D=φⁿ≈${D}`;
+    }
+  }
+}
+
+// === INTERACTION ===
+let playing = true;
+
+// Drag per canvas
+canvases.forEach((c, idx) => {
+  let dragging = false, mx = 0, my = 0;
+  c.addEventListener('pointerdown', e => {
+    dragging = true;
+    mx = e.clientX;
+    my = e.clientY;
+    c.setPointerCapture(e.pointerId);
+  });
+  c.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    cameras[idx].theta += (e.clientX - mx) * 0.008;
+    cameras[idx].phi = Math.max(-1.2, Math.min(1.2,
+      cameras[idx].phi + (e.clientY - my) * 0.008));
+    mx = e.clientX;
+    my = e.clientY;
+  });
+  c.addEventListener('pointerup', () => { dragging = false; });
+  c.style.touchAction = 'none';
+  c.style.cursor = 'grab';
+});
+
+window.togglePlay = function() {
+  playing = !playing;
+  document.getElementById('btn-play').textContent = playing ? '⏸' : '▶';
+};
+
+window.resetAll = function() {
+  sims.forEach(s => s.reset());
+};
+
+window.toggleNorm = function() {
+  // Already normalized — this is a no-op but could toggle raw vs normalized
+};
+
+// === MAIN LOOP ===
+let frameCount = 0;
+
+function loop() {
+  requestAnimationFrame(loop);
+
+  if (playing) {
+    frameCount++;
+    // Advance every few frames to see the dynamics clearly
+    if (frameCount % 3 === 0) {
+      sims.forEach(s => s.advance());
+    }
+  }
+
+  render();
+}
+
+loop();
+
+// === RESIZE ===
+window.addEventListener('resize', () => {
+  // Simple: reload
+});
+</script>
+</body>
+</html>

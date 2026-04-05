@@ -1,0 +1,14 @@
+{
+  "simulators": [
+    {
+      "id": "2603265086093",
+      "hash": "08031dedd4c96cab7ff3666ade99353b367807c41b1bb0a7f8055eb97532f89a",
+      "github_page_url": "https://www.captaincookieface.com/ccfu_simulators/three_geometries.html"
+    },
+    {
+      "id": "2604055175478",
+      "hash": "62b155478faa8af9af3bce13ff5e22f2ed45655321b48299e8e666c4b9e111e8",
+      "github_page_url": "https://www.captaincookieface.com/ccfu_simulators/three_ratios_same_eyes.html"
+    }
+  ]
+}

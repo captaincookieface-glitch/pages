@@ -5,6 +5,7 @@ on:
     paths:
       - 'captain_cookie_face/index.html'
       - 'theories/index.html'
+      - 'ccfu_simulators/index.html'
   workflow_dispatch:
 
 permissions:
@@ -26,6 +27,7 @@ jobs:
 
           CCF_INDEX="captain_cookie_face/index.html"
           THEORIES_INDEX="theories/index.html"
+          SIMULATORS_INDEX="ccfu_simulators/index.html"
 
           # ── Extract hrefs preserving order, no duplicates ──
           extract_urls() {
@@ -54,6 +56,11 @@ jobs:
             echo "${BASE_URL}/theories/"
             echo "${BASE_URL}/theories/index.html"
             extract_urls "$THEORIES_INDEX" "theories"
+
+            # 4. Simulators section
+            echo "${BASE_URL}/ccfu_simulators/"
+            echo "${BASE_URL}/ccfu_simulators/index.html"
+            extract_urls "$SIMULATORS_INDEX" "ccfu_simulators"
           } > /tmp/all_urls.txt
 
           # ── Build sitemap XML ──

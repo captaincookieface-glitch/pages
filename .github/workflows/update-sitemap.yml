@@ -80,7 +80,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git diff --quiet sitemap.xml && echo "No changes to sitemap.xml" && exit 0
           git add sitemap.xml
+          git diff --cached --quiet && echo "No changes to sitemap.xml" && exit 0
           git commit -m "Auto-update sitemap.xml from index files"
           git push

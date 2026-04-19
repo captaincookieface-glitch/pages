@@ -3,12 +3,15 @@
     {
       "id": "2512264115201",
       "hash": "711dfbba203799a9901f97430c001bdf474916c62ae8aa6049e5d6f93df7dc09",
-      "github_page_url": "https://www.captaincookieface.com/theories/universal_stability_pattern.html"
+      "github_page_url": "https://www.captaincookieface.com/theories/universal_stability_pattern.html",
+      "zenodo_doi": "10.5281/zenodo.19545691",
+      "zenodo_url": "https://zenodo.org/records/19545691",
+      "zenodo_doi_url": "https://doi.org/10.5281/zenodo.19545691"
     },
     {
       "id": "2512264117311",
       "hash": "6ab3dd8bc46e47b65cb29a24ac916529f43d44d1821f85d67cd97ec98ddecb21",
-      "github_page_url": "https://www.captaincookieface.com/theories/structural_mechanics_of_suffering.html"
+      "github_page_url": "https://www.captaincookieface.com/theories/the_structural_mechanics_of_suffering.html"
     },
     {
       "id": "2512264119667",
@@ -69,6 +72,11 @@
       "id": "2603194995190",
       "hash": "32ca123a7d1e2ac729facf6aa1ae61e283e79d53face5cb8a31052571ea0a472",
       "github_page_url": "https://www.captaincookieface.com/theories/accuracy_and_precision_as_structural_ratios.html"
+    },
+    {
+      "id": "2604195327553",
+      "hash": "6672da579a27d21c43485b579fc409c8f6605b793035fc146a4343c60606a216",
+      "github_page_url": "https://www.captaincookieface.com/theories/the_illusion_of_measured_time.html"
     }
   ]
 }

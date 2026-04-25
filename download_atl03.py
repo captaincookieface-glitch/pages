@@ -22,11 +22,11 @@ from pathlib import Path
 
 # ============== CONFIGURATION ==============
 # Bounding box: [west, south, east, north]
-# Example: Thames Estuary near London (water surface)
-BOUNDING_BOX = (0.5, 51.4, 1.0, 51.6)
+# Great Bahama Bank -- shallow, ultra-clear water, strong bathymetry returns
+BOUNDING_BOX = (-77.9, 24.0, -77.5, 24.5)
 
 # Date range
-DATE_RANGE = ("2023-06-01", "2023-06-30")
+DATE_RANGE = ("2023-01-01", "2023-12-31")
 
 # Output directory
 OUTPUT_DIR = Path("./atl03_output")
@@ -36,6 +36,10 @@ BEAM = "gt1l"
 
 # Max number of granules to download
 MAX_GRANULES = 1
+
+# Crop photons to this lat range after extraction
+# Wider range = more data for analysis, but larger CSV
+LAT_CROP = (24.0, 24.5)
 # ============================================
 
 
@@ -220,6 +224,15 @@ def main():
     for fpath in files:
         if str(fpath).endswith(".h5"):
             df = extract_photon_data(str(fpath))
+
+            # Crop to lat range to keep CSV manageable
+            before = len(df)
+            df = df[(df["lat_ph"] >= LAT_CROP[0]) & (df["lat_ph"] <= LAT_CROP[1])].copy()
+            print(f"Lat crop {LAT_CROP}: {before:,} -> {len(df):,} photons")
+
+            # Delete the large H5 file to save disk/artifact space
+            Path(fpath).unlink()
+            print(f"Deleted raw H5 file to save space")
 
             # Save all photons
             csv_path = OUTPUT_DIR / f"{Path(fpath).stem}_{BEAM}_photons.csv"

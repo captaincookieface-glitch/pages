@@ -11,7 +11,10 @@
     {
       "id": "2512264117311",
       "hash": "6ab3dd8bc46e47b65cb29a24ac916529f43d44d1821f85d67cd97ec98ddecb21",
-      "github_page_url": "https://www.captaincookieface.com/theories/the_structural_mechanics_of_suffering.html"
+      "github_page_url": "https://www.captaincookieface.com/theories/the_structural_mechanics_of_suffering.html",
+      "zenodo_doi": "10.5281/zenodo.19751313",
+      "zenodo_url": "https://zenodo.org/records/19751313",
+      "zenodo_doi_url": "https://doi.org/10.5281/zenodo.19751313"
     },
     {
       "id": "2512264119667",
@@ -56,17 +59,17 @@
     {
       "id": "2601014162593",
       "hash": "95ab2d09999e637208e6a1ec70cba0df60a2cd4fabfee93d025d3d44ee6c379c",
-      "github_page_url": "https://www.captaincookieface.com/theories/dependency.html"
+      "github_page_url": "https://www.captaincookieface.com/theories/dependency_the_necessary_human_tool_and_the_structural_risk.html"
     },
     {
       "id": "2601014163378",
       "hash": "c8476cbb5cb6e08d990b24ed00c7a0840f52a91bb898dd09966d14822cc5ab6f",
-      "github_page_url": "https://www.captaincookieface.com/theories/stable_happiness_theory.html"
+      "github_page_url": "https://www.captaincookieface.com/theories/stable_happiness_theory_with_the_pleasure_component.html"
     },
     {
       "id": "2601194302574",
       "hash": "f27ebf0b25bde788124ff56f79aa00de6eef75990025ade272d65d92e2b04821",
-      "github_page_url": "https://www.captaincookieface.com/theories/stability_before_computation.html"
+      "github_page_url": "https://www.captaincookieface.com/theories/stability_before_computation_a_chronological_record.html"
     },
     {
       "id": "2603194995190",

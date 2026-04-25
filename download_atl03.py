@@ -225,6 +225,14 @@ def main():
             print(f"File size: {csv_path.stat().st_size / 1024:.0f} KB")
             print(f"First 5 rows:\n{df.head()}")
 
+            # Save subsurface signal photons (multiple scattering candidates)
+            df_sub = filter_multiple_scattering(df)
+            if len(df_sub) > 0:
+                sub_path = OUTPUT_DIR / f"{Path(fpath).stem}_{BEAM}_subsurface.csv"
+                df_sub.to_csv(sub_path, index=False)
+                print(f"Saved subsurface photons to {sub_path}")
+                print(f"File size: {sub_path.stat().st_size / 1024:.0f} KB")
+
 
 if __name__ == "__main__":
     main()

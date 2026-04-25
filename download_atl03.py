@@ -16,6 +16,7 @@ Setup:
 
 import earthaccess
 import h5py
+import numpy as np
 import pandas as pd
 from pathlib import Path
 
@@ -103,16 +104,60 @@ def extract_photon_data(h5_path: str) -> pd.DataFrame:
 
         # signal_conf_ph shape: (n_photons, 5) - one column per surface type
         # Surface types: 0=land, 1=ocean, 2=sea_ice, 3=land_ice, 4=inland_water
-        # For water: use column 1 (ocean) or 4 (inland_water)
         signal_conf_all = grp["signal_conf_ph"][:]
         signal_conf_ocean = signal_conf_all[:, 1]
         signal_conf_inland = signal_conf_all[:, 4]
+
+        # --- Sea surface height estimation ---
+        # Use segment-level data to interpolate SSH per photon.
+        # geolocation/segment_ph_cnt: number of photons per segment
+        # geophys_corr/dem_h: DEM height per segment (includes ocean surface)
+        # geolocation/ref_elev: reference surface elevation per segment
+        seg_grp = f[f"/{BEAM}/geolocation"]
+        seg_ph_cnt = seg_grp["segment_ph_cnt"][:]
+
+        # Try multiple SSH sources in order of preference
+        ssh_per_segment = None
+        ssh_source = None
+
+        # Option 1: geophys_corr/dem_h (digital elevation model - includes ocean surface)
+        geophys_path = f"/{BEAM}/geophys_corr"
+        if geophys_path in f:
+            gc = f[geophys_path]
+            if "dem_h" in gc:
+                ssh_per_segment = gc["dem_h"][:]
+                ssh_source = "dem_h"
+
+        # Option 2: geolocation/ref_elev (reference elevation)
+        if ssh_per_segment is None and "ref_elev" in seg_grp:
+            ssh_per_segment = seg_grp["ref_elev"][:]
+            ssh_source = "ref_elev"
+
+        # Interpolate segment-level SSH to photon level
+        # Each segment has seg_ph_cnt[i] photons; repeat SSH for each photon
+        if ssh_per_segment is not None:
+            ssh_per_photon = np.repeat(ssh_per_segment, seg_ph_cnt)
+            # Handle length mismatch (can happen at file boundaries)
+            if len(ssh_per_photon) > len(h_ph):
+                ssh_per_photon = ssh_per_photon[:len(h_ph)]
+            elif len(ssh_per_photon) < len(h_ph):
+                ssh_per_photon = np.pad(
+                    ssh_per_photon, (0, len(h_ph) - len(ssh_per_photon)),
+                    constant_values=np.nan
+                )
+            print(f"SSH source: {ssh_source} ({np.count_nonzero(~np.isnan(ssh_per_photon)):,} valid values)")
+        else:
+            ssh_per_photon = np.full(len(h_ph), np.nan)
+            ssh_source = "none"
+            print("WARNING: No SSH source found in file. SSH column will be NaN.")
 
     df = pd.DataFrame({
         "delta_time": delta_time,
         "h_ph": h_ph,
         "lat_ph": lat_ph,
         "lon_ph": lon_ph,
+        "sea_surface_height": ssh_per_photon,
+        "depth_below_surface": ssh_per_photon - h_ph,
         "signal_conf_ocean": signal_conf_ocean,
         "signal_conf_inland": signal_conf_inland,
     })
@@ -133,6 +178,30 @@ def extract_photon_data(h5_path: str) -> pd.DataFrame:
     print(f"Extracted {len(df):,} photons")
     print(f"\nClassification distribution (ocean):\n{df['classification_ocean'].value_counts()}")
     return df
+
+
+def filter_multiple_scattering(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Filter photons likely from multiple scattering over water.
+
+    Multiple scattering photons are signal photons (conf >= 2) that appear
+    BELOW the sea surface - i.e. they penetrated the water column and
+    scattered back. These have depth_below_surface > 0.
+
+    Returns a filtered DataFrame with only subsurface signal photons.
+    """
+    mask = (
+        (df["signal_conf_ocean"] >= 2) &
+        (df["depth_below_surface"] > 0) &
+        (df["sea_surface_height"].notna())
+    )
+    df_sub = df[mask].copy()
+    print(f"\nMultiple scattering filter: {len(df_sub):,} subsurface signal photons "
+          f"(out of {len(df):,} total)")
+    if len(df_sub) > 0:
+        print(f"  Depth range: {df_sub['depth_below_surface'].min():.2f} - "
+              f"{df_sub['depth_below_surface'].max():.2f} m")
+    return df_sub
 
 
 def main():

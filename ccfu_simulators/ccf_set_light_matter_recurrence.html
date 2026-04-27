@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CCF Set — Light-Matter Recurrence</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #fff; }
+    .block { margin-bottom: 20px; padding: 15px; border: 1px solid #eee; word-wrap: break-word; }
+    .key { color: #000; font-size: 2em !important; text-transform: capitalize; font-weight: bold; }
+    .hash { word-break: break-all; color: #4287f5; }
+    a { color: #4287f5; text-decoration: underline; }
+    pre { white-space: pre-wrap; }
+    code { background: #f4f4f4; padding: 2px 4px; font-size: 0.9em; }
+    pre > code { display: block; padding: 12px; overflow-x: auto; }
+    button { font-family: inherit; padding: 6px 10px; border: 1px solid #ccc; background: #f9f9f9; cursor: pointer; }
+    h1 { margin-bottom: 10px; font-size: 32px; }
+    nav { background-color: #e1e1e1; padding: 10px; }
+    nav > ul { display: flex; flex-wrap: wrap; list-style: none; padding: 0; margin: 0; }
+    nav > ul > li, nav > ul > li > a { display: flex; flex-direction: column; text-align: center; margin: 0; }
+    nav ul li img { max-width: 80px; width: 100%; height: auto; border-radius: 40px; }
+    .arrow { width: 50px; height: 80px; font-size: 38px; }
+    iframe { border-radius: 4px; }
+  </style>
+</head>
+<body>
+<article itemscope itemtype="https://schema.org/CreativeWork">
+  <meta itemprop="identifier" content="2604275411578">
+  <meta itemprop="dateCreated" content="04/27/2026">
+<h1 itemprop="name">CCF Set — Light-Matter Recurrence</h1>
+<nav aria-label="Breadcrumb" class="breadcrumb">
+  <ul>
+    <li><a href="../"><img src="../assets/images/AFB9C382-3B34-4925-B318-E7083E758055.png" alt="Home"/><span>Home</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><a href="./"><img src="../assets/images/71663728-97C2-4B27-9214-62CE3EF2847A.png" alt="CCFU"/><span>Simulators</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><img src="../assets/images/71663728-97C2-4B27-9214-62CE3EF2847A.png" alt="CCFU"/><span>CCF Set — Light-Matter Recurrence</span></li>
+  </ul>
+</nav>
+
+  <div class="block">
+    <div class="key">Simulator</div>
+    <iframe src="https://hmbdb67m4dglz363xd4nx6mf2fovvuiigtfzhxwllu34b7jnz6qa.arweave.net/OwIw--zgzLzv27j42_mF0V1a0Qg0y5Pey103wP0tz6A" 
+     title="CCF Set — Light-Matter Recurrence" 
+     style="width: 100%; height: 600px; border: 1px solid #eee;"
+     sandbox="allow-scripts allow-same-origin"
+     loading="lazy"></iframe>
+  </div>
+
+  <div class="block" id="rendered">
+
+    <div class="block">
+      <div class="key">id</div>
+      <pre>2604275411578</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">safecreative_url</div>
+      <a href="https://www.safecreative.org/work/2604275411578-ccf-set-light-matter-recurrence" target="_blank">https://www.safecreative.org/work/2604275411578-ccf-set-light-matter-recurrence</a>
+    </div>
+
+    <div class="block">
+      <div class="key">title</div>
+      <pre>CCF Set — Light-Matter Recurrence</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">date</div>
+      <pre>04/27/2026</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">text</div>
+      <details><summary style="cursor:pointer; color:#4287f5; margin-bottom:8px;">Show source code</summary><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, user-scalable=no&quot;&gt;
+&lt;title&gt;Mandelbrot ↔ CCF Set&lt;/title&gt;
+&lt;style&gt;
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;font-family:'Courier New',monospace;overflow:hidden;touch-action:none}
+canvas{display:block;width:100vw;height:100vh;cursor:crosshair;image-rendering:pixelated}
+#toggle{position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:20;display:flex;border:1px solid #444;border-radius:3px;overflow:hidden}
+#toggle button{background:#111;color:#777;border:none;font-family:inherit;font-size:11px;padding:6px 14px;cursor:pointer}
+#toggle button.on{background:#333;font-weight:bold}
+#toggle .mb.on{color:#88aaff}
+#toggle .ccf.on{color:#c8b875}
+#info{position:fixed;top:8px;right:10px;z-index:10;pointer-events:none;text-align:right}
+#info div{font-size:9px;color:#555}
+#info b{color:#999}
+#eq{position:fixed;top:10px;left:10px;z-index:10;pointer-events:none}
+#eq .t{font-size:12px;font-weight:bold;letter-spacing:1px}
+#eq .t.mb{color:#88aaff}
+#eq .t.ccf{color:#c8b875}
+#eq .f{font-size:9px;color:#555}
+#log{position:fixed;bottom:6px;left:50%;transform:translateX(-50%);z-index:10;pointer-events:none;font-size:8px;color:#333}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;canvas id=&quot;cv&quot;&gt;&lt;/canvas&gt;
+&lt;div id=&quot;toggle&quot;&gt;
+&lt;button class=&quot;mb on&quot; id=&quot;b0&quot; onclick=&quot;go(0)&quot;&gt;Mandelbrot&lt;/button&gt;
+&lt;button class=&quot;ccf&quot; id=&quot;b1&quot; onclick=&quot;go(1)&quot;&gt;CCF Set&lt;/button&gt;
+&lt;/div&gt;
+&lt;div id=&quot;eq&quot;&gt;&lt;div class=&quot;t mb&quot; id=&quot;mt&quot;&gt;Mandelbrot&lt;/div&gt;&lt;div class=&quot;f&quot; id=&quot;mf&quot;&gt;zₙ₊₁ = zₙ² + c&lt;/div&gt;&lt;/div&gt;
+&lt;div id=&quot;info&quot;&gt;&lt;div&gt;zoom &lt;b id=&quot;zv&quot;&gt;×1&lt;/b&gt;&lt;/div&gt;&lt;div&gt;iter &lt;b id=&quot;iv&quot;&gt;80&lt;/b&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div id=&quot;log&quot;&gt;scroll · pinch · drag&lt;/div&gt;
+&lt;script&gt;
+var cv=document.getElementById('cv'),cx=cv.getContext('2d',{alpha:false});
+var W,H,img,mode=0,sX,sY,zm,it;
+
+// palette
+var P=new Uint8Array(768);
+for(var i=0;i&lt;255;i++){var r,g,b;
+if(i&lt;32){r=i*8;g=i*8;b=127-i*4}
+else if(i&lt;128){r=255;g=255-(i-32)*2.67|0;b=(i-32)*1.33|0}
+else if(i&lt;192){r=255-(i-128)*4;g=(i-128)*3;b=127-(i-128)}
+else{r=0;g=192-(i-192)*3;b=64+(i-192)}
+P[i*3]=r&lt;0?0:r&gt;255?255:r;P[i*3+1]=g&lt;0?0:g&gt;255?255:g;P[i*3+2]=b&lt;0?0:b&gt;255?255:b}
+
+function sz(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;img=cx.createImageData(W,H)}
+
+function iv(){
+if(mode===0){sX=W*0.65|0;sY=H/2|0;zm=Math.min(W,H)/3.5|0}
+else{sX=W/2|0;sY=H/2|0;zm=Math.min(W,H)*0.6|0}
+it=80}
+
+function go(m){mode=m;
+document.getElementById('b0').className=m?'mb':'mb on';
+document.getElementById('b1').className=m?'ccf on':'ccf';
+var mt=document.getElementById('mt');mt.textContent=m?'CCF Set':'Mandelbrot';mt.className=m?'t ccf':'t mb';
+document.getElementById('mf').textContent=m?'Eₙ₊₁ = Eₙ² + Eₙ₋₁':'zₙ₊₁ = zₙ² + c';
+iv();draw()}
+
+function draw(){
+var t0=performance.now();
+var d=img.data,esc=mode?10000:4;
+for(var py=0;py&lt;H;py++){
+var yn=(py-sY)/zm;
+for(var px=0;px&lt;W;px++){
+var xn=(px-sX)/zm;
+var n=0,r,g,b;
+if(mode===0){
+var zr=0,zi=0,tr,ti;
+while(n&lt;it){tr=zr*zr;ti=zi*zi;if(tr+ti&gt;=esc)break;zi=2*zr*zi+yn;zr=tr-ti+xn;n++}
+}else{
+var pr=0,pi=0,zr=xn,zi=yn,nr,ni;
+while(n&lt;it){if(zr*zr+zi*zi&gt;=esc)break;nr=zr*zr-zi*zi+pr;ni=2*zr*zi+pi;pr=zr;pi=zi;zr=nr;zi=ni;n++}
+}
+var o=(py*W+px)*4;
+if(n&gt;=it){d[o]=0;d[o+1]=0;d[o+2]=0}
+else{var c=n%255;d[o]=P[c*3];d[o+1]=P[c*3+1];d[o+2]=P[c*3+2]}
+d[o+3]=255}}
+cx.putImageData(img,0,0);
+var dt=performance.now()-t0|0;
+document.getElementById('log').textContent=dt+'ms · scroll/pinch zoom · drag pan';
+hud()}
+
+function hud(){
+var bz=mode?Math.min(W,H)*0.6:Math.min(W,H)/3.5;
+var z=zm/bz,s;
+if(z&gt;=1e6)s='×'+(z/1e6).toFixed(1)+'M';else if(z&gt;=1e3)s='×'+(z/1e3).toFixed(1)+'K';else s='×'+z.toFixed(1);
+document.getElementById('zv').textContent=s;
+document.getElementById('iv').textContent=it}
+
+// ── interaction ──
+var drag=0,dx,dy,pinch=0,pd0,zm0,rto=null;
+function sched(){if(rto)clearTimeout(rto);rto=setTimeout(draw,30);hud()}
+
+cv.addEventListener('wheel',function(e){e.preventDefault();
+var mx=e.clientX,my=e.clientY;
+var xn=(mx-sX)/zm,yn=(my-sY)/zm;
+zm=Math.max(10,zm*(e.deltaY&lt;0?1.3:0.77)|0);
+sX=mx-xn*zm+0.5|0;sY=my-yn*zm+0.5|0;
+var bz=mode?Math.min(W,H)*0.6:Math.min(W,H)/3.5;
+it=Math.max(50,Math.min(1500,50+Math.log(zm/bz+1)*80|0));
+sched()},{passive:false});
+
+cv.addEventListener('mousedown',function(e){drag=1;dx=e.clientX;dy=e.clientY});
+cv.addEventListener('mousemove',function(e){if(!drag)return;sX+=e.clientX-dx;sY+=e.clientY-dy;dx=e.clientX;dy=e.clientY;sched()});
+cv.addEventListener('mouseup',function(){drag=0});
+
+cv.addEventListener('touchstart',function(e){e.preventDefault();
+if(e.touches.length===2){pinch=1;var a=e.touches[0],b=e.touches[1];pd0=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);zm0=zm}
+else{drag=1;dx=e.touches[0].clientX;dy=e.touches[0].clientY}},{passive:false});
+
+cv.addEventListener('touchmove',function(e){e.preventDefault();
+if(e.touches.length===2&amp;&amp;pinch){var a=e.touches[0],b=e.touches[1];
+var dist=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);
+var cx2=(a.clientX+b.clientX)/2,cy2=(a.clientY+b.clientY)/2;
+var xn=(cx2-sX)/zm,yn=(cy2-sY)/zm;
+zm=Math.max(10,zm0*dist/pd0|0);
+sX=cx2-xn*zm+0.5|0;sY=cy2-yn*zm+0.5|0;
+var bz=mode?Math.min(W,H)*0.6:Math.min(W,H)/3.5;
+it=Math.max(50,Math.min(1500,50+Math.log(zm/bz+1)*80|0));
+sched()}
+else if(drag&amp;&amp;e.touches.length===1){sX+=e.touches[0].clientX-dx;sY+=e.touches[0].clientY-dy;dx=e.touches[0].clientX;dy=e.touches[0].clientY;sched()}},{passive:false});
+
+cv.addEventListener('touchend',function(e){if(e.touches.length&lt;2)pinch=0;if(e.touches.length&lt;1)drag=0});
+
+sz();iv();draw();
+window.addEventListener('resize',function(){sz();iv();draw()});
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></details>
+    </div>
+
+    <div class="block">
+      <div class="key">nft_url</div>
+      <a href="https://opensea.io/item/base/0x1f6fb546903c96c81f46a7b37743e328703c7083/5" target="_blank">https://opensea.io/item/base/0x1f6fb546903c96c81f46a7b37743e328703c7083/5</a>
+    </div>
+
+    <div class="block">
+      <div class="key">tweet_url</div>
+      <pre></pre>
+    </div>
+
+  </div>
+  <div class="block">
+    <div class="key">SHA-256</div>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <div class="hash" id="hashResult"></div>
+      <button id="copyHashBtn" type="button">Copy</button>
+    </div>
+  </div>
+</article>
+<script>
+(async () => {
+  const entry = {
+    id: `2604275411578`,
+    safecreative_url: `https://www.safecreative.org/work/2604275411578-ccf-set-light-matter-recurrence`,
+    title: `CCF Set — Light-Matter Recurrence`,
+    date: `04/27/2026`,
+    text: `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Mandelbrot ↔ CCF Set</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;font-family:'Courier New',monospace;overflow:hidden;touch-action:none}
+canvas{display:block;width:100vw;height:100vh;cursor:crosshair;image-rendering:pixelated}
+#toggle{position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:20;display:flex;border:1px solid #444;border-radius:3px;overflow:hidden}
+#toggle button{background:#111;color:#777;border:none;font-family:inherit;font-size:11px;padding:6px 14px;cursor:pointer}
+#toggle button.on{background:#333;font-weight:bold}
+#toggle .mb.on{color:#88aaff}
+#toggle .ccf.on{color:#c8b875}
+#info{position:fixed;top:8px;right:10px;z-index:10;pointer-events:none;text-align:right}
+#info div{font-size:9px;color:#555}
+#info b{color:#999}
+#eq{position:fixed;top:10px;left:10px;z-index:10;pointer-events:none}
+#eq .t{font-size:12px;font-weight:bold;letter-spacing:1px}
+#eq .t.mb{color:#88aaff}
+#eq .t.ccf{color:#c8b875}
+#eq .f{font-size:9px;color:#555}
+#log{position:fixed;bottom:6px;left:50%;transform:translateX(-50%);z-index:10;pointer-events:none;font-size:8px;color:#333}
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+<div id="toggle">
+<button class="mb on" id="b0" onclick="go(0)">Mandelbrot</button>
+<button class="ccf" id="b1" onclick="go(1)">CCF Set</button>
+</div>
+<div id="eq"><div class="t mb" id="mt">Mandelbrot</div><div class="f" id="mf">zₙ₊₁ = zₙ² + c</div></div>
+<div id="info"><div>zoom <b id="zv">×1</b></div><div>iter <b id="iv">80</b></div></div>
+<div id="log">scroll · pinch · drag</div>
+<script>
+var cv=document.getElementById('cv'),cx=cv.getContext('2d',{alpha:false});
+var W,H,img,mode=0,sX,sY,zm,it;
+
+// palette
+var P=new Uint8Array(768);
+for(var i=0;i<255;i++){var r,g,b;
+if(i<32){r=i*8;g=i*8;b=127-i*4}
+else if(i<128){r=255;g=255-(i-32)*2.67|0;b=(i-32)*1.33|0}
+else if(i<192){r=255-(i-128)*4;g=(i-128)*3;b=127-(i-128)}
+else{r=0;g=192-(i-192)*3;b=64+(i-192)}
+P[i*3]=r<0?0:r>255?255:r;P[i*3+1]=g<0?0:g>255?255:g;P[i*3+2]=b<0?0:b>255?255:b}
+
+function sz(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;img=cx.createImageData(W,H)}
+
+function iv(){
+if(mode===0){sX=W*0.65|0;sY=H/2|0;zm=Math.min(W,H)/3.5|0}
+else{sX=W/2|0;sY=H/2|0;zm=Math.min(W,H)*0.6|0}
+it=80}
+
+function go(m){mode=m;
+document.getElementById('b0').className=m?'mb':'mb on';
+document.getElementById('b1').className=m?'ccf on':'ccf';
+var mt=document.getElementById('mt');mt.textContent=m?'CCF Set':'Mandelbrot';mt.className=m?'t ccf':'t mb';
+document.getElementById('mf').textContent=m?'Eₙ₊₁ = Eₙ² + Eₙ₋₁':'zₙ₊₁ = zₙ² + c';
+iv();draw()}
+
+function draw(){
+var t0=performance.now();
+var d=img.data,esc=mode?10000:4;
+for(var py=0;py<H;py++){
+var yn=(py-sY)/zm;
+for(var px=0;px<W;px++){
+var xn=(px-sX)/zm;
+var n=0,r,g,b;
+if(mode===0){
+var zr=0,zi=0,tr,ti;
+while(n<it){tr=zr*zr;ti=zi*zi;if(tr+ti>=esc)break;zi=2*zr*zi+yn;zr=tr-ti+xn;n++}
+}else{
+var pr=0,pi=0,zr=xn,zi=yn,nr,ni;
+while(n<it){if(zr*zr+zi*zi>=esc)break;nr=zr*zr-zi*zi+pr;ni=2*zr*zi+pi;pr=zr;pi=zi;zr=nr;zi=ni;n++}
+}
+var o=(py*W+px)*4;
+if(n>=it){d[o]=0;d[o+1]=0;d[o+2]=0}
+else{var c=n%255;d[o]=P[c*3];d[o+1]=P[c*3+1];d[o+2]=P[c*3+2]}
+d[o+3]=255}}
+cx.putImageData(img,0,0);
+var dt=performance.now()-t0|0;
+document.getElementById('log').textContent=dt+'ms · scroll/pinch zoom · drag pan';
+hud()}
+
+function hud(){
+var bz=mode?Math.min(W,H)*0.6:Math.min(W,H)/3.5;
+var z=zm/bz,s;
+if(z>=1e6)s='×'+(z/1e6).toFixed(1)+'M';else if(z>=1e3)s='×'+(z/1e3).toFixed(1)+'K';else s='×'+z.toFixed(1);
+document.getElementById('zv').textContent=s;
+document.getElementById('iv').textContent=it}
+
+// ── interaction ──
+var drag=0,dx,dy,pinch=0,pd0,zm0,rto=null;
+function sched(){if(rto)clearTimeout(rto);rto=setTimeout(draw,30);hud()}
+
+cv.addEventListener('wheel',function(e){e.preventDefault();
+var mx=e.clientX,my=e.clientY;
+var xn=(mx-sX)/zm,yn=(my-sY)/zm;
+zm=Math.max(10,zm*(e.deltaY<0?1.3:0.77)|0);
+sX=mx-xn*zm+0.5|0;sY=my-yn*zm+0.5|0;
+var bz=mode?Math.min(W,H)*0.6:Math.min(W,H)/3.5;
+it=Math.max(50,Math.min(1500,50+Math.log(zm/bz+1)*80|0));
+sched()},{passive:false});
+
+cv.addEventListener('mousedown',function(e){drag=1;dx=e.clientX;dy=e.clientY});
+cv.addEventListener('mousemove',function(e){if(!drag)return;sX+=e.clientX-dx;sY+=e.clientY-dy;dx=e.clientX;dy=e.clientY;sched()});
+cv.addEventListener('mouseup',function(){drag=0});
+
+cv.addEventListener('touchstart',function(e){e.preventDefault();
+if(e.touches.length===2){pinch=1;var a=e.touches[0],b=e.touches[1];pd0=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);zm0=zm}
+else{drag=1;dx=e.touches[0].clientX;dy=e.touches[0].clientY}},{passive:false});
+
+cv.addEventListener('touchmove',function(e){e.preventDefault();
+if(e.touches.length===2&&pinch){var a=e.touches[0],b=e.touches[1];
+var dist=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);
+var cx2=(a.clientX+b.clientX)/2,cy2=(a.clientY+b.clientY)/2;
+var xn=(cx2-sX)/zm,yn=(cy2-sY)/zm;
+zm=Math.max(10,zm0*dist/pd0|0);
+sX=cx2-xn*zm+0.5|0;sY=cy2-yn*zm+0.5|0;
+var bz=mode?Math.min(W,H)*0.6:Math.min(W,H)/3.5;
+it=Math.max(50,Math.min(1500,50+Math.log(zm/bz+1)*80|0));
+sched()}
+else if(drag&&e.touches.length===1){sX+=e.touches[0].clientX-dx;sY+=e.touches[0].clientY-dy;dx=e.touches[0].clientX;dy=e.touches[0].clientY;sched()}},{passive:false});
+
+cv.addEventListener('touchend',function(e){if(e.touches.length<2)pinch=0;if(e.touches.length<1)drag=0});
+
+sz();iv();draw();
+window.addEventListener('resize',function(){sz();iv();draw()});
+<\/script>
+</body>
+</html>`,
+    nft_url: `https://opensea.io/item/base/0x1f6fb546903c96c81f46a7b37743e328703c7083/5`,
+    tweet_url: ``
+  };
+  const canonicalString = [entry.id, entry.safecreative_url, entry.title, entry.date, entry.text, entry.nft_url, entry.tweet_url].join('\n---\n');
+  const data = new TextEncoder().encode(canonicalString);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashHex = [...new Uint8Array(hashBuffer)].map(b => b.toString(16).padStart(2, '0')).join('');
+  document.getElementById('hashResult').textContent = hashHex;
+  document.getElementById('copyHashBtn').addEventListener('click', () => { navigator.clipboard.writeText(hashHex); alert('Hash copied'); });
+})();
+</script>
+</body></html>

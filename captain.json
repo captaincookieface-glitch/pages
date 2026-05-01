@@ -1603,6 +1603,16 @@
       "nft_url": "https://opensea.io/item/base/0xfa583a819f70dd23213384b50ee1a20a5f083fa6/56",
       "tweet_url": "https://x.com/captaincoo39471/status/2049767333657231442",
       "image_url": "https://5eaw7vjj5kbyhvpi2eaorgm7ib5yqstwqscn22gj3ztoeclua2ea.ardrive.net/6QFv1Snqg4PV6NEA6JmfQHuISnaEhN1oyd5m4gl0Bog"
+    },
+    {
+      "id": "2605015457757",
+      "safecreative_url": "https://www.safecreative.org/work/2605015457757-the-conformal-signature",
+      "title": "The Conformal Signature",
+      "date": "05/01/2026",
+      "text": "E(n+1) = E(n)² + E(n-1) on C² = R⁴\nthe nonlinear memory preserves signature (2,2) at the origin",
+      "nft_url": "https://opensea.io/item/base/0xfa583a819f70dd23213384b50ee1a20a5f083fa6/57",
+      "tweet_url": "https://x.com/captaincoo39471/status/2050101424474706262",
+      "image_url": "https://7ceisfkktowdeilvrrp2fwmgmxdtah4sh2kq3wrx6ay4pumfi4ya.ardrive.net/-IiJFUqbrDIhdYxfotmGZccwH5I-lQ3aN_Axx9GFRzA"
     }
   ]
 }

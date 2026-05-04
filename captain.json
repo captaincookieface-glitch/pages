@@ -1633,6 +1633,16 @@
       "nft_url": "https://opensea.io/item/base/0xfa583a819f70dd23213384b50ee1a20a5f083fa6/59",
       "tweet_url": "https://x.com/captaincoo39471/status/2050830471110467908",
       "image_url": "https://6i7bm3et6lm7plq2wn74rjnt4vu5ttfxck25sjwkkwsslcntedea.arweave.net/8j4WbJPy2feuGrN_yKWz5WnZzLcStdkmylWlJYmzIMg"
+    },
+    {
+      "id": "2605045512310",
+      "safecreative_url": "https://www.safecreative.org/work/2605045512310-the-minimal-parent",
+      "title": "The Minimal Parent",
+      "date": "05/04/2026",
+      "text": "sig(n,1) and sig(2,2) require sig(max(n,2), 2)\ndim = max(n,2) + 2 — only n = 3 gives dim = 5",
+      "nft_url": "https://opensea.io/item/base/0xfa583a819f70dd23213384b50ee1a20a5f083fa6/60",
+      "tweet_url": "https://x.com/captaincoo39471/status/2051215549439361082",
+      "image_url": "https://atgogdktiqxu67ykmqm6srjmqofe4jpgewlqx56vc23ccv6cr5na.turbo-gateway.com/BMzjDVNEL09_CmQZ6UUsg4pOJeYllwv31Ra2IVfCj1o"
     }
   ]
 }

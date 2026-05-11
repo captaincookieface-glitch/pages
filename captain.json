@@ -1703,6 +1703,16 @@
       "nft_url": "https://opensea.io/item/base/0xfa583a819f70dd23213384b50ee1a20a5f083fa6/66",
       "tweet_url": "https://x.com/captaincoo39471/status/2053387027366740281",
       "image_url": "https://paxwmhfcj4ipojknoqfue3lxwbjrjwxlzmpnfzkhtetmnnnucqya.turbo-gateway.com/eC9mHKJPEPclTXQLQm13sFMU2uvLHtLlR5kmxrW0FDA"
+    },
+    {
+      "id": "2605115608493",
+      "safecreative_url": "https://www.safecreative.org/work/2605115608493-two-preservation-laws",
+      "title": "Two Preservation Laws",
+      "date": "05/11/2026",
+      "text": "Linear:\nA₄ᵀG₄A₄ = G₄\nsig(3,1), isometric.\n\nNonlinear:\nJ(0)ᵀGJ(0) = βG, β ≠ 0\nsig(2,2), conformal at fixed point.\n\nBoth arise from C₂ memory.\nNeither is chosen.\n\nThe parent carries both.\nIts dimension is 5.",
+      "nft_url": "https://opensea.io/item/base/0xfa583a819f70dd23213384b50ee1a20a5f083fa6/67",
+      "tweet_url": "https://x.com/captaincoo39471/status/2053731218764472470",
+      "image_url": "https://f3fjz33zqmqxrfcrvytwqeewnvbxkmrutnbuz5rc4njjm7gjlj2q.turbo-gateway.com/Lsqc73mDIXiUUa4naBCWbUN1MjSbQ0z2IuNSlnzJWnU"
     }
   ]
 }

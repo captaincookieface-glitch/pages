@@ -1,10 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
-<path d="M205 100L670 100 770 200 770 924 205 924Z" fill="#fff" stroke="#4A4A4A" stroke-width="40" stroke-linejoin="round"/>
-<path d="M670 100L670 200 770 200" fill="#E0E0E0" stroke="#4A4A4A" stroke-width="40" stroke-linejoin="round"/>
-<rect x="205" y="420" width="565" height="140" fill="#4A4A4A"/>
-<text x="487" y="505" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="80" fill="#fff" text-anchor="middle" dominant-baseline="middle" letter-spacing="5">PROOFS</text>
-<rect x="250" y="640" width="410" height="110" rx="6" fill="none" stroke="#4A4A4A" stroke-width="22"/>
-<circle cx="680" cy="780" r="95" fill="#fff" stroke="#4A4A4A" stroke-width="14"/>
-<circle cx="680" cy="780" r="72" fill="#fff" stroke="#4A4A4A" stroke-width="5"/>
-<polyline points="644,782 668,808 720,752" fill="none" stroke="#4A4A4A" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="0" y="0" width="1024" height="1024" rx="120" ry="120" fill="#fff"/>
+<path d="M390 220L640 220 710 290 710 750 390 750Z" fill="#fff" stroke="#4A4A4A" stroke-width="30" stroke-linejoin="round"/>
+<path d="M640 220L640 290 710 290" fill="#E0E0E0" stroke="#4A4A4A" stroke-width="30" stroke-linejoin="round"/>
+<rect x="390" y="440" width="320" height="90" fill="#4A4A4A"/>
+<text x="550" y="495" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="52" fill="#fff" text-anchor="middle" dominant-baseline="middle" letter-spacing="4">PROOFS</text>
+<rect x="420" y="580" width="230" height="70" rx="5" fill="none" stroke="#4A4A4A" stroke-width="16"/>
+<circle cx="660" cy="670" r="60" fill="#fff" stroke="#4A4A4A" stroke-width="10"/>
+<circle cx="660" cy="670" r="46" fill="#fff" stroke="#4A4A4A" stroke-width="4"/>
+<polyline points="637,672 652,688 685,653" fill="none" stroke="#4A4A4A" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

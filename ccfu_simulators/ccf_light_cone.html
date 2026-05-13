@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CCF Light Cone</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #fff; }
+    .block { margin-bottom: 20px; padding: 15px; border: 1px solid #eee; word-wrap: break-word; }
+    .key { color: #000; font-size: 2em !important; text-transform: capitalize; font-weight: bold; }
+    .hash { word-break: break-all; color: #4287f5; }
+    a { color: #4287f5; text-decoration: underline; }
+    pre { white-space: pre-wrap; }
+    code { background: #f4f4f4; padding: 2px 4px; font-size: 0.9em; }
+    pre > code { display: block; padding: 12px; overflow-x: auto; }
+    button { font-family: inherit; padding: 6px 10px; border: 1px solid #ccc; background: #f9f9f9; cursor: pointer; }
+    h1 { margin-bottom: 10px; font-size: 32px; }
+    nav { background-color: #e1e1e1; padding: 10px; }
+    nav > ul { display: flex; flex-wrap: wrap; list-style: none; padding: 0; margin: 0; }
+    nav > ul > li, nav > ul > li > a { display: flex; flex-direction: column; text-align: center; margin: 0; }
+    nav ul li img { max-width: 80px; width: 100%; height: auto; border-radius: 40px; }
+    .arrow { width: 50px; height: 80px; font-size: 38px; }
+    iframe { border-radius: 4px; }
+  </style>
+</head>
+<body>
+<article itemscope itemtype="https://schema.org/CreativeWork">
+  <meta itemprop="identifier" content="2605135640435">
+  <meta itemprop="dateCreated" content="05/13/2026">
+<h1 itemprop="name">CCF Light Cone</h1>
+<nav aria-label="Breadcrumb" class="breadcrumb">
+  <ul>
+    <li><a href="../"><img src="../assets/images/AFB9C382-3B34-4925-B318-E7083E758055.png" alt="Home"/><span>Home</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><a href="./"><img src="../assets/images/71663728-97C2-4B27-9214-62CE3EF2847A.png" alt="CCFU"/><span>Simulators</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><img src="../assets/images/71663728-97C2-4B27-9214-62CE3EF2847A.png" alt="CCFU"/><span>CCF Light Cone</span></li>
+  </ul>
+</nav>
+
+  <div class="block">
+    <div class="key">Simulator</div>
+    <iframe src="https://bk23bywph273gswtmveaj4c7seaenzgn43uwt7wzpkuqdgm3kytq.turbo-gateway.com/CrWw4s8-v7NK02VIBPBfkQBG5M3m6Wn-2XqpAZmbVic" 
+     title="CCF Light Cone" 
+     style="width: 100%; height: 600px; border: 1px solid #eee;"
+     sandbox="allow-scripts allow-same-origin"
+     loading="lazy"></iframe>
+  </div>
+
+  <div class="block" id="rendered">
+
+    <div class="block">
+      <div class="key">id</div>
+      <pre>2605135640435</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">safecreative_url</div>
+      <a href="https://www.safecreative.org/work/2605135640435-ccf-light-cone" target="_blank">https://www.safecreative.org/work/2605135640435-ccf-light-cone</a>
+    </div>
+
+    <div class="block">
+      <div class="key">title</div>
+      <pre>CCF Light Cone</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">date</div>
+      <pre>05/13/2026</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">text</div>
+      <details><summary style="cursor:pointer; color:#4287f5; margin-bottom:8px;">Show source code</summary><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, user-scalable=no&quot;&gt;
+&lt;title&gt;CCF Light Cone&lt;/title&gt;
+&lt;style&gt;
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@200;300;400;600&amp;display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#06060b;font-family:'JetBrains Mono',monospace;overflow:hidden;touch-action:none;color:#c8a84e}
+
+#topPanel{position:absolute;top:0;left:0;right:0;height:50vh;overflow:hidden}
+#cv{display:block;width:100%;height:100%;cursor:crosshair;image-rendering:pixelated}
+#hud{position:absolute;top:0;left:0;right:0;padding:5px 10px;background:linear-gradient(rgba(6,6,11,0.9),rgba(6,6,11,0));pointer-events:none;display:flex;justify-content:space-between}
+.title{font-size:10px;font-weight:600;letter-spacing:1px;color:#c8a84e}
+.eq{font-size:8px;color:#666}
+.st{font-size:8px;color:#555;text-align:right}
+.st b{color:#999}
+
+#botPanel{position:absolute;top:50vh;left:0;right:0;bottom:0;overflow:hidden}
+#cone3d{display:block;width:100%;height:100%;cursor:grab}
+#cone3d:active{cursor:grabbing}
+#coneHud{position:absolute;top:4px;left:0;right:0;text-align:center;pointer-events:none}
+#coneHud .t{font-size:9px;font-weight:400;letter-spacing:2px;color:#c8a84e}
+#coneHud .s{font-size:7px;color:#6a6040;margin-top:2px}
+
+#divider{position:absolute;top:50vh;left:0;right:0;height:1px;background:#222;z-index:20}
+
+#ctrl{position:absolute;top:calc(50vh - 52px);left:0;right:0;z-index:20;text-align:center;padding:4px 14px;background:linear-gradient(rgba(6,6,11,0),rgba(6,6,11,0.95))}
+#ctrl .val{font-size:14px;color:#fff;font-weight:600;letter-spacing:1px;margin-bottom:2px}
+#slider{width:80%;max-width:320px;height:5px;-webkit-appearance:none;appearance:none;background:#222;border-radius:3px;outline:none}
+#slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#c8a84e;cursor:pointer}
+#presets{margin-top:4px;display:flex;justify-content:center;gap:4px}
+#presets button{background:rgba(200,168,78,0.04);color:#555;border:1px solid #222;font-family:inherit;font-size:7px;padding:3px 7px;cursor:pointer;border-radius:2px}
+#presets button:hover{background:rgba(200,168,78,0.1);color:#c8a84e;border-color:#c8a84e}
+.copy{position:absolute;bottom:2px;right:6px;font-size:6px;color:#1a1a10;z-index:20}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;div id=&quot;topPanel&quot;&gt;
+&lt;canvas id=&quot;cv&quot;&gt;&lt;/canvas&gt;
+&lt;div id=&quot;hud&quot;&gt;
+&lt;div&gt;&lt;div class=&quot;title&quot; id=&quot;mt&quot;&gt;CCF Set&lt;/div&gt;&lt;div class=&quot;eq&quot; id=&quot;mf&quot;&gt;Eₙ₊₁ = Eₙ² + Eₙ₋₁&lt;/div&gt;&lt;div class=&quot;eq&quot; id=&quot;mp&quot;&gt;emission · full memory&lt;/div&gt;&lt;/div&gt;
+&lt;div&gt;&lt;div class=&quot;st&quot;&gt;zoom &lt;b id=&quot;zv&quot;&gt;×1&lt;/b&gt;&lt;/div&gt;&lt;div class=&quot;st&quot;&gt;iter &lt;b id=&quot;iv&quot;&gt;80&lt;/b&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;ctrl&quot;&gt;
+&lt;div class=&quot;val&quot; id=&quot;betaV&quot;&gt;β = +1.000 (CCF Set)&lt;/div&gt;
+&lt;input type=&quot;range&quot; id=&quot;slider&quot; min=&quot;-100&quot; max=&quot;100&quot; value=&quot;100&quot; step=&quot;1&quot;&gt;
+&lt;div id=&quot;presets&quot;&gt;
+&lt;button onclick=&quot;setB(-100)&quot;&gt;−1&lt;/button&gt;
+&lt;button onclick=&quot;setB(-50)&quot;&gt;−½&lt;/button&gt;
+&lt;button onclick=&quot;setB(0)&quot;&gt;0&lt;/button&gt;
+&lt;button onclick=&quot;setB(50)&quot;&gt;+½&lt;/button&gt;
+&lt;button onclick=&quot;setB(100)&quot;&gt;+1&lt;/button&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;divider&quot;&gt;&lt;/div&gt;
+
+&lt;div id=&quot;botPanel&quot;&gt;
+&lt;canvas id=&quot;cone3d&quot;&gt;&lt;/canvas&gt;
+&lt;div id=&quot;coneHud&quot;&gt;
+&lt;div class=&quot;t&quot;&gt;CCF LIGHT CONE — β = e in sig(3,2)&lt;/div&gt;
+&lt;div class=&quot;s&quot;&gt;J(β)ᵀGJ(β) = βG · E(n+1) = E(n)² + β·E(n-1)&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;copy&quot;&gt;© 2026 Captain Cookie Face Universe&lt;/div&gt;
+
+&lt;script&gt;
+// ═══════════════════════════════════════
+// SHARED DATA
+// ═══════════════════════════════════════
+var beta = 1.0;
+var slider = document.getElementById('slider');
+
+// Average radius data from original CCF Light Lifecycle simulator
+var coneData = [
+  [-1.00, 0.6658], [-0.90, 0.8635], [-0.80, 0.9062], [-0.70, 0.9380],
+  [-0.60, 0.9497], [-0.50, 0.9631], [-0.40, 0.9724], [-0.30, 0.9832],
+  [-0.20, 0.9908], [-0.10, 0.9941], [ 0.00, 0.9950], [ 0.10, 0.9925],
+  [ 0.20, 0.9866], [ 0.30, 0.9757], [ 0.40, 0.9631], [ 0.50, 0.9355],
+  [ 0.60, 0.8886], [ 0.70, 0.8342], [ 0.80, 0.7814], [ 0.90, 0.6692],
+  [ 1.00, 0.2739]
+];
+
+function getRadAtBeta(b) {
+  for (var i = 0; i &lt; coneData.length - 1; i++) {
+    if (b &gt;= coneData[i][0] &amp;&amp; b &lt;= coneData[i + 1][0]) {
+      var t = (b - coneData[i][0]) / (coneData[i + 1][0] - coneData[i][0]);
+      return coneData[i][1] + (coneData[i + 1][1] - coneData[i][1]) * t;
+    }
+  }
+  return coneData[0][1];
+}
+
+// ═══════════════════════════════════════
+// FRACTAL (TOP)
+// ═══════════════════════════════════════
+var cv = document.getElementById('cv');
+var cx = cv.getContext('2d', { alpha: false });
+var fW, fH, img, sX, sY, zm, it;
+
+var P = new Uint8Array(768);
+for (var i = 0; i &lt; 255; i++) {
+  var r, g, b;
+  if (i &lt; 32) { r = i * 8; g = i * 8; b = 127 - i * 4; }
+  else if (i &lt; 128) { r = 255; g = 255 - (i - 32) * 2.67 | 0; b = (i - 32) * 1.33 | 0; }
+  else if (i &lt; 192) { r = 255 - (i - 128) * 4; g = (i - 128) * 3; b = 127 - (i - 128); }
+  else { r = 0; g = 192 - (i - 192) * 3; b = 64 + (i - 192); }
+  P[i * 3] = r &lt; 0 ? 0 : r &gt; 255 ? 255 : r;
+  P[i * 3 + 1] = g &lt; 0 ? 0 : g &gt; 255 ? 255 : g;
+  P[i * 3 + 2] = b &lt; 0 ? 0 : b &gt; 255 ? 255 : b;
+}
+
+function szFractal() {
+  fW = cv.width = cv.clientWidth;
+  fH = cv.height = cv.clientHeight;
+  img = cx.createImageData(fW, fH);
+}
+
+function ivFractal() {
+  sX = fW / 2 | 0; sY = fH / 2 | 0;
+  zm = Math.min(fW, fH) / 3.75 | 0;
+  it = 80;
+}
+
+function drawFractal() {
+  var d = img.data, b = beta, esc = 10000;
+  for (var py = 0; py &lt; fH; py++) {
+    var yn = (py - sY) / zm;
+    for (var px = 0; px &lt; fW; px++) {
+      var xn = (px - sX) / zm;
+      var n = 0, pr = 0, pi = 0, zr = xn, zi = yn, nr, ni;
+      while (n &lt; it) {
+        if (zr * zr + zi * zi &gt;= esc) break;
+        nr = zr * zr - zi * zi + b * pr;
+        ni = 2 * zr * zi + b * pi;
+        pr = zr; pi = zi; zr = nr; zi = ni; n++;
+      }
+      var o = (py * fW + px) * 4;
+      if (n &gt;= it) { d[o] = 0; d[o + 1] = 0; d[o + 2] = 0; }
+      else { var c = n % 255; d[o] = P[c * 3]; d[o + 1] = P[c * 3 + 1]; d[o + 2] = P[c * 3 + 2]; }
+      d[o + 3] = 255;
+    }
+  }
+  cx.putImageData(img, 0, 0);
+  var baseZm = Math.min(fW, fH) / 3 | 0;
+  document.getElementById('zv').textContent = '×' + (zm / baseZm).toFixed(1);
+  document.getElementById('iv').textContent = it;
+}
+
+// Fractal interaction
+var fDrag = 0, fdx, fdy, fPinch = 0, fpd0, fzm0, fRto = null;
+function fSched() { if (fRto) clearTimeout(fRto); fRto = setTimeout(function () { drawFractal(); }, 30); }
+
+cv.addEventListener('wheel', function (e) {
+  e.preventDefault();
+  var rect = cv.getBoundingClientRect();
+  var mx = e.clientX - rect.left, my = e.clientY - rect.top;
+  var xn = (mx - sX) / zm, yn = (my - sY) / zm;
+  zm = Math.max(10, zm * (e.deltaY &lt; 0 ? 1.3 : 0.77) | 0);
+  sX = mx - xn * zm + 0.5 | 0; sY = my - yn * zm + 0.5 | 0;
+  it = Math.max(50, Math.min(1500, 50 + Math.log(zm / 100 + 1) * 80 | 0));
+  fSched();
+}, { passive: false });
+
+cv.addEventListener('mousedown', function (e) { fDrag = 1; fdx = e.clientX; fdy = e.clientY; });
+cv.addEventListener('mousemove', function (e) { if (!fDrag) return; sX += e.clientX - fdx; sY += e.clientY - fdy; fdx = e.clientX; fdy = e.clientY; fSched(); });
+cv.addEventListener('mouseup', function () { fDrag = 0; });
+
+cv.addEventListener('touchstart', function (e) {
+  e.preventDefault();
+  if (e.touches.length === 2) { fPinch = 1; var a = e.touches[0], b = e.touches[1]; fpd0 = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY); fzm0 = zm; }
+  else if (e.touches.length === 1) { fDrag = 1; fdx = e.touches[0].clientX; fdy = e.touches[0].clientY; }
+}, { passive: false });
+
+cv.addEventListener('touchmove', function (e) {
+  e.preventDefault();
+  if (e.touches.length === 2 &amp;&amp; fPinch) {
+    var a = e.touches[0], b = e.touches[1];
+    var dist = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+    var rect = cv.getBoundingClientRect();
+    var cx2 = (a.clientX + b.clientX) / 2 - rect.left, cy2 = (a.clientY + b.clientY) / 2 - rect.top;
+    var xn = (cx2 - sX) / zm, yn = (cy2 - sY) / zm;
+    zm = Math.max(10, fzm0 * dist / fpd0 | 0);
+    sX = cx2 - xn * zm + 0.5 | 0; sY = cy2 - yn * zm + 0.5 | 0;
+    it = Math.max(50, Math.min(1500, 50 + Math.log(zm / 100 + 1) * 80 | 0));
+    fSched();
+  } else if (fDrag &amp;&amp; e.touches.length === 1) {
+    sX += e.touches[0].clientX - fdx; sY += e.touches[0].clientY - fdy;
+    fdx = e.touches[0].clientX; fdy = e.touches[0].clientY; fSched();
+  }
+}, { passive: false });
+
+cv.addEventListener('touchend', function (e) { if (e.touches.length &lt; 2) fPinch = 0; if (e.touches.length &lt; 1) fDrag = 0; });
+
+// ═══════════════════════════════════════
+// 3D CONE (BOTTOM)
+// ═══════════════════════════════════════
+var c3 = document.getElementById('cone3d');
+var g3 = c3.getContext('2d');
+var cW, cH, cCx, cCy, cSC;
+var cRotX = -0.25, cRotY = 0.3, cTRX = -0.25, cTRY = 0.3;
+var cDrag = false, clx, cly;
+
+function szCone() {
+  cW = c3.width = c3.clientWidth * 2;
+  cH = c3.height = c3.clientHeight * 2;
+  c3.style.width = c3.clientWidth + 'px';
+  c3.style.height = c3.clientHeight + 'px';
+  cCx = cW / 2; cCy = cH / 2;
+  cSC = Math.min(cW, cH) * 0.2;
+}
+
+c3.addEventListener('mousedown', function (e) { cDrag = true; clx = e.clientX; cly = e.clientY; });
+c3.addEventListener('mousemove', function (e) {
+  if (!cDrag) return;
+  cTRY += (e.clientX - clx) * 0.005; cTRX += (e.clientY - cly) * 0.005;
+  cTRX = Math.max(-1.3, Math.min(0.4, cTRX));
+  clx = e.clientX; cly = e.clientY;
+});
+c3.addEventListener('mouseup', function () { cDrag = false; });
+c3.addEventListener('mouseleave', function () { cDrag = false; });
+c3.addEventListener('touchstart', function (e) { cDrag = true; clx = e.touches[0].clientX; cly = e.touches[0].clientY; }, { passive: true });
+c3.addEventListener('touchmove', function (e) {
+  if (!cDrag) return;
+  cTRY += (e.touches[0].clientX - clx) * 0.005; cTRX += (e.touches[0].clientY - cly) * 0.005;
+  cTRX = Math.max(-1.3, Math.min(0.4, cTRX));
+  clx = e.touches[0].clientX; cly = e.touches[0].clientY;
+  e.preventDefault();
+}, { passive: false });
+c3.addEventListener('touchend', function () { cDrag = false; });
+
+function cProj(x, y, z) {
+  var x1 = x * Math.cos(cRotY) - z * Math.sin(cRotY);
+  var z1 = x * Math.sin(cRotY) + z * Math.cos(cRotY);
+  var y1 = y * Math.cos(cRotX) - z1 * Math.sin(cRotX);
+  var z2 = y * Math.sin(cRotX) + z1 * Math.cos(cRotX);
+  var p = 5.5 / (5.5 + z2);
+  return { x: cCx + x1 * cSC * p, y: cCy - y1 * cSC * p, z: z2, s: p };
+}
+
+function cLn(a, b, col, al, w) {
+  if (al &lt; 0.005) return;
+  g3.beginPath(); g3.moveTo(a.x, a.y); g3.lineTo(b.x, b.y);
+  g3.strokeStyle = col; g3.globalAlpha = al; g3.lineWidth = w;
+  g3.stroke(); g3.globalAlpha = 1;
+}
+
+function cPt(p, col, r, al) {
+  if (al &lt; 0.005) return;
+  g3.beginPath(); g3.arc(p.x, p.y, r * p.s, 0, Math.PI * 2);
+  g3.fillStyle = col; g3.globalAlpha = al; g3.fill(); g3.globalAlpha = 1;
+}
+
+function cLb(p, t, col, sz, ox, oy) {
+  g3.font = (sz || 16) + 'px JetBrains Mono';
+  g3.fillStyle = col || '#c8a84e'; g3.textAlign = 'center';
+  g3.globalAlpha = 0.9;
+  g3.fillText(t, p.x + (ox || 0), p.y + (oy || -16));
+  g3.globalAlpha = 1;
+}
+
+function drawCone3D() {
+  g3.clearRect(0, 0, cW, cH);
+
+  // Smooth rotation
+  cRotX += (cTRX - cRotX) * 0.07;
+  cRotY += (cTRY - cRotY) * 0.07;
+
+  var eLen = 2.0;
+  var N = 36;
+
+  // e-axis (β axis)
+  var eNeg = cProj(0, 0, eLen);
+  var ePos = cProj(0, 0, -eLen);
+  var o = cProj(0, 0, 0);
+  cLn(eNeg, ePos, '#dd44dd', 0.5, 2.5);
+  cLb(ePos, 'β=+1', '#dd44dd', 12, 0, -12);
+  cLb(ePos, 'emission', '#aa33aa', 9, 0, 2);
+  cLb(eNeg, 'β=−1', '#dd44dd', 12, 0, -12);
+  cLb(eNeg, 'absorption', '#aa33aa', 9, 0, 2);
+
+  // Draw all rings
+  for (var di = 0; di &lt; coneData.length; di++) {
+    var b = coneData[di][0];
+    var r = coneData[di][1];
+    var eCoord = -b * eLen;
+
+    g3.beginPath();
+    var first = true;
+    for (var ai = 0; ai &lt;= N; ai++) {
+      var ang = ai / N * Math.PI * 2;
+      var p = cProj(r * Math.cos(ang), r * Math.sin(ang), eCoord);
+      if (first) { g3.moveTo(p.x, p.y); first = false; } else g3.lineTo(p.x, p.y);
+    }
+    g3.strokeStyle = '#dd44dd';
+    g3.globalAlpha = 0.25 + 0.15 * Math.abs(b);
+    g3.lineWidth = 2;
+    g3.stroke(); g3.globalAlpha = 1;
+  }
+
+  // Meridian lines
+  for (var mi = 0; mi &lt; 8; mi++) {
+    var ang = mi / 8 * Math.PI * 2;
+    g3.beginPath();
+    var first = true;
+    for (var di = 0; di &lt; coneData.length; di++) {
+      var b = coneData[di][0], r = coneData[di][1];
+      var eCoord = -b * eLen;
+      var p = cProj(r * Math.cos(ang), r * Math.sin(ang), eCoord);
+      if (first) { g3.moveTo(p.x, p.y); first = false; } else g3.lineTo(p.x, p.y);
+    }
+    g3.strokeStyle = '#dd44dd';
+    g3.globalAlpha = 0.2;
+    g3.lineWidth = 1.5;
+    g3.stroke(); g3.globalAlpha = 1;
+  }
+
+  // Highlight β=0 ring
+  var r0 = getRadAtBeta(0);
+  g3.beginPath();
+  for (var ai = 0; ai &lt;= N; ai++) {
+    var ang = ai / N * Math.PI * 2;
+    var p = cProj(r0 * Math.cos(ang), r0 * Math.sin(ang), 0);
+    ai === 0 ? g3.moveTo(p.x, p.y) : g3.lineTo(p.x, p.y);
+  }
+  g3.strokeStyle = '#888'; g3.globalAlpha = 0.5; g3.lineWidth = 2;
+  g3.stroke(); g3.globalAlpha = 1;
+  cLb(cProj(r0 + 0.1, 0, 0), 'β=0', '#888', 10, 15, 0);
+
+  // Highlight β=+1 ring (emission)
+  var r1 = coneData[coneData.length - 1][1];
+  g3.beginPath();
+  for (var ai = 0; ai &lt;= N; ai++) {
+    var ang = ai / N * Math.PI * 2;
+    var p = cProj(r1 * Math.cos(ang), r1 * Math.sin(ang), -eLen);
+    ai === 0 ? g3.moveTo(p.x, p.y) : g3.lineTo(p.x, p.y);
+  }
+  g3.strokeStyle = '#c8a84e'; g3.globalAlpha = 0.6; g3.lineWidth = 2.5;
+  g3.stroke(); g3.globalAlpha = 1;
+
+  // Highlight β=-1 ring (absorption)
+  var rn = coneData[0][1];
+  g3.beginPath();
+  for (var ai = 0; ai &lt;= N; ai++) {
+    var ang = ai / N * Math.PI * 2;
+    var p = cProj(rn * Math.cos(ang), rn * Math.sin(ang), eLen);
+    ai === 0 ? g3.moveTo(p.x, p.y) : g3.lineTo(p.x, p.y);
+  }
+  g3.strokeStyle = '#4499ff'; g3.globalAlpha = 0.5; g3.lineWidth = 2.5;
+  g3.stroke(); g3.globalAlpha = 1;
+
+  // ═══ CURRENT SLICE — bright, animated ═══
+  var curR = getRadAtBeta(beta);
+  var curE = -beta * eLen;
+  var sliceCol = beta &gt; 0.01 ? '#c8a84e' : beta &lt; -0.01 ? '#4499ff' : '#888';
+
+  // Filled slice disk
+  g3.beginPath();
+  for (var ai = 0; ai &lt;= N; ai++) {
+    var ang = ai / N * Math.PI * 2;
+    var p = cProj(curR * Math.cos(ang), curR * Math.sin(ang), curE);
+    ai === 0 ? g3.moveTo(p.x, p.y) : g3.lineTo(p.x, p.y);
+  }
+  g3.closePath();
+  g3.fillStyle = sliceCol; g3.globalAlpha = 0.12; g3.fill();
+  g3.strokeStyle = sliceCol; g3.globalAlpha = 0.8; g3.lineWidth = 3;
+  g3.stroke(); g3.globalAlpha = 1;
+
+  // Center dot on slice
+  var sliceCenter = cProj(0, 0, curE);
+  cPt(sliceCenter, sliceCol, 6, 0.9);
+
+  // Label
+  var sign = beta &gt;= 0 ? '+' : '';
+  cLb(sliceCenter, 'β=' + sign + beta.toFixed(2), sliceCol, 12, 0, -14);
+
+  requestAnimationFrame(drawCone3D);
+}
+
+// ═══════════════════════════════════════
+// SLIDER &amp; UPDATE
+// ═══════════════════════════════════════
+function setB(v) { slider.value = v; ivFractal(); upd(); }
+
+function upd() {
+  beta = slider.value / 100;
+  var bv = document.getElementById('betaV');
+  var mt = document.getElementById('mt');
+  var mf = document.getElementById('mf');
+  var mp = document.getElementById('mp');
+  var sign = beta &gt;= 0 ? '+' : '';
+
+  if (Math.abs(beta - 1) &lt; 0.005) {
+    bv.textContent = 'β = +1.000 (CCF Set)'; mt.textContent = 'CCF Set'; mt.style.color = '#c8a84e';
+    mf.textContent = 'Eₙ₊₁ = Eₙ² + Eₙ₋₁'; mp.textContent = 'emission · full memory';
+  } else if (Math.abs(beta + 1) &lt; 0.005) {
+    bv.textContent = 'β = −1.000 (Null Cone)'; mt.textContent = 'CCF Null Cone Set'; mt.style.color = '#4499ff';
+    mf.textContent = 'Eₙ₊₁ = Eₙ² − Eₙ₋₁'; mp.textContent = 'absorption · inverse memory';
+  } else if (Math.abs(beta) &lt; 0.005) {
+    bv.textContent = 'β = 0 (free space)'; mt.textContent = 'E²'; mt.style.color = '#888';
+    mf.textContent = 'Eₙ₊₁ = Eₙ²'; mp.textContent = 'free space · circle';
+  } else {
+    bv.textContent = 'β = ' + sign + beta.toFixed(3);
+    mt.textContent = 'E² + β·E(n-1)'; mt.style.color = '#999';
+    mf.textContent = 'Eₙ₊₁ = Eₙ² + ' + sign + beta.toFixed(3) + '·Eₙ₋₁';
+    mp.textContent = beta &gt; 0 ? 'partial memory' : 'partial inverse memory';
+  }
+  drawFractal();
+}
+
+slider.addEventListener('input', upd);
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+function init() {
+  szFractal(); ivFractal();
+  szCone();
+  upd();
+  drawCone3D();
+}
+
+window.addEventListener('resize', function () { szFractal(); ivFractal(); szCone(); upd(); });
+init();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></details>
+    </div>
+
+    <div class="block">
+      <div class="key">nft_url</div>
+      <a href="https://opensea.io/item/base/0x1f6fb546903c96c81f46a7b37743e328703c7083/8" target="_blank">https://opensea.io/item/base/0x1f6fb546903c96c81f46a7b37743e328703c7083/8</a>
+    </div>
+
+    <div class="block">
+      <div class="key">tweet_url</div>
+      <pre></pre>
+    </div>
+
+  </div>
+  <div class="block">
+    <div class="key">SHA-256</div>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <div class="hash" id="hashResult"></div>
+      <button id="copyHashBtn" type="button">Copy</button>
+    </div>
+  </div>
+</article>
+<script>
+(async () => {
+  const entry = {
+    id: `2605135640435`,
+    safecreative_url: `https://www.safecreative.org/work/2605135640435-ccf-light-cone`,
+    title: `CCF Light Cone`,
+    date: `05/13/2026`,
+    text: `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>CCF Light Cone</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@200;300;400;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#06060b;font-family:'JetBrains Mono',monospace;overflow:hidden;touch-action:none;color:#c8a84e}
+
+#topPanel{position:absolute;top:0;left:0;right:0;height:50vh;overflow:hidden}
+#cv{display:block;width:100%;height:100%;cursor:crosshair;image-rendering:pixelated}
+#hud{position:absolute;top:0;left:0;right:0;padding:5px 10px;background:linear-gradient(rgba(6,6,11,0.9),rgba(6,6,11,0));pointer-events:none;display:flex;justify-content:space-between}
+.title{font-size:10px;font-weight:600;letter-spacing:1px;color:#c8a84e}
+.eq{font-size:8px;color:#666}
+.st{font-size:8px;color:#555;text-align:right}
+.st b{color:#999}
+
+#botPanel{position:absolute;top:50vh;left:0;right:0;bottom:0;overflow:hidden}
+#cone3d{display:block;width:100%;height:100%;cursor:grab}
+#cone3d:active{cursor:grabbing}
+#coneHud{position:absolute;top:4px;left:0;right:0;text-align:center;pointer-events:none}
+#coneHud .t{font-size:9px;font-weight:400;letter-spacing:2px;color:#c8a84e}
+#coneHud .s{font-size:7px;color:#6a6040;margin-top:2px}
+
+#divider{position:absolute;top:50vh;left:0;right:0;height:1px;background:#222;z-index:20}
+
+#ctrl{position:absolute;top:calc(50vh - 52px);left:0;right:0;z-index:20;text-align:center;padding:4px 14px;background:linear-gradient(rgba(6,6,11,0),rgba(6,6,11,0.95))}
+#ctrl .val{font-size:14px;color:#fff;font-weight:600;letter-spacing:1px;margin-bottom:2px}
+#slider{width:80%;max-width:320px;height:5px;-webkit-appearance:none;appearance:none;background:#222;border-radius:3px;outline:none}
+#slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#c8a84e;cursor:pointer}
+#presets{margin-top:4px;display:flex;justify-content:center;gap:4px}
+#presets button{background:rgba(200,168,78,0.04);color:#555;border:1px solid #222;font-family:inherit;font-size:7px;padding:3px 7px;cursor:pointer;border-radius:2px}
+#presets button:hover{background:rgba(200,168,78,0.1);color:#c8a84e;border-color:#c8a84e}
+.copy{position:absolute;bottom:2px;right:6px;font-size:6px;color:#1a1a10;z-index:20}
+</style>
+</head>
+<body>
+
+<div id="topPanel">
+<canvas id="cv"></canvas>
+<div id="hud">
+<div><div class="title" id="mt">CCF Set</div><div class="eq" id="mf">Eₙ₊₁ = Eₙ² + Eₙ₋₁</div><div class="eq" id="mp">emission · full memory</div></div>
+<div><div class="st">zoom <b id="zv">×1</b></div><div class="st">iter <b id="iv">80</b></div></div>
+</div>
+</div>
+
+<div id="ctrl">
+<div class="val" id="betaV">β = +1.000 (CCF Set)</div>
+<input type="range" id="slider" min="-100" max="100" value="100" step="1">
+<div id="presets">
+<button onclick="setB(-100)">−1</button>
+<button onclick="setB(-50)">−½</button>
+<button onclick="setB(0)">0</button>
+<button onclick="setB(50)">+½</button>
+<button onclick="setB(100)">+1</button>
+</div>
+</div>
+
+<div id="divider"></div>
+
+<div id="botPanel">
+<canvas id="cone3d"></canvas>
+<div id="coneHud">
+<div class="t">CCF LIGHT CONE — β = e in sig(3,2)</div>
+<div class="s">J(β)ᵀGJ(β) = βG · E(n+1) = E(n)² + β·E(n-1)</div>
+</div>
+</div>
+
+<div class="copy">© 2026 Captain Cookie Face Universe</div>
+
+<script>
+// ═══════════════════════════════════════
+// SHARED DATA
+// ═══════════════════════════════════════
+var beta = 1.0;
+var slider = document.getElementById('slider');
+
+// Average radius data from original CCF Light Lifecycle simulator
+var coneData = [
+  [-1.00, 0.6658], [-0.90, 0.8635], [-0.80, 0.9062], [-0.70, 0.9380],
+  [-0.60, 0.9497], [-0.50, 0.9631], [-0.40, 0.9724], [-0.30, 0.9832],
+  [-0.20, 0.9908], [-0.10, 0.9941], [ 0.00, 0.9950], [ 0.10, 0.9925],
+  [ 0.20, 0.9866], [ 0.30, 0.9757], [ 0.40, 0.9631], [ 0.50, 0.9355],
+  [ 0.60, 0.8886], [ 0.70, 0.8342], [ 0.80, 0.7814], [ 0.90, 0.6692],
+  [ 1.00, 0.2739]
+];
+
+function getRadAtBeta(b) {
+  for (var i = 0; i < coneData.length - 1; i++) {
+    if (b >= coneData[i][0] && b <= coneData[i + 1][0]) {
+      var t = (b - coneData[i][0]) / (coneData[i + 1][0] - coneData[i][0]);
+      return coneData[i][1] + (coneData[i + 1][1] - coneData[i][1]) * t;
+    }
+  }
+  return coneData[0][1];
+}
+
+// ═══════════════════════════════════════
+// FRACTAL (TOP)
+// ═══════════════════════════════════════
+var cv = document.getElementById('cv');
+var cx = cv.getContext('2d', { alpha: false });
+var fW, fH, img, sX, sY, zm, it;
+
+var P = new Uint8Array(768);
+for (var i = 0; i < 255; i++) {
+  var r, g, b;
+  if (i < 32) { r = i * 8; g = i * 8; b = 127 - i * 4; }
+  else if (i < 128) { r = 255; g = 255 - (i - 32) * 2.67 | 0; b = (i - 32) * 1.33 | 0; }
+  else if (i < 192) { r = 255 - (i - 128) * 4; g = (i - 128) * 3; b = 127 - (i - 128); }
+  else { r = 0; g = 192 - (i - 192) * 3; b = 64 + (i - 192); }
+  P[i * 3] = r < 0 ? 0 : r > 255 ? 255 : r;
+  P[i * 3 + 1] = g < 0 ? 0 : g > 255 ? 255 : g;
+  P[i * 3 + 2] = b < 0 ? 0 : b > 255 ? 255 : b;
+}
+
+function szFractal() {
+  fW = cv.width = cv.clientWidth;
+  fH = cv.height = cv.clientHeight;
+  img = cx.createImageData(fW, fH);
+}
+
+function ivFractal() {
+  sX = fW / 2 | 0; sY = fH / 2 | 0;
+  zm = Math.min(fW, fH) / 3.75 | 0;
+  it = 80;
+}
+
+function drawFractal() {
+  var d = img.data, b = beta, esc = 10000;
+  for (var py = 0; py < fH; py++) {
+    var yn = (py - sY) / zm;
+    for (var px = 0; px < fW; px++) {
+      var xn = (px - sX) / zm;
+      var n = 0, pr = 0, pi = 0, zr = xn, zi = yn, nr, ni;
+      while (n < it) {
+        if (zr * zr + zi * zi >= esc) break;
+        nr = zr * zr - zi * zi + b * pr;
+        ni = 2 * zr * zi + b * pi;
+        pr = zr; pi = zi; zr = nr; zi = ni; n++;
+      }
+      var o = (py * fW + px) * 4;
+      if (n >= it) { d[o] = 0; d[o + 1] = 0; d[o + 2] = 0; }
+      else { var c = n % 255; d[o] = P[c * 3]; d[o + 1] = P[c * 3 + 1]; d[o + 2] = P[c * 3 + 2]; }
+      d[o + 3] = 255;
+    }
+  }
+  cx.putImageData(img, 0, 0);
+  var baseZm = Math.min(fW, fH) / 3 | 0;
+  document.getElementById('zv').textContent = '×' + (zm / baseZm).toFixed(1);
+  document.getElementById('iv').textContent = it;
+}
+
+// Fractal interaction
+var fDrag = 0, fdx, fdy, fPinch = 0, fpd0, fzm0, fRto = null;
+function fSched() { if (fRto) clearTimeout(fRto); fRto = setTimeout(function () { drawFractal(); }, 30); }
+
+cv.addEventListener('wheel', function (e) {
+  e.preventDefault();
+  var rect = cv.getBoundingClientRect();
+  var mx = e.clientX - rect.left, my = e.clientY - rect.top;
+  var xn = (mx - sX) / zm, yn = (my - sY) / zm;
+  zm = Math.max(10, zm * (e.deltaY < 0 ? 1.3 : 0.77) | 0);
+  sX = mx - xn * zm + 0.5 | 0; sY = my - yn * zm + 0.5 | 0;
+  it = Math.max(50, Math.min(1500, 50 + Math.log(zm / 100 + 1) * 80 | 0));
+  fSched();
+}, { passive: false });
+
+cv.addEventListener('mousedown', function (e) { fDrag = 1; fdx = e.clientX; fdy = e.clientY; });
+cv.addEventListener('mousemove', function (e) { if (!fDrag) return; sX += e.clientX - fdx; sY += e.clientY - fdy; fdx = e.clientX; fdy = e.clientY; fSched(); });
+cv.addEventListener('mouseup', function () { fDrag = 0; });
+
+cv.addEventListener('touchstart', function (e) {
+  e.preventDefault();
+  if (e.touches.length === 2) { fPinch = 1; var a = e.touches[0], b = e.touches[1]; fpd0 = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY); fzm0 = zm; }
+  else if (e.touches.length === 1) { fDrag = 1; fdx = e.touches[0].clientX; fdy = e.touches[0].clientY; }
+}, { passive: false });
+
+cv.addEventListener('touchmove', function (e) {
+  e.preventDefault();
+  if (e.touches.length === 2 && fPinch) {
+    var a = e.touches[0], b = e.touches[1];
+    var dist = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+    var rect = cv.getBoundingClientRect();
+    var cx2 = (a.clientX + b.clientX) / 2 - rect.left, cy2 = (a.clientY + b.clientY) / 2 - rect.top;
+    var xn = (cx2 - sX) / zm, yn = (cy2 - sY) / zm;
+    zm = Math.max(10, fzm0 * dist / fpd0 | 0);
+    sX = cx2 - xn * zm + 0.5 | 0; sY = cy2 - yn * zm + 0.5 | 0;
+    it = Math.max(50, Math.min(1500, 50 + Math.log(zm / 100 + 1) * 80 | 0));
+    fSched();
+  } else if (fDrag && e.touches.length === 1) {
+    sX += e.touches[0].clientX - fdx; sY += e.touches[0].clientY - fdy;
+    fdx = e.touches[0].clientX; fdy = e.touches[0].clientY; fSched();
+  }
+}, { passive: false });
+
+cv.addEventListener('touchend', function (e) { if (e.touches.length < 2) fPinch = 0; if (e.touches.length < 1) fDrag = 0; });
+
+// ═══════════════════════════════════════
+// 3D CONE (BOTTOM)
+// ═══════════════════════════════════════
+var c3 = document.getElementById('cone3d');
+var g3 = c3.getContext('2d');
+var cW, cH, cCx, cCy, cSC;
+var cRotX = -0.25, cRotY = 0.3, cTRX = -0.25, cTRY = 0.3;
+var cDrag = false, clx, cly;
+
+function szCone() {
+  cW = c3.width = c3.clientWidth * 2;
+  cH = c3.height = c3.clientHeight * 2;
+  c3.style.width = c3.clientWidth + 'px';
+  c3.style.height = c3.clientHeight + 'px';
+  cCx = cW / 2; cCy = cH / 2;
+  cSC = Math.min(cW, cH) * 0.2;
+}
+
+c3.addEventListener('mousedown', function (e) { cDrag = true; clx = e.clientX; cly = e.clientY; });
+c3.addEventListener('mousemove', function (e) {
+  if (!cDrag) return;
+  cTRY += (e.clientX - clx) * 0.005; cTRX += (e.clientY - cly) * 0.005;
+  cTRX = Math.max(-1.3, Math.min(0.4, cTRX));
+  clx = e.clientX; cly = e.clientY;
+});
+c3.addEventListener('mouseup', function () { cDrag = false; });
+c3.addEventListener('mouseleave', function () { cDrag = false; });
+c3.addEventListener('touchstart', function (e) { cDrag = true; clx = e.touches[0].clientX; cly = e.touches[0].clientY; }, { passive: true });
+c3.addEventListener('touchmove', function (e) {
+  if (!cDrag) return;
+  cTRY += (e.touches[0].clientX - clx) * 0.005; cTRX += (e.touches[0].clientY - cly) * 0.005;
+  cTRX = Math.max(-1.3, Math.min(0.4, cTRX));
+  clx = e.touches[0].clientX; cly = e.touches[0].clientY;
+  e.preventDefault();
+}, { passive: false });
+c3.addEventListener('touchend', function () { cDrag = false; });
+
+function cProj(x, y, z) {
+  var x1 = x * Math.cos(cRotY) - z * Math.sin(cRotY);
+  var z1 = x * Math.sin(cRotY) + z * Math.cos(cRotY);
+  var y1 = y * Math.cos(cRotX) - z1 * Math.sin(cRotX);
+  var z2 = y * Math.sin(cRotX) + z1 * Math.cos(cRotX);
+  var p = 5.5 / (5.5 + z2);
+  return { x: cCx + x1 * cSC * p, y: cCy - y1 * cSC * p, z: z2, s: p };
+}
+
+function cLn(a, b, col, al, w) {
+  if (al < 0.005) return;
+  g3.beginPath(); g3.moveTo(a.x, a.y); g3.lineTo(b.x, b.y);
+  g3.strokeStyle = col; g3.globalAlpha = al; g3.lineWidth = w;
+  g3.stroke(); g3.globalAlpha = 1;
+}
+
+function cPt(p, col, r, al) {
+  if (al < 0.005) return;
+  g3.beginPath(); g3.arc(p.x, p.y, r * p.s, 0, Math.PI * 2);
+  g3.fillStyle = col; g3.globalAlpha = al; g3.fill(); g3.globalAlpha = 1;
+}
+
+function cLb(p, t, col, sz, ox, oy) {
+  g3.font = (sz || 16) + 'px JetBrains Mono';
+  g3.fillStyle = col || '#c8a84e'; g3.textAlign = 'center';
+  g3.globalAlpha = 0.9;
+  g3.fillText(t, p.x + (ox || 0), p.y + (oy || -16));
+  g3.globalAlpha = 1;
+}
+
+function drawCone3D() {
+  g3.clearRect(0, 0, cW, cH);
+
+  // Smooth rotation
+  cRotX += (cTRX - cRotX) * 0.07;
+  cRotY += (cTRY - cRotY) * 0.07;
+
+  var eLen = 2.0;
+  var N = 36;
+
+  // e-axis (β axis)
+  var eNeg = cProj(0, 0, eLen);
+  var ePos = cProj(0, 0, -eLen);
+  var o = cProj(0, 0, 0);
+  cLn(eNeg, ePos, '#dd44dd', 0.5, 2.5);
+  cLb(ePos, 'β=+1', '#dd44dd', 12, 0, -12);
+  cLb(ePos, 'emission', '#aa33aa', 9, 0, 2);
+  cLb(eNeg, 'β=−1', '#dd44dd', 12, 0, -12);
+  cLb(eNeg, 'absorption', '#aa33aa', 9, 0, 2);
+
+  // Draw all rings
+  for (var di = 0; di < coneData.length; di++) {
+    var b = coneData[di][0];
+    var r = coneData[di][1];
+    var eCoord = -b * eLen;
+
+    g3.beginPath();
+    var first = true;
+    for (var ai = 0; ai <= N; ai++) {
+      var ang = ai / N * Math.PI * 2;
+      var p = cProj(r * Math.cos(ang), r * Math.sin(ang), eCoord);
+      if (first) { g3.moveTo(p.x, p.y); first = false; } else g3.lineTo(p.x, p.y);
+    }
+    g3.strokeStyle = '#dd44dd';
+    g3.globalAlpha = 0.25 + 0.15 * Math.abs(b);
+    g3.lineWidth = 2;
+    g3.stroke(); g3.globalAlpha = 1;
+  }
+
+  // Meridian lines
+  for (var mi = 0; mi < 8; mi++) {
+    var ang = mi / 8 * Math.PI * 2;
+    g3.beginPath();
+    var first = true;
+    for (var di = 0; di < coneData.length; di++) {
+      var b = coneData[di][0], r = coneData[di][1];
+      var eCoord = -b * eLen;
+      var p = cProj(r * Math.cos(ang), r * Math.sin(ang), eCoord);
+      if (first) { g3.moveTo(p.x, p.y); first = false; } else g3.lineTo(p.x, p.y);
+    }
+    g3.strokeStyle = '#dd44dd';
+    g3.globalAlpha = 0.2;
+    g3.lineWidth = 1.5;
+    g3.stroke(); g3.globalAlpha = 1;
+  }
+
+  // Highlight β=0 ring
+  var r0 = getRadAtBeta(0);
+  g3.beginPath();
+  for (var ai = 0; ai <= N; ai++) {
+    var ang = ai / N * Math.PI * 2;
+    var p = cProj(r0 * Math.cos(ang), r0 * Math.sin(ang), 0);
+    ai === 0 ? g3.moveTo(p.x, p.y) : g3.lineTo(p.x, p.y);
+  }
+  g3.strokeStyle = '#888'; g3.globalAlpha = 0.5; g3.lineWidth = 2;
+  g3.stroke(); g3.globalAlpha = 1;
+  cLb(cProj(r0 + 0.1, 0, 0), 'β=0', '#888', 10, 15, 0);
+
+  // Highlight β=+1 ring (emission)
+  var r1 = coneData[coneData.length - 1][1];
+  g3.beginPath();
+  for (var ai = 0; ai <= N; ai++) {
+    var ang = ai / N * Math.PI * 2;
+    var p = cProj(r1 * Math.cos(ang), r1 * Math.sin(ang), -eLen);
+    ai === 0 ? g3.moveTo(p.x, p.y) : g3.lineTo(p.x, p.y);
+  }
+  g3.strokeStyle = '#c8a84e'; g3.globalAlpha = 0.6; g3.lineWidth = 2.5;
+  g3.stroke(); g3.globalAlpha = 1;
+
+  // Highlight β=-1 ring (absorption)
+  var rn = coneData[0][1];
+  g3.beginPath();
+  for (var ai = 0; ai <= N; ai++) {
+    var ang = ai / N * Math.PI * 2;
+    var p = cProj(rn * Math.cos(ang), rn * Math.sin(ang), eLen);
+    ai === 0 ? g3.moveTo(p.x, p.y) : g3.lineTo(p.x, p.y);
+  }
+  g3.strokeStyle = '#4499ff'; g3.globalAlpha = 0.5; g3.lineWidth = 2.5;
+  g3.stroke(); g3.globalAlpha = 1;
+
+  // ═══ CURRENT SLICE — bright, animated ═══
+  var curR = getRadAtBeta(beta);
+  var curE = -beta * eLen;
+  var sliceCol = beta > 0.01 ? '#c8a84e' : beta < -0.01 ? '#4499ff' : '#888';
+
+  // Filled slice disk
+  g3.beginPath();
+  for (var ai = 0; ai <= N; ai++) {
+    var ang = ai / N * Math.PI * 2;
+    var p = cProj(curR * Math.cos(ang), curR * Math.sin(ang), curE);
+    ai === 0 ? g3.moveTo(p.x, p.y) : g3.lineTo(p.x, p.y);
+  }
+  g3.closePath();
+  g3.fillStyle = sliceCol; g3.globalAlpha = 0.12; g3.fill();
+  g3.strokeStyle = sliceCol; g3.globalAlpha = 0.8; g3.lineWidth = 3;
+  g3.stroke(); g3.globalAlpha = 1;
+
+  // Center dot on slice
+  var sliceCenter = cProj(0, 0, curE);
+  cPt(sliceCenter, sliceCol, 6, 0.9);
+
+  // Label
+  var sign = beta >= 0 ? '+' : '';
+  cLb(sliceCenter, 'β=' + sign + beta.toFixed(2), sliceCol, 12, 0, -14);
+
+  requestAnimationFrame(drawCone3D);
+}
+
+// ═══════════════════════════════════════
+// SLIDER & UPDATE
+// ═══════════════════════════════════════
+function setB(v) { slider.value = v; ivFractal(); upd(); }
+
+function upd() {
+  beta = slider.value / 100;
+  var bv = document.getElementById('betaV');
+  var mt = document.getElementById('mt');
+  var mf = document.getElementById('mf');
+  var mp = document.getElementById('mp');
+  var sign = beta >= 0 ? '+' : '';
+
+  if (Math.abs(beta - 1) < 0.005) {
+    bv.textContent = 'β = +1.000 (CCF Set)'; mt.textContent = 'CCF Set'; mt.style.color = '#c8a84e';
+    mf.textContent = 'Eₙ₊₁ = Eₙ² + Eₙ₋₁'; mp.textContent = 'emission · full memory';
+  } else if (Math.abs(beta + 1) < 0.005) {
+    bv.textContent = 'β = −1.000 (Null Cone)'; mt.textContent = 'CCF Null Cone Set'; mt.style.color = '#4499ff';
+    mf.textContent = 'Eₙ₊₁ = Eₙ² − Eₙ₋₁'; mp.textContent = 'absorption · inverse memory';
+  } else if (Math.abs(beta) < 0.005) {
+    bv.textContent = 'β = 0 (free space)'; mt.textContent = 'E²'; mt.style.color = '#888';
+    mf.textContent = 'Eₙ₊₁ = Eₙ²'; mp.textContent = 'free space · circle';
+  } else {
+    bv.textContent = 'β = ' + sign + beta.toFixed(3);
+    mt.textContent = 'E² + β·E(n-1)'; mt.style.color = '#999';
+    mf.textContent = 'Eₙ₊₁ = Eₙ² + ' + sign + beta.toFixed(3) + '·Eₙ₋₁';
+    mp.textContent = beta > 0 ? 'partial memory' : 'partial inverse memory';
+  }
+  drawFractal();
+}
+
+slider.addEventListener('input', upd);
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+function init() {
+  szFractal(); ivFractal();
+  szCone();
+  upd();
+  drawCone3D();
+}
+
+window.addEventListener('resize', function () { szFractal(); ivFractal(); szCone(); upd(); });
+init();
+<\/script>
+</body>
+</html>`,
+    nft_url: `https://opensea.io/item/base/0x1f6fb546903c96c81f46a7b37743e328703c7083/8`,
+    tweet_url: ``
+  };
+  const canonicalString = [entry.id, entry.safecreative_url, entry.title, entry.date, entry.text, entry.nft_url, entry.tweet_url].join('\n---\n');
+  const data = new TextEncoder().encode(canonicalString);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashHex = [...new Uint8Array(hashBuffer)].map(b => b.toString(16).padStart(2, '0')).join('');
+  document.getElementById('hashResult').textContent = hashHex;
+  document.getElementById('copyHashBtn').addEventListener('click', () => { navigator.clipboard.writeText(hashHex); alert('Hash copied'); });
+})();
+</script>
+</body></html>

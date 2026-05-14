@@ -8,5 +8,15 @@
     "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/1",
     "tweet_url": "",
     "image_url": "https://rcbxeodkkyiyz32uu6vejodkykpuifrn4s5l4kkmoo6kdn463goq.ardrive.net/iINyOGpWEYzvVKeqRLhqwp9EFi3kur4pTHO8obee2Z0"
+  },
+  {
+    "id": "2605145657744",
+    "safecreative_url": "https://www.safecreative.org/work/2605145657744-ccfu-proof-2-the-lorentzian-hyperboloid-identity",
+    "title": "CCFU Proof 2 — The Lorentzian Hyperboloid Identity",
+    "date": "05/14/2026",
+    "text": "Given.\nThe second-order linear recurrence:\n\n    C₂:  x(n+2) = x(n+1) + x(n)\n\nAssume x(n) ≠ 0.  Let R = x(n+1)/x(n) ∈ ℝ.\n\nDefine.\n\n    U₁ = (2R − 1) / √5\n    U₂ = (R + 2) / √5\n    V  = R\n\nClaim.\n\n    U₁² + U₂² − V² = 1\n\nProof.\n\n    U₁² + U₂² = ((2R−1)² + (R+2)²) / 5\n              = (4R²−4R+1 + R²+4R+4) / 5\n              = (5R² + 5) / 5\n              = R² + 1\n\n    U₁² + U₂² − V² = R² + 1 − R² = 1  ∎\n\nNote.\nThis is a one-parameter Lorentzian hyperboloid identity, not a full H² embedding with metric and curvature. For every real R, the point (U₁, U₂, V) lies on the unit hyperboloid U₁² + U₂² − V² = 1 in signature (2,1). In the positive C₂ ratio dynamics, R > 0. The normalization √5 is the C₂ discriminant scale. No free parameters are chosen.\n\nCorollary — C₂ defines a null ruling.\n\nWrite (U₁, U₂, V) = P + R·D, where\n\n    P = (−1/√5, 2/√5, 0)\n    D = (2/√5, 1/√5, 1)\n\nUnder the Lorentzian form ⟨u,v⟩ = u₁v₁ + u₂v₂ − u₃v₃:\n\n    ⟨P,P⟩ = 1\n    ⟨D,D⟩ = 0\n    ⟨P,D⟩ = 0\n\nTherefore ⟨P+RD, P+RD⟩ = 1 for all R ∈ ℝ. The direction D is null; the C₂ ratio curve is a null ruling on the Lorentzian hyperboloid.  ∎\n",
+    "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/2",
+    "tweet_url": "",
+    "image_url": "https://6v4qb2apk3agjo6jlbd6dkx2qwn4skphrdljibqrwt24we7g3hoq.turbo-gateway.com/9XkA6A9WwGS7yVhH4ar6hZvJKeeI1pQGEbT1yxPm2d0"
   }
 ]

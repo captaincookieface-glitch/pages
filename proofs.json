@@ -1,0 +1,12 @@
+[
+  {
+    "id": "2605135641760",
+    "safecreative_url": "https://www.safecreative.org/work/2605135641760-ccfu-proof-1-is-the-unique-positive-attracting-fixed-point-of-c2",
+    "title": "CCFU Proof 1\nφ is the unique positive attracting fixed point of C2",
+    "date": "05/13/2026",
+    "text": "Given. The second-order linear recurrence with unit coefficients:\nC₂: x(n+1) = x(n) + x(n-1)\nDefine. Rₙ = x(n+1)/x(n), assuming x(n) ≠ 0 and R₀ > 0.\nStep 1 — Ratio dynamics.\nR(n+1) = x(n+2)/x(n+1) = (x(n+1) + x(n))/x(n+1) = 1 + 1/Rₙ\nStep 2 — Fixed point. At equilibrium R(n+1) = Rₙ = R:\nR = 1 + 1/R,   R² = R + 1,   R² − R − 1 = 0\nSolutions: R = (1 ± √5)/2. The unique positive root is\nφ = (1 + √5)/2\nStep 3 — Local stability. Define f(R) = 1 + 1/R. Then f’(R) = −1/R², so\n|f’(φ)| = 1/φ² = 1/(φ + 1) < 1\nwhere we used φ² = φ + 1. The fixed point is locally attracting.\nStep 4 — Global convergence. For all R₀ > 0:\nR(n+1) − φ = 1 + 1/Rₙ − φ = (φ − Rₙ)/(φ Rₙ) = −(Rₙ − φ)/(φ Rₙ)\nTherefore\n|R(n+1) − φ| = |Rₙ − φ|/(φ Rₙ)\nFor any R₀ > 0, we have R₁ = 1 + 1/R₀ > 1. Therefore for all n ≥ 1:\nRₙ > 1,   φ Rₙ > φ > 1\nso\n|R(n+1) − φ| < |Rₙ − φ|/φ\nThe error contracts by a factor smaller than 1/φ per step. Convergence is geometric after the first iteration.\nTherefore Rₙ → φ for all R₀ > 0.\nConclusion. φ = (1+√5)/2 is the unique positive fixed point of the ratio map f(R) = 1+1/R. It is globally attracting on ℝ₊. No parameters are chosen. The recurrence C₂ alone forces φ. ∎​​​​​​​​​​​​​​​​",
+    "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/1",
+    "tweet_url": "",
+    "image_url": "https://rcbxeodkkyiyz32uu6vejodkykpuifrn4s5l4kkmoo6kdn463goq.ardrive.net/iINyOGpWEYzvVKeqRLhqwp9EFi3kur4pTHO8obee2Z0"
+  }
+]

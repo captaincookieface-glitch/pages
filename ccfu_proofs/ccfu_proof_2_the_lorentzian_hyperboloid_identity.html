@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CCFU Proof 2 — The Lorentzian Hyperboloid Identity</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #fff; }
+    .block { margin-bottom: 20px; padding: 15px; border: 1px solid #eee; word-wrap: break-word; }
+    .key { color: #000; font-size: 2em !important; text-transform: capitalize; font-weight: bold; }
+    .hash { word-break: break-all; color: #4287f5; }
+    a { color: #4287f5; text-decoration: underline; }
+    pre { white-space: pre-wrap; }
+    button { font-family: inherit; padding: 6px 10px; border: 1px solid #ccc; background: #f9f9f9; cursor: pointer; }
+    h1 { margin-bottom: 10px; font-size: 32px; }
+    nav { background-color: #e1e1e1; padding: 10px; }
+    nav > ul { display: flex; flex-wrap: wrap; list-style: none; padding: 0; margin: 0; }
+    nav > ul > li, nav > ul > li > a { display: flex; flex-direction: column; text-align: center; margin: 0; }
+    nav ul li img { max-width: 80px; width: 100%; height: auto; border-radius: 40px; }
+    .arrow { width: 50px; height: 80px; font-size: 38px; }
+  </style>
+</head>
+<body>
+<article itemscope itemtype="https://schema.org/CreativeWork">
+  <meta itemprop="identifier" content="2605145657744">
+  <meta itemprop="dateCreated" content="05/14/2026">
+<h1 itemprop="name">CCFU Proof 2 — The Lorentzian Hyperboloid Identity</h1>
+<nav aria-label="Breadcrumb" class="breadcrumb">
+  <ul>
+    <li><a href="../"><img src="../assets/images/AFB9C382-3B34-4925-B318-E7083E758055.png" alt="Home"/><span>Home</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><a href="./"><img src="../assets/images/proofs-1024.svg" alt="CCFU"/><span>CCFU Proofs</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><img src="../assets/images/proofs-1024.svg" alt="CCFU"/><span>CCFU Proof 2 — The Lorentzian Hyperboloid Identity</span></li>
+  </ul>
+</nav>
+  <div class="block" id="rendered">
+
+    <div class="block">
+      <div class="key">id</div>
+      <pre>2605145657744</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">safecreative_url</div>
+      <a href="https://www.safecreative.org/work/2605145657744-ccfu-proof-2-the-lorentzian-hyperboloid-identity" target="_blank">https://www.safecreative.org/work/2605145657744-ccfu-proof-2-the-lorentzian-hyperboloid-identity</a>
+    </div>
+
+    <div class="block">
+      <div class="key">title</div>
+      <pre>CCFU Proof 2 — The Lorentzian Hyperboloid Identity</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">date</div>
+      <pre>05/14/2026</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">text</div>
+      <pre>Given.
+The second-order linear recurrence:
+
+    C₂:  x(n+2) = x(n+1) + x(n)
+
+Assume x(n) ≠ 0.  Let R = x(n+1)/x(n) ∈ ℝ.
+
+Define.
+
+    U₁ = (2R − 1) / √5
+    U₂ = (R + 2) / √5
+    V  = R
+
+Claim.
+
+    U₁² + U₂² − V² = 1
+
+Proof.
+
+    U₁² + U₂² = ((2R−1)² + (R+2)²) / 5
+              = (4R²−4R+1 + R²+4R+4) / 5
+              = (5R² + 5) / 5
+              = R² + 1
+
+    U₁² + U₂² − V² = R² + 1 − R² = 1  ∎
+
+Note.
+This is a one-parameter Lorentzian hyperboloid identity, not a full H² embedding with metric and curvature. For every real R, the point (U₁, U₂, V) lies on the unit hyperboloid U₁² + U₂² − V² = 1 in signature (2,1). In the positive C₂ ratio dynamics, R &gt; 0. The normalization √5 is the C₂ discriminant scale. No free parameters are chosen.
+
+Corollary — C₂ defines a null ruling.
+
+Write (U₁, U₂, V) = P + R·D, where
+
+    P = (−1/√5, 2/√5, 0)
+    D = (2/√5, 1/√5, 1)
+
+Under the Lorentzian form ⟨u,v⟩ = u₁v₁ + u₂v₂ − u₃v₃:
+
+    ⟨P,P⟩ = 1
+    ⟨D,D⟩ = 0
+    ⟨P,D⟩ = 0
+
+Therefore ⟨P+RD, P+RD⟩ = 1 for all R ∈ ℝ. The direction D is null; the C₂ ratio curve is a null ruling on the Lorentzian hyperboloid.  ∎
+</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">nft_url</div>
+      <a href="https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/2" target="_blank">https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/2</a>
+    </div>
+
+    <div class="block">
+      <div class="key">tweet_url</div>
+      <pre></pre>
+    </div>
+
+  </div>
+  <div class="block">
+    <div class="key">SHA-256</div>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <div class="hash" id="hashResult"></div>
+      <button id="copyHashBtn" type="button">Copy</button>
+    </div>
+  </div>
+
+  <div class="block">
+    <img src="https://6v4qb2apk3agjo6jlbd6dkx2qwn4skphrdljibqrwt24we7g3hoq.turbo-gateway.com/9XkA6A9WwGS7yVhH4ar6hZvJKeeI1pQGEbT1yxPm2d0" 
+     alt="CCFU Proof 2 — The Lorentzian Hyperboloid Identity" 
+     style="max-width: 100%; height: auto;" />
+  </div>
+
+</article>
+<script>
+(async () => {
+  const entry = {
+    id: `2605145657744`,
+    safecreative_url: `https://www.safecreative.org/work/2605145657744-ccfu-proof-2-the-lorentzian-hyperboloid-identity`,
+    title: `CCFU Proof 2 — The Lorentzian Hyperboloid Identity`,
+    date: `05/14/2026`,
+    text: `Given.
+The second-order linear recurrence:
+
+    C₂:  x(n+2) = x(n+1) + x(n)
+
+Assume x(n) ≠ 0.  Let R = x(n+1)/x(n) ∈ ℝ.
+
+Define.
+
+    U₁ = (2R − 1) / √5
+    U₂ = (R + 2) / √5
+    V  = R
+
+Claim.
+
+    U₁² + U₂² − V² = 1
+
+Proof.
+
+    U₁² + U₂² = ((2R−1)² + (R+2)²) / 5
+              = (4R²−4R+1 + R²+4R+4) / 5
+              = (5R² + 5) / 5
+              = R² + 1
+
+    U₁² + U₂² − V² = R² + 1 − R² = 1  ∎
+
+Note.
+This is a one-parameter Lorentzian hyperboloid identity, not a full H² embedding with metric and curvature. For every real R, the point (U₁, U₂, V) lies on the unit hyperboloid U₁² + U₂² − V² = 1 in signature (2,1). In the positive C₂ ratio dynamics, R > 0. The normalization √5 is the C₂ discriminant scale. No free parameters are chosen.
+
+Corollary — C₂ defines a null ruling.
+
+Write (U₁, U₂, V) = P + R·D, where
+
+    P = (−1/√5, 2/√5, 0)
+    D = (2/√5, 1/√5, 1)
+
+Under the Lorentzian form ⟨u,v⟩ = u₁v₁ + u₂v₂ − u₃v₃:
+
+    ⟨P,P⟩ = 1
+    ⟨D,D⟩ = 0
+    ⟨P,D⟩ = 0
+
+Therefore ⟨P+RD, P+RD⟩ = 1 for all R ∈ ℝ. The direction D is null; the C₂ ratio curve is a null ruling on the Lorentzian hyperboloid.  ∎
+`,
+    nft_url: `https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/2`,
+    tweet_url: ``
+  };
+  const canonicalString = [entry.id, entry.safecreative_url, entry.title, entry.date, entry.text, entry.nft_url, entry.tweet_url].join('\n---\n');
+  const data = new TextEncoder().encode(canonicalString);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashHex = [...new Uint8Array(hashBuffer)].map(b => b.toString(16).padStart(2, '0')).join('');
+  document.getElementById('hashResult').textContent = hashHex;
+  document.getElementById('copyHashBtn').addEventListener('click', () => { navigator.clipboard.writeText(hashHex); alert('Hash copied'); });
+})();
+</script>
+</body></html>

@@ -5,7 +5,7 @@ on:
     paths:
       - 'captain_cookie_face/index.html'
       - 'theories/index.html'
-      - 'ccfu_simulators/index.html'
+      - 'ccfu_proofs/index.html'
   workflow_dispatch:
 
 permissions:
@@ -27,7 +27,7 @@ jobs:
 
           CCF_INDEX="captain_cookie_face/index.html"
           THEORIES_INDEX="theories/index.html"
-          SIMULATORS_INDEX="ccfu_simulators/index.html"
+          PROOFS_INDEX="ccfu_proofs/index.html"
 
           # ── Extract hrefs preserving order, no duplicates ──
           extract_urls() {
@@ -57,10 +57,10 @@ jobs:
             echo "${BASE_URL}/theories/index.html"
             extract_urls "$THEORIES_INDEX" "theories"
 
-            # 4. Simulators section
-            echo "${BASE_URL}/ccfu_simulators/"
-            echo "${BASE_URL}/ccfu_simulators/index.html"
-            extract_urls "$SIMULATORS_INDEX" "ccfu_simulators"
+            # 4. CCFU Proofs section
+            echo "${BASE_URL}/ccfu_proofs/"
+            echo "${BASE_URL}/ccfu_proofs/index.html"
+            extract_urls "$PROOFS_INDEX" "ccfu_proofs"
           } > /tmp/all_urls.txt
 
           # ── Build sitemap XML ──
@@ -80,7 +80,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --quiet sitemap.xml && echo "No changes to sitemap.xml" && exit 0
           git add sitemap.xml
-          git diff --cached --quiet && echo "No changes to sitemap.xml" && exit 0
           git commit -m "Auto-update sitemap.xml from index files"
           git push

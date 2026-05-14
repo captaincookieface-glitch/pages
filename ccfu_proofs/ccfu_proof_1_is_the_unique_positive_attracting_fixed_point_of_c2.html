@@ -61,29 +61,68 @@
 
     <div class="block">
       <div class="key">text</div>
-      <pre>Given. The second-order linear recurrence with unit coefficients:
-C₂: x(n+1) = x(n) + x(n-1)
-Define. Rₙ = x(n+1)/x(n), assuming x(n) ≠ 0 and R₀ &gt; 0.
+      <pre>Given.
+The second-order linear recurrence with unit coefficients:
+
+    C₂:  x(n+1) = x(n) + x(n-1)
+
+Define.  Rₙ = x(n+1)/x(n),  assuming x(n) ≠ 0 and R₀ &gt; 0.
+
 Step 1 — Ratio dynamics.
-R(n+1) = x(n+2)/x(n+1) = (x(n+1) + x(n))/x(n+1) = 1 + 1/Rₙ
-Step 2 — Fixed point. At equilibrium R(n+1) = Rₙ = R:
-R = 1 + 1/R,   R² = R + 1,   R² − R − 1 = 0
-Solutions: R = (1 ± √5)/2. The unique positive root is
-φ = (1 + √5)/2
-Step 3 — Local stability. Define f(R) = 1 + 1/R. Then f’(R) = −1/R², so
-|f’(φ)| = 1/φ² = 1/(φ + 1) &lt; 1
-where we used φ² = φ + 1. The fixed point is locally attracting.
-Step 4 — Global convergence. For all R₀ &gt; 0:
-R(n+1) − φ = 1 + 1/Rₙ − φ = (φ − Rₙ)/(φ Rₙ) = −(Rₙ − φ)/(φ Rₙ)
+
+    R(n+1) = x(n+2)/x(n+1)
+           = (x(n+1) + x(n)) / x(n+1)
+           = 1 + 1/Rₙ
+
+Step 2 — Fixed point.
+At equilibrium R(n+1) = Rₙ = R:
+
+    R = 1 + 1/R
+    R² = R + 1
+    R² − R − 1 = 0
+
+Solutions:  R = (1 ± √5)/2.
+The unique positive root is
+
+    φ = (1 + √5)/2
+
+Step 3 — Local stability.
+Define f(R) = 1 + 1/R.  Then f′(R) = −1/R², so
+
+    |f′(φ)| = 1/φ² = 1/(φ + 1) &lt; 1
+
+where we used φ² = φ + 1.
+The fixed point is locally attracting.
+
+Step 4 — Global convergence.
+For all R₀ &gt; 0:
+
+    R(n+1) − φ  =  1 + 1/Rₙ − φ
+                 =  (φ − Rₙ) / (φ Rₙ)
+                 = −(Rₙ − φ) / (φ Rₙ)
+
 Therefore
-|R(n+1) − φ| = |Rₙ − φ|/(φ Rₙ)
-For any R₀ &gt; 0, we have R₁ = 1 + 1/R₀ &gt; 1. Therefore for all n ≥ 1:
-Rₙ &gt; 1,   φ Rₙ &gt; φ &gt; 1
+
+    |R(n+1) − φ| = |Rₙ − φ| / (φ Rₙ)
+
+For any R₀ &gt; 0, we have R₁ = 1 + 1/R₀ &gt; 1.
+Therefore for all n ≥ 1:
+
+    Rₙ &gt; 1,    φ Rₙ &gt; φ &gt; 1
+
 so
-|R(n+1) − φ| &lt; |Rₙ − φ|/φ
-The error contracts by a factor smaller than 1/φ per step. Convergence is geometric after the first iteration.
-Therefore Rₙ → φ for all R₀ &gt; 0.
-Conclusion. φ = (1+√5)/2 is the unique positive fixed point of the ratio map f(R) = 1+1/R. It is globally attracting on ℝ₊. No parameters are chosen. The recurrence C₂ alone forces φ. ∎​​​​​​​​​​​​​​​​</pre>
+
+    |R(n+1) − φ| &lt; |Rₙ − φ| / φ
+
+The error contracts by a factor smaller than 1/φ per step.
+Convergence is geometric after the first iteration.
+
+Therefore  Rₙ → φ  for all R₀ &gt; 0.
+
+Conclusion.
+φ = (1+√5)/2 is the unique positive fixed point of the ratio map f(R) = 1+1/R.
+It is globally attracting on ℝ₊.
+No parameters are chosen. The recurrence C₂ alone forces φ.  ∎</pre>
     </div>
 
     <div class="block">
@@ -121,29 +160,68 @@ Conclusion. φ = (1+√5)/2 is the unique positive fixed point of the ratio map 
     title: `CCFU Proof 1
 φ is the unique positive attracting fixed point of C2`,
     date: `05/13/2026`,
-    text: `Given. The second-order linear recurrence with unit coefficients:
-C₂: x(n+1) = x(n) + x(n-1)
-Define. Rₙ = x(n+1)/x(n), assuming x(n) ≠ 0 and R₀ > 0.
+    text: `Given.
+The second-order linear recurrence with unit coefficients:
+
+    C₂:  x(n+1) = x(n) + x(n-1)
+
+Define.  Rₙ = x(n+1)/x(n),  assuming x(n) ≠ 0 and R₀ > 0.
+
 Step 1 — Ratio dynamics.
-R(n+1) = x(n+2)/x(n+1) = (x(n+1) + x(n))/x(n+1) = 1 + 1/Rₙ
-Step 2 — Fixed point. At equilibrium R(n+1) = Rₙ = R:
-R = 1 + 1/R,   R² = R + 1,   R² − R − 1 = 0
-Solutions: R = (1 ± √5)/2. The unique positive root is
-φ = (1 + √5)/2
-Step 3 — Local stability. Define f(R) = 1 + 1/R. Then f’(R) = −1/R², so
-|f’(φ)| = 1/φ² = 1/(φ + 1) < 1
-where we used φ² = φ + 1. The fixed point is locally attracting.
-Step 4 — Global convergence. For all R₀ > 0:
-R(n+1) − φ = 1 + 1/Rₙ − φ = (φ − Rₙ)/(φ Rₙ) = −(Rₙ − φ)/(φ Rₙ)
+
+    R(n+1) = x(n+2)/x(n+1)
+           = (x(n+1) + x(n)) / x(n+1)
+           = 1 + 1/Rₙ
+
+Step 2 — Fixed point.
+At equilibrium R(n+1) = Rₙ = R:
+
+    R = 1 + 1/R
+    R² = R + 1
+    R² − R − 1 = 0
+
+Solutions:  R = (1 ± √5)/2.
+The unique positive root is
+
+    φ = (1 + √5)/2
+
+Step 3 — Local stability.
+Define f(R) = 1 + 1/R.  Then f′(R) = −1/R², so
+
+    |f′(φ)| = 1/φ² = 1/(φ + 1) < 1
+
+where we used φ² = φ + 1.
+The fixed point is locally attracting.
+
+Step 4 — Global convergence.
+For all R₀ > 0:
+
+    R(n+1) − φ  =  1 + 1/Rₙ − φ
+                 =  (φ − Rₙ) / (φ Rₙ)
+                 = −(Rₙ − φ) / (φ Rₙ)
+
 Therefore
-|R(n+1) − φ| = |Rₙ − φ|/(φ Rₙ)
-For any R₀ > 0, we have R₁ = 1 + 1/R₀ > 1. Therefore for all n ≥ 1:
-Rₙ > 1,   φ Rₙ > φ > 1
+
+    |R(n+1) − φ| = |Rₙ − φ| / (φ Rₙ)
+
+For any R₀ > 0, we have R₁ = 1 + 1/R₀ > 1.
+Therefore for all n ≥ 1:
+
+    Rₙ > 1,    φ Rₙ > φ > 1
+
 so
-|R(n+1) − φ| < |Rₙ − φ|/φ
-The error contracts by a factor smaller than 1/φ per step. Convergence is geometric after the first iteration.
-Therefore Rₙ → φ for all R₀ > 0.
-Conclusion. φ = (1+√5)/2 is the unique positive fixed point of the ratio map f(R) = 1+1/R. It is globally attracting on ℝ₊. No parameters are chosen. The recurrence C₂ alone forces φ. ∎​​​​​​​​​​​​​​​​`,
+
+    |R(n+1) − φ| < |Rₙ − φ| / φ
+
+The error contracts by a factor smaller than 1/φ per step.
+Convergence is geometric after the first iteration.
+
+Therefore  Rₙ → φ  for all R₀ > 0.
+
+Conclusion.
+φ = (1+√5)/2 is the unique positive fixed point of the ratio map f(R) = 1+1/R.
+It is globally attracting on ℝ₊.
+No parameters are chosen. The recurrence C₂ alone forces φ.  ∎`,
     nft_url: `https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/1`,
     tweet_url: ``
   };

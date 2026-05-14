@@ -1733,6 +1733,16 @@
       "nft_url": "https://opensea.io/item/base/0xfa583a819f70dd23213384b50ee1a20a5f083fa6/69",
       "tweet_url": "https://x.com/captaincoo39471/status/2054484314272763972",
       "image_url": "https://2ipaiisrzftutjqcqe2hjbjrxrcus2vvfcloshq7zrq3r3ylq4nq.turbo-gateway.com/0h4EIlHJZ0mmAoE0dIUxvEVJarUolukeH8xhuO8Lhxs"
+    },
+    {
+      "id": "2605145654590",
+      "safecreative_url": "https://www.safecreative.org/work/2605145654590-why-sig-2-2-",
+      "title": "Why sig(2,2)",
+      "date": "05/14/2026",
+      "text": "F(z,w) = (z² + βw, z), β ∈ ℝ, β ≠ 0, on C² = R⁴.\nAt the fixed point:\nJ(0) = [[0, βI₂], [I₂, 0]]\nJ(0)² = βI₄.\nQ = x₁x₃ + x₂x₄.\nsig(Q) = (2,2).\nJ(0)ᵀGJ(0) = βG.\n\nsig(2,2) — conformal at the fixed point, forced by nonlinear memory, not chosen.",
+      "nft_url": "https://opensea.io/item/base/0xfa583a819f70dd23213384b50ee1a20a5f083fa6/70",
+      "tweet_url": "https://x.com/captaincoo39471/status/2054887761245569106",
+      "image_url": "https://hsladnhlldclfo53vx5xr7je5dc2ngisro53em2fo7algje4ooua.arweave.net/PJYBtOtYxLK7u637eP0k6MWmmRKLu7IzRXfAsyScc6g"
     }
   ]
 }

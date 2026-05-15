@@ -48,5 +48,15 @@
     "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/5",
     "tweet_url": "",
     "image_url": "https://5u7oookvlc2nsyx4eytbtvr7hp77cctzao5jiasb5js7x3xjbipq.arweave.net/7T7nOVVYtNli_CYmGdY_O__xCnkDupQCQepl--7pCh8"
+  },
+  {
+    "id": "2605155667382",
+    "safecreative_url": "https://www.safecreative.org/work/2605155667382-ccfu-proof-6-lucas-2cosh-fibonacci-2-5-sinh-even-index-",
+    "title": "CCFU Proof 6 — Lucas = cosh, Fibonacci = sinh (even index)",
+    "date": "05/15/2026",
+    "text": "Given.\nBinet's formulas:\n\n    F(n) = (φⁿ − ψⁿ)/√5\n    L(n) = φⁿ + ψⁿ\n\nwhere ψ = −1/φ.\n\nEven index.  For n = 2k, k ≥ 0:\n\n    ψ^{2k} = (−1/φ)^{2k} = (1/φ)^{2k} = φ^{−2k}\n\nTheorem 1 (Lucas = 2·cosh).\n\n    L(2k) = φ^{2k} + φ^{−2k} = 2·cosh(2k·ln φ)  ∎\n\nTheorem 2 (Fibonacci = (2/√5)·sinh).\n\n    F(2k) = (φ^{2k} − φ^{−2k})/√5 = (2/√5)·sinh(2k·ln φ)  ∎\n\nCorollary (Hyperbolic identity).\nLet r = 2k·ln φ. Then:\n\n    L(2k)² − 5·F(2k)²\n    = [2·cosh(r)]² − 5·[(2/√5)·sinh(r)]²\n    = 4·cosh²(r) − 4·sinh²(r)\n    = 4·(cosh²(r) − sinh²(r))\n    = 4  ∎\n\nNote.\nThese identities hold exactly for even indices. For odd indices the roles swap: L(2k+1) involves sinh and F(2k+1) involves cosh. The even-index identities do not apply as stated to odd indices.\n",
+    "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/6",
+    "tweet_url": "",
+    "image_url": "https://ysvwgs7andk4mi6cjxw2nnfp34eudi2gty27css5iqdb6gitvtta.turbo-gateway.com/xKtjS-Bo1cYjwk3tprSv3wlBo0aeNfFKXUQGHxkTrOY"
   }
 ]

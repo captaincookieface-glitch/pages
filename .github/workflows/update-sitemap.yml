@@ -5,6 +5,7 @@ on:
     paths:
       - 'captain_cookie_face/index.html'
       - 'theories/index.html'
+      - 'ccfu_simulators/index.html'
       - 'ccfu_proofs/index.html'
   workflow_dispatch:
 
@@ -27,6 +28,7 @@ jobs:
 
           CCF_INDEX="captain_cookie_face/index.html"
           THEORIES_INDEX="theories/index.html"
+          SIMULATORS_INDEX="ccfu_simulators/index.html"
           PROOFS_INDEX="ccfu_proofs/index.html"
 
           # ── Extract hrefs preserving order, no duplicates ──
@@ -57,7 +59,12 @@ jobs:
             echo "${BASE_URL}/theories/index.html"
             extract_urls "$THEORIES_INDEX" "theories"
 
-            # 4. CCFU Proofs section
+            # 4. Simulators section
+            echo "${BASE_URL}/ccfu_simulators/"
+            echo "${BASE_URL}/ccfu_simulators/index.html"
+            extract_urls "$SIMULATORS_INDEX" "ccfu_simulators"
+
+            # 5. Proofs section
             echo "${BASE_URL}/ccfu_proofs/"
             echo "${BASE_URL}/ccfu_proofs/index.html"
             extract_urls "$PROOFS_INDEX" "ccfu_proofs"

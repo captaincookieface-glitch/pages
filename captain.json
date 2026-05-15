@@ -1743,6 +1743,16 @@
       "nft_url": "https://opensea.io/item/base/0xfa583a819f70dd23213384b50ee1a20a5f083fa6/70",
       "tweet_url": "https://x.com/captaincoo39471/status/2054887761245569106",
       "image_url": "https://hsladnhlldclfo53vx5xr7je5dc2ngisro53em2fo7algje4ooua.arweave.net/PJYBtOtYxLK7u637eP0k6MWmmRKLu7IzRXfAsyScc6g"
+    },
+    {
+      "id": "2605155665036",
+      "safecreative_url": "https://www.safecreative.org/work/2605155665036-why-sig-3-2-",
+      "title": "Why sig(3,2)",
+      "date": "05/15/2026",
+      "text": "sig(3,1) needs p ≥ 3, q ≥ 1.\nsig(2,2) needs p ≥ 2, q ≥ 2.\nTogether: p ≥ 3, q ≥ 2, dim ≥ 5.\nsig(3,2) contains both. No smaller signature does.\nThis is the minimal parent theorem.",
+      "nft_url": "https://opensea.io/item/base/0xfa583a819f70dd23213384b50ee1a20a5f083fa6/71",
+      "tweet_url": "",
+      "image_url": "https://unspfeqal3hguqmpcez4245dwtzuzteookzrzvvclnnc5u2xgrza.turbo-gateway.com/o2TykgBezmpBjxEzzXOjtPNMzI5ysxzWoltaLtNXNHI"
     }
   ]
 }

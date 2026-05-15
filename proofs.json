@@ -18,5 +18,15 @@
     "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/2",
     "tweet_url": "",
     "image_url": "https://6v4qb2apk3agjo6jlbd6dkx2qwn4skphrdljibqrwt24we7g3hoq.turbo-gateway.com/9XkA6A9WwGS7yVhH4ar6hZvJKeeI1pQGEbT1yxPm2d0"
+  },
+  {
+    "id": "2605155663445",
+    "safecreative_url": "https://www.safecreative.org/work/2605155663445-ccfu-proof-3-conformal-preservation-j-0-tgj-0-g",
+    "title": "CCFU Proof 3 — Conformal Preservation J(0)ᵀGJ(0) = βG",
+    "date": "05/15/2026",
+    "text": "Given.\nThe nonlinear memory map on C² = R⁴:\n\n    F(z,w) = (z² + βw, z),  β ∈ ℝ, β ≠ 0.\n\nWrite z = x₁ + ix₂, w = x₃ + ix₄.\n\nJacobian at the origin (z=0, w=0):\n\n    J(0) = [[0, 0, β, 0],\n            [0, 0, 0, β],\n            [1, 0, 0, 0],\n            [0, 1, 0, 0]]\n\nBilinear form.  Define Q = x₁x₃ + x₂x₄, represented by:\n\n    G = [[0, 0, 1, 0],\n         [0, 0, 0, 1],\n         [1, 0, 0, 0],\n         [0, 1, 0, 0]]\n\n    sig(G) = (2,2).\n\nNote: under the convention vᵀGv, this matrix represents 2Q.\nThe scalar factor does not affect signature or conformal preservation.\n\nClaim.\n    J(0)ᵀ G J(0) = β·G  for all β ∈ ℝ, β ≠ 0.\n\nProof.\n\n    J(0)ᵀ = [[0, 0, 1, 0],\n              [0, 0, 0, 1],\n              [β, 0, 0, 0],\n              [0, β, 0, 0]]\n\n    J(0)ᵀ · G = [[1, 0, 0, 0],\n                  [0, 1, 0, 0],\n                  [0, 0, β, 0],\n                  [0, 0, 0, β]]\n\n    (J(0)ᵀ · G) · J(0) = [[0, 0, β, 0],\n                            [0, 0, 0, β],\n                            [β, 0, 0, 0],\n                            [0, β, 0, 0]]\n\n                         = β · G  ∎\n\nSignature.\nEigenvalues of G: +1, +1, −1, −1.  sig(G) = (2,2).\nSince sig(2,2) is symmetric under sign reversal, β < 0 preserves the signature class.\n\nLimitations.\nβ = 0 gives 0·G (degenerate). Result holds for β ≠ 0.\nThis is conformal preservation at the fixed point.\nThe full nonlinear map does not preserve Q globally:\n\n    Q(F(z,w)) = |z|²Re(z) + βQ(z,w) ≠ βQ(z,w) in general.\n\nStatus.\n\n[PROVEN]\nJ(0)ᵀGJ(0) = βG, β ∈ ℝ, β ≠ 0.\n\n[DISPROVEN FOR THIS Q]\nGlobal nonlinear preservation Q(F(z,w)) = βQ(z,w).\n\n[RESOLVED LATER — Proof 15]\nThe differential signature is globally preserved:\nsig(J(z)ᵀGJ(z)) = (2,2) for all z, β ≠ 0.\n\n[OPEN]\nWhether a modified global form-level invariant exists.\n",
+    "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/3",
+    "tweet_url": "",
+    "image_url": "https://nqydqnmwpwmm2gcd3xu6l6ybdthsnwmd57sra6oym76ayxpodpwa.turbo-gateway.com/bDA4NZZ9mM0YQ93p5fsBHM8m2YPv5RB52Gf8DF3uG-w"
   }
 ]

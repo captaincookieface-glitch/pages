@@ -38,5 +38,15 @@
     "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/4",
     "tweet_url": "",
     "image_url": "https://aeeyoeyp2goyljfugadnw6vp2vd42eg34btbl4vakz4pr52gvoja.turbo-gateway.com/AQmHEw_RnYWktDAG23qv1UfNENvgZhXyoFZ4-PdGq5I"
+  },
+  {
+    "id": "2605155666590",
+    "safecreative_url": "https://www.safecreative.org/work/2605155666590-ccfu-proof-5-the-minimal-parent-theorem-dim-p_min-5-c2-",
+    "title": "CCFU Proof 5 — The Minimal Parent Theorem: dim(P_min) = 5 = Δ(C₂)",
+    "date": "05/15/2026",
+    "text": "Definition.\nA signed parent P is a finite-dimensional real vector space\nwith a nondegenerate symmetric bilinear form of signature (p,q),\ncontaining nondegenerate subspaces of signatures sig(3,1) and sig(2,2).\n\nDependencies.\nsig(3,1) from Proof 4 [C₂ linear closure]\nsig(2,2) from Proof 3 [C₂ nonlinear memory, at fixed point; strengthened globally in Proof 15]\n\nPart A — Δ(C₂) = 5.\n\nC₂ characteristic equation: λ² − λ − 1 = 0\nΔ = (−1)² − 4(1)(−1) = 1 + 4 = 5  ∎\n\nPart B — Lower bound (dim ≥ 5).\n\nTo contain sig(3,1): need p ≥ 3, q ≥ 1.\nTo contain sig(2,2): need p ≥ 2, q ≥ 2.\nTogether: p ≥ max(3,2) = 3, q ≥ max(1,2) = 2.\ndim = p + q ≥ 5  ∎\n\nPart C — Upper bound (dim ≤ 5).\n\nTake R⁵ with Q(a,b,c,d,e) = a² + b² + c² − d² − e²\nsig(Q) = (3,2)\n\nSubspace e=0: Q = a²+b²+c²−d², sig = (3,1) ✓\nSubspace c=0: Q = a²+b²−d²−e², sig = (2,2) ✓\n\nTherefore dim ≤ 5.  ∎\n\nPart D — Uniqueness.\n\nIn dim 5, possible signatures: (5,0), (4,1), (3,2), (2,3), (1,4), (0,5)\n\n(4,1): q=1 < 2, cannot contain sig(2,2).\n(2,3): p=2 < 3, cannot contain sig(3,1).\n(5,0),(0,5): definite, cannot contain mixed signature.\n(1,4): p=1 < 3.\n\nOnly (3,2) works.  ∎\n\nConclusion.\nΔ(C₂) = 5.  dim(P_min) = 5.  sig(P_min) = (3,2).\nP_min has signature sig(3,2). Its dimension equals the discriminant of C₂. No parameters are chosen.  ∎\n",
+    "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/5",
+    "tweet_url": "",
+    "image_url": "https://5u7oookvlc2nsyx4eytbtvr7hp77cctzao5jiasb5js7x3xjbipq.arweave.net/7T7nOVVYtNli_CYmGdY_O__xCnkDupQCQepl--7pCh8"
   }
 ]

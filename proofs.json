@@ -58,5 +58,15 @@
     "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/6",
     "tweet_url": "",
     "image_url": "https://ysvwgs7andk4mi6cjxw2nnfp34eudi2gty27css5iqdb6gitvtta.turbo-gateway.com/xKtjS-Bo1cYjwk3tprSv3wlBo0aeNfFKXUQGHxkTrOY"
+  },
+  {
+    "id": "2605155669720",
+    "safecreative_url": "https://www.safecreative.org/work/2605155669720-ccfu-proof-7-arctangent-identity-arctan-1-arctan-1-3-4",
+    "title": "CCFU Proof 7 — Arctangent Identity: arctan(1/φ) + arctan(1/φ³) = π/4",
+    "date": "05/15/2026",
+    "text": "Given.\nLet φ = (1+√5)/2. Then φ² = φ + 1 and φ > 1.\n\nClaim.\n\n    arctan(1/φ) + arctan(1/φ³) = π/4\n\nProof.\nUsing the addition formula:\n\n    arctan(a) + arctan(b) = arctan((a+b)/(1−ab))  when ab < 1\n\nLet a = 1/φ, b = 1/φ³.\n\nBranch safety.\nab = 1/φ⁴ < 1. Since a > 0, b > 0, and ab < 1,\nthe sum lies in (0, π/2), so no branch correction is needed.\n\nNumerator:\n\n    a + b = 1/φ + 1/φ³ = (φ² + 1)/φ³ = (φ + 2)/φ³\n\nDenominator:\n\n    1 − ab = 1 − 1/φ⁴ = (φ⁴ − 1)/φ⁴\n\nPowers of φ.  Using φ² = φ + 1:\n\n    φ³ = 2φ + 1\n    φ⁴ = 3φ + 2\n    φ⁴ − 1 = 3φ + 1\n\nRatio:\n\n    (a+b)/(1−ab) = [(φ+2)/φ³] / [(3φ+1)/φ⁴]\n                 = φ(φ+2)/(3φ+1)\n                 = (φ²+2φ)/(3φ+1)\n                 = (φ+1+2φ)/(3φ+1)\n                 = (3φ+1)/(3φ+1)\n                 = 1\n\nTherefore arctan(1/φ) + arctan(1/φ³) = arctan(1) = π/4.  ∎",
+    "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/7",
+    "tweet_url": "",
+    "image_url": "https://hyvh5jrd6om7aqdexdtnwzdmgtsym74zuhqt3rmbfrsqalaqhpaa.arweave.net/Pip-piPzmfBAZLjm22RsNOWGf5mh4T3FgSxlACwQO8A"
   }
 ]

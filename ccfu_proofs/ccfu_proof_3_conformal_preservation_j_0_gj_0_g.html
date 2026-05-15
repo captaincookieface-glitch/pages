@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CCFU Proof 3 — Conformal Preservation J(0)ᵀGJ(0) = βG</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #fff; }
+    .block { margin-bottom: 20px; padding: 15px; border: 1px solid #eee; word-wrap: break-word; }
+    .key { color: #000; font-size: 2em !important; text-transform: capitalize; font-weight: bold; }
+    .hash { word-break: break-all; color: #4287f5; }
+    a { color: #4287f5; text-decoration: underline; }
+    pre { white-space: pre-wrap; }
+    button { font-family: inherit; padding: 6px 10px; border: 1px solid #ccc; background: #f9f9f9; cursor: pointer; }
+    h1 { margin-bottom: 10px; font-size: 32px; }
+    nav { background-color: #e1e1e1; padding: 10px; }
+    nav > ul { display: flex; flex-wrap: wrap; list-style: none; padding: 0; margin: 0; }
+    nav > ul > li, nav > ul > li > a { display: flex; flex-direction: column; text-align: center; margin: 0; }
+    nav ul li img { max-width: 80px; width: 100%; height: auto; border-radius: 40px; }
+    .arrow { width: 50px; height: 80px; font-size: 38px; }
+  </style>
+</head>
+<body>
+<article itemscope itemtype="https://schema.org/CreativeWork">
+  <meta itemprop="identifier" content="2605155663445">
+  <meta itemprop="dateCreated" content="05/15/2026">
+<h1 itemprop="name">CCFU Proof 3 — Conformal Preservation J(0)ᵀGJ(0) = βG</h1>
+<nav aria-label="Breadcrumb" class="breadcrumb">
+  <ul>
+    <li><a href="../"><img src="../assets/images/AFB9C382-3B34-4925-B318-E7083E758055.png" alt="Home"/><span>Home</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><a href="./"><img src="../assets/images/proofs-1024.svg" alt="CCFU"/><span>CCFU Proofs</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><img src="../assets/images/proofs-1024.svg" alt="CCFU"/><span>CCFU Proof 3 — Conformal Preservation J(0)ᵀGJ(0) = βG</span></li>
+  </ul>
+</nav>
+  <div class="block" id="rendered">
+
+    <div class="block">
+      <div class="key">id</div>
+      <pre>2605155663445</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">safecreative_url</div>
+      <a href="https://www.safecreative.org/work/2605155663445-ccfu-proof-3-conformal-preservation-j-0-tgj-0-g" target="_blank">https://www.safecreative.org/work/2605155663445-ccfu-proof-3-conformal-preservation-j-0-tgj-0-g</a>
+    </div>
+
+    <div class="block">
+      <div class="key">title</div>
+      <pre>CCFU Proof 3 — Conformal Preservation J(0)ᵀGJ(0) = βG</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">date</div>
+      <pre>05/15/2026</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">text</div>
+      <pre>Given.
+The nonlinear memory map on C² = R⁴:
+
+    F(z,w) = (z² + βw, z),  β ∈ ℝ, β ≠ 0.
+
+Write z = x₁ + ix₂, w = x₃ + ix₄.
+
+Jacobian at the origin (z=0, w=0):
+
+    J(0) = [[0, 0, β, 0],
+            [0, 0, 0, β],
+            [1, 0, 0, 0],
+            [0, 1, 0, 0]]
+
+Bilinear form.  Define Q = x₁x₃ + x₂x₄, represented by:
+
+    G = [[0, 0, 1, 0],
+         [0, 0, 0, 1],
+         [1, 0, 0, 0],
+         [0, 1, 0, 0]]
+
+    sig(G) = (2,2).
+
+Note: under the convention vᵀGv, this matrix represents 2Q.
+The scalar factor does not affect signature or conformal preservation.
+
+Claim.
+    J(0)ᵀ G J(0) = β·G  for all β ∈ ℝ, β ≠ 0.
+
+Proof.
+
+    J(0)ᵀ = [[0, 0, 1, 0],
+              [0, 0, 0, 1],
+              [β, 0, 0, 0],
+              [0, β, 0, 0]]
+
+    J(0)ᵀ · G = [[1, 0, 0, 0],
+                  [0, 1, 0, 0],
+                  [0, 0, β, 0],
+                  [0, 0, 0, β]]
+
+    (J(0)ᵀ · G) · J(0) = [[0, 0, β, 0],
+                            [0, 0, 0, β],
+                            [β, 0, 0, 0],
+                            [0, β, 0, 0]]
+
+                         = β · G  ∎
+
+Signature.
+Eigenvalues of G: +1, +1, −1, −1.  sig(G) = (2,2).
+Since sig(2,2) is symmetric under sign reversal, β &lt; 0 preserves the signature class.
+
+Limitations.
+β = 0 gives 0·G (degenerate). Result holds for β ≠ 0.
+This is conformal preservation at the fixed point.
+The full nonlinear map does not preserve Q globally:
+
+    Q(F(z,w)) = |z|²Re(z) + βQ(z,w) ≠ βQ(z,w) in general.
+
+Status.
+
+[PROVEN]
+J(0)ᵀGJ(0) = βG, β ∈ ℝ, β ≠ 0.
+
+[DISPROVEN FOR THIS Q]
+Global nonlinear preservation Q(F(z,w)) = βQ(z,w).
+
+[RESOLVED LATER — Proof 15]
+The differential signature is globally preserved:
+sig(J(z)ᵀGJ(z)) = (2,2) for all z, β ≠ 0.
+
+[OPEN]
+Whether a modified global form-level invariant exists.
+</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">nft_url</div>
+      <a href="https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/3" target="_blank">https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/3</a>
+    </div>
+
+    <div class="block">
+      <div class="key">tweet_url</div>
+      <pre></pre>
+    </div>
+
+  </div>
+  <div class="block">
+    <div class="key">SHA-256</div>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <div class="hash" id="hashResult"></div>
+      <button id="copyHashBtn" type="button">Copy</button>
+    </div>
+  </div>
+
+  <div class="block">
+    <img src="https://nqydqnmwpwmm2gcd3xu6l6ybdthsnwmd57sra6oym76ayxpodpwa.turbo-gateway.com/bDA4NZZ9mM0YQ93p5fsBHM8m2YPv5RB52Gf8DF3uG-w" 
+     alt="CCFU Proof 3 — Conformal Preservation J(0)ᵀGJ(0) = βG" 
+     style="max-width: 100%; height: auto;" />
+  </div>
+
+</article>
+<script>
+(async () => {
+  const entry = {
+    id: `2605155663445`,
+    safecreative_url: `https://www.safecreative.org/work/2605155663445-ccfu-proof-3-conformal-preservation-j-0-tgj-0-g`,
+    title: `CCFU Proof 3 — Conformal Preservation J(0)ᵀGJ(0) = βG`,
+    date: `05/15/2026`,
+    text: `Given.
+The nonlinear memory map on C² = R⁴:
+
+    F(z,w) = (z² + βw, z),  β ∈ ℝ, β ≠ 0.
+
+Write z = x₁ + ix₂, w = x₃ + ix₄.
+
+Jacobian at the origin (z=0, w=0):
+
+    J(0) = [[0, 0, β, 0],
+            [0, 0, 0, β],
+            [1, 0, 0, 0],
+            [0, 1, 0, 0]]
+
+Bilinear form.  Define Q = x₁x₃ + x₂x₄, represented by:
+
+    G = [[0, 0, 1, 0],
+         [0, 0, 0, 1],
+         [1, 0, 0, 0],
+         [0, 1, 0, 0]]
+
+    sig(G) = (2,2).
+
+Note: under the convention vᵀGv, this matrix represents 2Q.
+The scalar factor does not affect signature or conformal preservation.
+
+Claim.
+    J(0)ᵀ G J(0) = β·G  for all β ∈ ℝ, β ≠ 0.
+
+Proof.
+
+    J(0)ᵀ = [[0, 0, 1, 0],
+              [0, 0, 0, 1],
+              [β, 0, 0, 0],
+              [0, β, 0, 0]]
+
+    J(0)ᵀ · G = [[1, 0, 0, 0],
+                  [0, 1, 0, 0],
+                  [0, 0, β, 0],
+                  [0, 0, 0, β]]
+
+    (J(0)ᵀ · G) · J(0) = [[0, 0, β, 0],
+                            [0, 0, 0, β],
+                            [β, 0, 0, 0],
+                            [0, β, 0, 0]]
+
+                         = β · G  ∎
+
+Signature.
+Eigenvalues of G: +1, +1, −1, −1.  sig(G) = (2,2).
+Since sig(2,2) is symmetric under sign reversal, β < 0 preserves the signature class.
+
+Limitations.
+β = 0 gives 0·G (degenerate). Result holds for β ≠ 0.
+This is conformal preservation at the fixed point.
+The full nonlinear map does not preserve Q globally:
+
+    Q(F(z,w)) = |z|²Re(z) + βQ(z,w) ≠ βQ(z,w) in general.
+
+Status.
+
+[PROVEN]
+J(0)ᵀGJ(0) = βG, β ∈ ℝ, β ≠ 0.
+
+[DISPROVEN FOR THIS Q]
+Global nonlinear preservation Q(F(z,w)) = βQ(z,w).
+
+[RESOLVED LATER — Proof 15]
+The differential signature is globally preserved:
+sig(J(z)ᵀGJ(z)) = (2,2) for all z, β ≠ 0.
+
+[OPEN]
+Whether a modified global form-level invariant exists.
+`,
+    nft_url: `https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/3`,
+    tweet_url: ``
+  };
+  const canonicalString = [entry.id, entry.safecreative_url, entry.title, entry.date, entry.text, entry.nft_url, entry.tweet_url].join('\n---\n');
+  const data = new TextEncoder().encode(canonicalString);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashHex = [...new Uint8Array(hashBuffer)].map(b => b.toString(16).padStart(2, '0')).join('');
+  document.getElementById('hashResult').textContent = hashHex;
+  document.getElementById('copyHashBtn').addEventListener('click', () => { navigator.clipboard.writeText(hashHex); alert('Hash copied'); });
+})();
+</script>
+</body></html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CCFU Proof 6 — Lucas = cosh, Fibonacci = sinh (even index)</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #fff; }
+    .block { margin-bottom: 20px; padding: 15px; border: 1px solid #eee; word-wrap: break-word; }
+    .key { color: #000; font-size: 2em !important; text-transform: capitalize; font-weight: bold; }
+    .hash { word-break: break-all; color: #4287f5; }
+    a { color: #4287f5; text-decoration: underline; }
+    pre { white-space: pre-wrap; }
+    button { font-family: inherit; padding: 6px 10px; border: 1px solid #ccc; background: #f9f9f9; cursor: pointer; }
+    h1 { margin-bottom: 10px; font-size: 32px; }
+    nav { background-color: #e1e1e1; padding: 10px; }
+    nav > ul { display: flex; flex-wrap: wrap; list-style: none; padding: 0; margin: 0; }
+    nav > ul > li, nav > ul > li > a { display: flex; flex-direction: column; text-align: center; margin: 0; }
+    nav ul li img { max-width: 80px; width: 100%; height: auto; border-radius: 40px; }
+    .arrow { width: 50px; height: 80px; font-size: 38px; }
+  </style>
+</head>
+<body>
+<article itemscope itemtype="https://schema.org/CreativeWork">
+  <meta itemprop="identifier" content="2605155667382">
+  <meta itemprop="dateCreated" content="05/15/2026">
+<h1 itemprop="name">CCFU Proof 6 — Lucas = cosh, Fibonacci = sinh (even index)</h1>
+<nav aria-label="Breadcrumb" class="breadcrumb">
+  <ul>
+    <li><a href="../"><img src="../assets/images/AFB9C382-3B34-4925-B318-E7083E758055.png" alt="Home"/><span>Home</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><a href="./"><img src="../assets/images/proofs-1024.svg" alt="CCFU"/><span>CCFU Proofs</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><img src="../assets/images/proofs-1024.svg" alt="CCFU"/><span>CCFU Proof 6 — Lucas = cosh, Fibonacci = sinh (even index)</span></li>
+  </ul>
+</nav>
+  <div class="block" id="rendered">
+
+    <div class="block">
+      <div class="key">id</div>
+      <pre>2605155667382</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">safecreative_url</div>
+      <a href="https://www.safecreative.org/work/2605155667382-ccfu-proof-6-lucas-2cosh-fibonacci-2-5-sinh-even-index-" target="_blank">https://www.safecreative.org/work/2605155667382-ccfu-proof-6-lucas-2cosh-fibonacci-2-5-sinh-even-index-</a>
+    </div>
+
+    <div class="block">
+      <div class="key">title</div>
+      <pre>CCFU Proof 6 — Lucas = cosh, Fibonacci = sinh (even index)</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">date</div>
+      <pre>05/15/2026</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">text</div>
+      <pre>Given.
+Binet's formulas:
+
+    F(n) = (φⁿ − ψⁿ)/√5
+    L(n) = φⁿ + ψⁿ
+
+where ψ = −1/φ.
+
+Even index.  For n = 2k, k ≥ 0:
+
+    ψ^{2k} = (−1/φ)^{2k} = (1/φ)^{2k} = φ^{−2k}
+
+Theorem 1 (Lucas = 2·cosh).
+
+    L(2k) = φ^{2k} + φ^{−2k} = 2·cosh(2k·ln φ)  ∎
+
+Theorem 2 (Fibonacci = (2/√5)·sinh).
+
+    F(2k) = (φ^{2k} − φ^{−2k})/√5 = (2/√5)·sinh(2k·ln φ)  ∎
+
+Corollary (Hyperbolic identity).
+Let r = 2k·ln φ. Then:
+
+    L(2k)² − 5·F(2k)²
+    = [2·cosh(r)]² − 5·[(2/√5)·sinh(r)]²
+    = 4·cosh²(r) − 4·sinh²(r)
+    = 4·(cosh²(r) − sinh²(r))
+    = 4  ∎
+
+Note.
+These identities hold exactly for even indices. For odd indices the roles swap: L(2k+1) involves sinh and F(2k+1) involves cosh. The even-index identities do not apply as stated to odd indices.
+</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">nft_url</div>
+      <a href="https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/6" target="_blank">https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/6</a>
+    </div>
+
+    <div class="block">
+      <div class="key">tweet_url</div>
+      <pre></pre>
+    </div>
+
+  </div>
+  <div class="block">
+    <div class="key">SHA-256</div>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <div class="hash" id="hashResult"></div>
+      <button id="copyHashBtn" type="button">Copy</button>
+    </div>
+  </div>
+
+  <div class="block">
+    <img src="https://ysvwgs7andk4mi6cjxw2nnfp34eudi2gty27css5iqdb6gitvtta.turbo-gateway.com/xKtjS-Bo1cYjwk3tprSv3wlBo0aeNfFKXUQGHxkTrOY" 
+     alt="CCFU Proof 6 — Lucas = cosh, Fibonacci = sinh (even index)" 
+     style="max-width: 100%; height: auto;" />
+  </div>
+
+</article>
+<script>
+(async () => {
+  const entry = {
+    id: `2605155667382`,
+    safecreative_url: `https://www.safecreative.org/work/2605155667382-ccfu-proof-6-lucas-2cosh-fibonacci-2-5-sinh-even-index-`,
+    title: `CCFU Proof 6 — Lucas = cosh, Fibonacci = sinh (even index)`,
+    date: `05/15/2026`,
+    text: `Given.
+Binet's formulas:
+
+    F(n) = (φⁿ − ψⁿ)/√5
+    L(n) = φⁿ + ψⁿ
+
+where ψ = −1/φ.
+
+Even index.  For n = 2k, k ≥ 0:
+
+    ψ^{2k} = (−1/φ)^{2k} = (1/φ)^{2k} = φ^{−2k}
+
+Theorem 1 (Lucas = 2·cosh).
+
+    L(2k) = φ^{2k} + φ^{−2k} = 2·cosh(2k·ln φ)  ∎
+
+Theorem 2 (Fibonacci = (2/√5)·sinh).
+
+    F(2k) = (φ^{2k} − φ^{−2k})/√5 = (2/√5)·sinh(2k·ln φ)  ∎
+
+Corollary (Hyperbolic identity).
+Let r = 2k·ln φ. Then:
+
+    L(2k)² − 5·F(2k)²
+    = [2·cosh(r)]² − 5·[(2/√5)·sinh(r)]²
+    = 4·cosh²(r) − 4·sinh²(r)
+    = 4·(cosh²(r) − sinh²(r))
+    = 4  ∎
+
+Note.
+These identities hold exactly for even indices. For odd indices the roles swap: L(2k+1) involves sinh and F(2k+1) involves cosh. The even-index identities do not apply as stated to odd indices.
+`,
+    nft_url: `https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/6`,
+    tweet_url: ``
+  };
+  const canonicalString = [entry.id, entry.safecreative_url, entry.title, entry.date, entry.text, entry.nft_url, entry.tweet_url].join('\n---\n');
+  const data = new TextEncoder().encode(canonicalString);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashHex = [...new Uint8Array(hashBuffer)].map(b => b.toString(16).padStart(2, '0')).join('');
+  document.getElementById('hashResult').textContent = hashHex;
+  document.getElementById('copyHashBtn').addEventListener('click', () => { navigator.clipboard.writeText(hashHex); alert('Hash copied'); });
+})();
+</script>
+</body></html>

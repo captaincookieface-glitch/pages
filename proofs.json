@@ -28,5 +28,15 @@
     "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/3",
     "tweet_url": "",
     "image_url": "https://nqydqnmwpwmm2gcd3xu6l6ybdthsnwmd57sra6oym76ayxpodpwa.turbo-gateway.com/bDA4NZZ9mM0YQ93p5fsBHM8m2YPv5RB52Gf8DF3uG-w"
+  },
+  {
+    "id": "2605155665661",
+    "safecreative_url": "https://www.safecreative.org/work/2605155665661-ccfu-proof-4-sig-g4-3-1-",
+    "title": "CCFU Proof 4 — sig(G₄) = (3,1)",
+    "date": "05/15/2026",
+    "text": "Given.\nspec(A₄) = {φ, 1/φ, +1, −1}\n\nThis spectrum is derived from C₂ by separating\nspec(A₂) = {φ, −1/φ} into signs and magnitudes.\n[Dependency: Theory #15c / CCFU Paper I]\n\nConstruction.  Define G̃ in the eigenbasis by the reciprocal pairing rule:\n\n    G̃[i,j] = 1 if λᵢ · λⱼ = 1, else 0.\n\nReciprocal pair (φ, 1/φ):\n    φ · (1/φ) = 1  →  off-diagonal block [[0,1],[1,0]]\n    Eigenvalues of this block: +1, −1\n    Contribution to signature: (1,1)\n\nSelf-reciprocal modes (+1 and −1):\n    (+1)·(+1) = 1  →  diagonal entry +1\n    (−1)·(−1) = 1  →  diagonal entry +1\n    Contribution to signature: (2,0)\n\nTotal signature:\n    (1,1) + (2,0) = (3,1)\n\nTherefore sig(G₄) = (3,1).  ∎\n\nVerification of invariance.\nIn the eigenbasis, D = diag(φ, 1/φ, +1, −1).\nFor every nonzero entry G̃ᵢⱼ, we have λᵢλⱼ = 1, hence\n    (DᵀG̃D)ᵢⱼ = λᵢλⱼ G̃ᵢⱼ = G̃ᵢⱼ.\nAll zero entries remain zero. Therefore DᵀG̃D = G̃.\n\nStandard basis.\nIf A₄ = PDP⁻¹, define G₄ = P⁻ᵀG̃P⁻¹. Then:\n    A₄ᵀG₄A₄ = (PDP⁻¹)ᵀ(P⁻ᵀG̃P⁻¹)(PDP⁻¹)\n             = P⁻ᵀDᵀG̃DP⁻¹\n             = P⁻ᵀG̃P⁻¹\n             = G₄.  ∎\n",
+    "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/4",
+    "tweet_url": "",
+    "image_url": "https://aeeyoeyp2goyljfugadnw6vp2vd42eg34btbl4vakz4pr52gvoja.turbo-gateway.com/AQmHEw_RnYWktDAG23qv1UfNENvgZhXyoFZ4-PdGq5I"
   }
 ]

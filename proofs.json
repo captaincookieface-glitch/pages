@@ -118,5 +118,15 @@
     "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/12",
     "tweet_url": "",
     "image_url": "https://rd72ybl2p76qnn6r4kjtoajpefsyr3zg7jkc2gsh6ol7jquxqk5a.turbo-gateway.com/iP-sBXp__Qa30eKTNwEvIWWI7yb6VC0aR_OX9MKXgro"
+  },
+  {
+    "id": "2605165676497",
+    "safecreative_url": "https://www.safecreative.org/work/2605165676497-ccfu-proof-13-parallelism-identity-ln-arctan-2-",
+    "title": "CCFU Proof 13 — Parallelism Identity Π(ln φ) = arctan(2)",
+    "date": "05/16/2026",
+    "text": "Given.\nLet φ = (1+√5)/2, so φ² = φ + 1 and φ > 1.\n\nDefinition.\nThe Lobachevsky parallelism function in H² (K = −1):\n    Π(d) = 2·arctan(e^{−d})\nEquivalently: Π(d) = arccos(tanh d)\n\nClaim.\n    Π(ln φ) = arctan(2)\n\nProof via double angle formula.\n\n    Π(ln φ) = 2·arctan(e^{−ln φ})\n            = 2·arctan(1/φ)\n\nUsing 2·arctan(x) = arctan(2x/(1−x²)) when x² < 1.\n\n    x = 1/φ\n    x² = 1/φ² < 1  ✓\n\nSince x > 0 and x² < 1, the result lies in (0, π/2),\nso no branch correction is needed.\n\n    2x/(1−x²) = (2/φ) / (1 − 1/φ²)\n              = (2/φ) / ((φ²−1)/φ²)\n              = 2φ/(φ²−1)\n              = 2φ/φ          [since φ²−1 = φ]\n              = 2\n\nTherefore Π(ln φ) = 2·arctan(1/φ) = arctan(2).  ∎\n\nVerification via arccos form.\n\n    tanh(ln φ) = (φ − 1/φ)/(φ + 1/φ) = (φ²−1)/(φ²+1) = φ/(φ+2)\n\nSince 2φ − 1 = √5:\n    √5·φ = (2φ − 1)·φ = 2φ² − φ = 2(φ+1) − φ = φ + 2\nTherefore:\n    φ/(φ+2) = φ/(√5·φ) = 1/√5\n\n    arccos(1/√5) = arctan(2)  ✓\n\nBoth definitions give the same result.  ∎",
+    "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/13",
+    "tweet_url": "",
+    "image_url": "https://nk5dc4t6tdy4axjhyt46homwtc2ikmefp2vumltjqzwuxiglclhq.arweave.net/aroxcn6Y8cBdJ8T547mWmLSFMIV-q0YuaYZtS6DLEs8"
   }
 ]

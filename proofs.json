@@ -88,5 +88,15 @@
     "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/9",
     "tweet_url": "",
     "image_url": "https://hleniqw2jziar4ttnu4mckf74cnfo5xljhlnix5etip5bcgaywaa.arweave.net/OsjUQtpOUAjyc204wSi_4JpXdutJ1tRfpJof0IjAxYA"
+  },
+  {
+    "id": "2605165672574",
+    "safecreative_url": "https://www.safecreative.org/work/2605165672574-ccfu-proof-10-the-c2-level-set-is-isometric-to-h3-with-k-1-r2",
+    "title": "CCFU Proof 10 — The C₂ Level Set Is Isometric to H³ with K = −1/R²",
+    "date": "05/16/2026",
+    "text": "Given.\nG₄ is the invariant quadratic form with sig(G₄) = (3,1)  [Proof 4].\nA₄ᵀG₄A₄ = G₄  [Proof 4].\nQ(v) = vᵀG₄v.\nLet R > 0. Define M_R = {v ∈ R⁴ : Q(v) = −R²}.\n\nPart A — Explicit isometry M_R⁺ ≅ H³.\n\nBy Sylvester's law of inertia, since sig(G₄) = (3,1),\nthere exists an invertible matrix P such that:\n\n    PᵀG₄P = η,  η = diag(−1,+1,+1,+1).\n\nSet f(v) = P⁻¹v and w = f(v).\n\n(i)  f is linear and bijective (det(P) ≠ 0).\n(ii) Q(v) = vᵀG₄v = wᵀηw.\n(iii) Q(v) = −R² iff wᵀηw = −R², i.e.,\n     −w₀² + w₁² + w₂² + w₃² = −R².\n\nThis is the standard two-sheeted hyperboloid.\nChoose the sheet w₀ > 0 and call it M_R⁺.\nThis is the standard hyperboloid model of H³(R).\n\nTherefore f restricts to an isometry from (M_R⁺, G₄) to (H³(R), η).  ∎\n\nPart B — Induced metric.\n\nParametrize H³(R):\n\n    w₀ = R·cosh(r)\n    w₁ = R·sinh(r)·sin(θ₁)·cos(θ₂)\n    w₂ = R·sinh(r)·sin(θ₁)·sin(θ₂)\n    w₃ = R·sinh(r)·cos(θ₁)\n\nDirect computation gives the induced metric:\n\n    ds² = R²(dr² + sinh²(r)(dθ₁² + sin²(θ₁)dθ₂²))\n\nThis is the standard global H³ metric with scale R.  ∎\n\nPart C — Sectional curvature.\n\nThe unit normal to M_R⁺ in the standard coordinates w = f(v) is n = w/R,\nwhich is timelike: η(n,n) = −1.\nThe shape operator is S = −(1/R)I.\nFor any orthonormal tangent 2-plane, the Gauss equation in flat\nambient space gives:\n\n    K = η(n,n) · (1/R²) = (−1) · (1/R²) = −1/R²  ∎\n\nConclusion.\nFor each R > 0, each connected sheet of M_R = {v : Q(v) = −R²}\nis linearly isometric to H³(R), the hyperbolic 3-space of constant\nsectional curvature K = −1/R². The result depends only on the\nC₂-derived signature sig(G₄) = (3,1). No additional parameters\nare chosen beyond R.\n",
+    "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/10",
+    "tweet_url": "",
+    "image_url": "https://v2gnduzo3ph2g4ww2oirsrfo33sztyyeockdlij6egkdcsdjhbgq.ardrive.net/rozR0y7bz6Ny1tORGUSu3uWZ4wRwlDWhPiGUMUhpOE0"
   }
 ]

@@ -1753,6 +1753,16 @@
       "nft_url": "https://opensea.io/item/base/0xfa583a819f70dd23213384b50ee1a20a5f083fa6/71",
       "tweet_url": "https://x.com/captaincoo39471/status/2055260064571658253",
       "image_url": "https://unspfeqal3hguqmpcez4245dwtzuzteookzrzvvclnnc5u2xgrza.turbo-gateway.com/o2TykgBezmpBjxEzzXOjtPNMzI5ysxzWoltaLtNXNHI"
+    },
+    {
+      "id": "2605165671164",
+      "safecreative_url": "https://www.safecreative.org/work/2605165671164-the-signature-count",
+      "title": "The Signature Count",
+      "date": "05/16/2026",
+      "text": "sig(1,1): p=1, q=1. From the C₂ quadratic form.\nsig(2,2): p=2, q=2. From nonlinear memory on R⁴.\nsig(3,1): p=3, q=1. From A₄ spectral pairing.\nsig(3,2): p+q=5. From the minimal parent theorem.\nThe count: 1, 1, 2, 3, 5.\nEach forced independently.\nThe count remembers C₂.",
+      "nft_url": "https://opensea.io/item/base/0xfa583a819f70dd23213384b50ee1a20a5f083fa6/72",
+      "tweet_url": "https://x.com/captaincoo39471/status/2055548332672487644",
+      "image_url": "https://r4fe7iebfekqb2cqrmld7qhjkoluqiyqf6a5qgrxvlhm2j6jm4ka.arweave.net/jwpPoIEpFQDoUIsWP8DpU5dIIxAvgdgaN6rOzSfJZxQ"
     }
   ]
 }

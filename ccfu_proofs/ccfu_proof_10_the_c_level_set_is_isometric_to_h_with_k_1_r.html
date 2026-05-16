@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CCFU Proof 10 — The C₂ Level Set Is Isometric to H³ with K = −1/R²</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #fff; }
+    .block { margin-bottom: 20px; padding: 15px; border: 1px solid #eee; word-wrap: break-word; }
+    .key { color: #000; font-size: 2em !important; text-transform: capitalize; font-weight: bold; }
+    .hash { word-break: break-all; color: #4287f5; }
+    a { color: #4287f5; text-decoration: underline; }
+    pre { white-space: pre-wrap; }
+    button { font-family: inherit; padding: 6px 10px; border: 1px solid #ccc; background: #f9f9f9; cursor: pointer; }
+    h1 { margin-bottom: 10px; font-size: 32px; }
+    nav { background-color: #e1e1e1; padding: 10px; }
+    nav > ul { display: flex; flex-wrap: wrap; list-style: none; padding: 0; margin: 0; }
+    nav > ul > li, nav > ul > li > a { display: flex; flex-direction: column; text-align: center; margin: 0; }
+    nav ul li img { max-width: 80px; width: 100%; height: auto; border-radius: 40px; }
+    .arrow { width: 50px; height: 80px; font-size: 38px; }
+  </style>
+</head>
+<body>
+<article itemscope itemtype="https://schema.org/CreativeWork">
+  <meta itemprop="identifier" content="2605165672574">
+  <meta itemprop="dateCreated" content="05/16/2026">
+<h1 itemprop="name">CCFU Proof 10 — The C₂ Level Set Is Isometric to H³ with K = −1/R²</h1>
+<nav aria-label="Breadcrumb" class="breadcrumb">
+  <ul>
+    <li><a href="../"><img src="../assets/images/AFB9C382-3B34-4925-B318-E7083E758055.png" alt="Home"/><span>Home</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><a href="./"><img src="../assets/images/proofs-1024.svg" alt="CCFU"/><span>CCFU Proofs</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><img src="../assets/images/proofs-1024.svg" alt="CCFU"/><span>CCFU Proof 10 — The C₂ Level Set Is Isometric to H³ with K = −1/R²</span></li>
+  </ul>
+</nav>
+  <div class="block" id="rendered">
+
+    <div class="block">
+      <div class="key">id</div>
+      <pre>2605165672574</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">safecreative_url</div>
+      <a href="https://www.safecreative.org/work/2605165672574-ccfu-proof-10-the-c2-level-set-is-isometric-to-h3-with-k-1-r2" target="_blank">https://www.safecreative.org/work/2605165672574-ccfu-proof-10-the-c2-level-set-is-isometric-to-h3-with-k-1-r2</a>
+    </div>
+
+    <div class="block">
+      <div class="key">title</div>
+      <pre>CCFU Proof 10 — The C₂ Level Set Is Isometric to H³ with K = −1/R²</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">date</div>
+      <pre>05/16/2026</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">text</div>
+      <pre>Given.
+G₄ is the invariant quadratic form with sig(G₄) = (3,1)  [Proof 4].
+A₄ᵀG₄A₄ = G₄  [Proof 4].
+Q(v) = vᵀG₄v.
+Let R &gt; 0. Define M_R = {v ∈ R⁴ : Q(v) = −R²}.
+
+Part A — Explicit isometry M_R⁺ ≅ H³.
+
+By Sylvester's law of inertia, since sig(G₄) = (3,1),
+there exists an invertible matrix P such that:
+
+    PᵀG₄P = η,  η = diag(−1,+1,+1,+1).
+
+Set f(v) = P⁻¹v and w = f(v).
+
+(i)  f is linear and bijective (det(P) ≠ 0).
+(ii) Q(v) = vᵀG₄v = wᵀηw.
+(iii) Q(v) = −R² iff wᵀηw = −R², i.e.,
+     −w₀² + w₁² + w₂² + w₃² = −R².
+
+This is the standard two-sheeted hyperboloid.
+Choose the sheet w₀ &gt; 0 and call it M_R⁺.
+This is the standard hyperboloid model of H³(R).
+
+Therefore f restricts to an isometry from (M_R⁺, G₄) to (H³(R), η).  ∎
+
+Part B — Induced metric.
+
+Parametrize H³(R):
+
+    w₀ = R·cosh(r)
+    w₁ = R·sinh(r)·sin(θ₁)·cos(θ₂)
+    w₂ = R·sinh(r)·sin(θ₁)·sin(θ₂)
+    w₃ = R·sinh(r)·cos(θ₁)
+
+Direct computation gives the induced metric:
+
+    ds² = R²(dr² + sinh²(r)(dθ₁² + sin²(θ₁)dθ₂²))
+
+This is the standard global H³ metric with scale R.  ∎
+
+Part C — Sectional curvature.
+
+The unit normal to M_R⁺ in the standard coordinates w = f(v) is n = w/R,
+which is timelike: η(n,n) = −1.
+The shape operator is S = −(1/R)I.
+For any orthonormal tangent 2-plane, the Gauss equation in flat
+ambient space gives:
+
+    K = η(n,n) · (1/R²) = (−1) · (1/R²) = −1/R²  ∎
+
+Conclusion.
+For each R &gt; 0, each connected sheet of M_R = {v : Q(v) = −R²}
+is linearly isometric to H³(R), the hyperbolic 3-space of constant
+sectional curvature K = −1/R². The result depends only on the
+C₂-derived signature sig(G₄) = (3,1). No additional parameters
+are chosen beyond R.
+</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">nft_url</div>
+      <a href="https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/10" target="_blank">https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/10</a>
+    </div>
+
+    <div class="block">
+      <div class="key">tweet_url</div>
+      <pre></pre>
+    </div>
+
+  </div>
+  <div class="block">
+    <div class="key">SHA-256</div>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <div class="hash" id="hashResult"></div>
+      <button id="copyHashBtn" type="button">Copy</button>
+    </div>
+  </div>
+
+  <div class="block">
+    <img src="https://v2gnduzo3ph2g4ww2oirsrfo33sztyyeockdlij6egkdcsdjhbgq.ardrive.net/rozR0y7bz6Ny1tORGUSu3uWZ4wRwlDWhPiGUMUhpOE0" 
+     alt="CCFU Proof 10 — The C₂ Level Set Is Isometric to H³ with K = −1/R²" 
+     style="max-width: 100%; height: auto;" />
+  </div>
+
+</article>
+<script>
+(async () => {
+  const entry = {
+    id: `2605165672574`,
+    safecreative_url: `https://www.safecreative.org/work/2605165672574-ccfu-proof-10-the-c2-level-set-is-isometric-to-h3-with-k-1-r2`,
+    title: `CCFU Proof 10 — The C₂ Level Set Is Isometric to H³ with K = −1/R²`,
+    date: `05/16/2026`,
+    text: `Given.
+G₄ is the invariant quadratic form with sig(G₄) = (3,1)  [Proof 4].
+A₄ᵀG₄A₄ = G₄  [Proof 4].
+Q(v) = vᵀG₄v.
+Let R > 0. Define M_R = {v ∈ R⁴ : Q(v) = −R²}.
+
+Part A — Explicit isometry M_R⁺ ≅ H³.
+
+By Sylvester's law of inertia, since sig(G₄) = (3,1),
+there exists an invertible matrix P such that:
+
+    PᵀG₄P = η,  η = diag(−1,+1,+1,+1).
+
+Set f(v) = P⁻¹v and w = f(v).
+
+(i)  f is linear and bijective (det(P) ≠ 0).
+(ii) Q(v) = vᵀG₄v = wᵀηw.
+(iii) Q(v) = −R² iff wᵀηw = −R², i.e.,
+     −w₀² + w₁² + w₂² + w₃² = −R².
+
+This is the standard two-sheeted hyperboloid.
+Choose the sheet w₀ > 0 and call it M_R⁺.
+This is the standard hyperboloid model of H³(R).
+
+Therefore f restricts to an isometry from (M_R⁺, G₄) to (H³(R), η).  ∎
+
+Part B — Induced metric.
+
+Parametrize H³(R):
+
+    w₀ = R·cosh(r)
+    w₁ = R·sinh(r)·sin(θ₁)·cos(θ₂)
+    w₂ = R·sinh(r)·sin(θ₁)·sin(θ₂)
+    w₃ = R·sinh(r)·cos(θ₁)
+
+Direct computation gives the induced metric:
+
+    ds² = R²(dr² + sinh²(r)(dθ₁² + sin²(θ₁)dθ₂²))
+
+This is the standard global H³ metric with scale R.  ∎
+
+Part C — Sectional curvature.
+
+The unit normal to M_R⁺ in the standard coordinates w = f(v) is n = w/R,
+which is timelike: η(n,n) = −1.
+The shape operator is S = −(1/R)I.
+For any orthonormal tangent 2-plane, the Gauss equation in flat
+ambient space gives:
+
+    K = η(n,n) · (1/R²) = (−1) · (1/R²) = −1/R²  ∎
+
+Conclusion.
+For each R > 0, each connected sheet of M_R = {v : Q(v) = −R²}
+is linearly isometric to H³(R), the hyperbolic 3-space of constant
+sectional curvature K = −1/R². The result depends only on the
+C₂-derived signature sig(G₄) = (3,1). No additional parameters
+are chosen beyond R.
+`,
+    nft_url: `https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/10`,
+    tweet_url: ``
+  };
+  const canonicalString = [entry.id, entry.safecreative_url, entry.title, entry.date, entry.text, entry.nft_url, entry.tweet_url].join('\n---\n');
+  const data = new TextEncoder().encode(canonicalString);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashHex = [...new Uint8Array(hashBuffer)].map(b => b.toString(16).padStart(2, '0')).join('');
+  document.getElementById('hashResult').textContent = hashHex;
+  document.getElementById('copyHashBtn').addEventListener('click', () => { navigator.clipboard.writeText(hashHex); alert('Hash copied'); });
+})();
+</script>
+</body></html>

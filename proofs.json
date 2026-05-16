@@ -128,5 +128,15 @@
     "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/13",
     "tweet_url": "",
     "image_url": "https://nk5dc4t6tdy4axjhyt46homwtc2ikmefp2vumltjqzwuxiglclhq.arweave.net/aroxcn6Y8cBdJ8T547mWmLSFMIV-q0YuaYZtS6DLEs8"
+  },
+  {
+    "id": "2605165677067",
+    "safecreative_url": "https://www.safecreative.org/work/2605165677067-ccfu-proof-14-null-vector-q-1-0",
+    "title": "CCFU Proof 14 — Null Vector: Q(φ,1) = 0",
+    "date": "05/16/2026",
+    "text": "Given.\nLet φ = (1+√5)/2, so φ² = φ + 1.\n\nC₂ characteristic polynomial: λ² − λ − 1 = 0\nAssociated quadratic form (eigenvector convention):\n    Q(x,y) = x² − xy − y²\n\nCompanion matrix:\n    A₂ = [[1, 1],\n          [1, 0]]\n\nEigenvector verification.\nv = (φ, 1) is an eigenvector of A₂ for eigenvalue φ:\n    A₂(φ,1) = (φ+1, φ) = (φ², φ) = φ(φ,1).  ∎\n\nConvention note.\nIn Proof 9, Q is written as Q(x,y) = y² − xy − x²\n(state-pair convention). Here Q(x,y) = x² − xy − y²\n(eigenvector convention). These are coordinate-swapped\nversions of the same characteristic quadratic structure.\n\nClaim.\n    Q(φ, 1) = 0\n\nProof.\n    Q(φ, 1) = φ² − φ·1 − 1²\n            = φ² − φ − 1\n            = 0          [since φ² − φ − 1 = 0]  ∎\n\nNote.\nThe eigenvector (φ,1) of A₂ is a null vector of the quadratic\nform Q associated with the characteristic polynomial of C₂.\nThis is Q-null, not Minkowski-null. The structural correspondence\n— that φ is null in its own quadratic form — is an observation,\nnot a physical claim.",
+    "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/14",
+    "tweet_url": "",
+    "image_url": "https://xkorsh24mynbywbs34kb6vw5lvcp44kvoxpt2qx3qvxexo6qofja.arweave.net/up0ZH1xmGhxYMt8UH1bdXUT-cVV13z1C-4VuS7vQcVI"
   }
 ]

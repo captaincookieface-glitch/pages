@@ -78,5 +78,15 @@
     "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/8",
     "tweet_url": "",
     "image_url": "https://upp7id3cy7itzjeofa2uxcqhmwcsue4gcdq32olckg6rmoyvyyaa.arweave.net/o9_0D2LH0Tykjig1S4oHZYUqE4YQ4b05YlG9FjsVxgA"
+  },
+  {
+    "id": "2605165670785",
+    "safecreative_url": "https://www.safecreative.org/work/2605165670785-ccfu-proof-9-cassini-identity-and-h1-orbit",
+    "title": "CCFU Proof 9 — Cassini Identity and H¹ Orbit",
+    "date": "05/16/2026",
+    "text": "Given.\nC₂: x(n+1) = x(n) + x(n-1)\n\nDefine (state-pair convention):\n    Q(x,y) = y² − xy − x²\n\nClaim.\nQ(x_n, x_{n+1}) = (−1)^n · Q(x_0, x_1) for all n ≥ 0.\n\nProof by induction.\n\nBase case (n=0): Q(x_0, x_1) = Q(x_0, x_1). ✓\n\nInductive step. Assume Q(x_n, x_{n+1}) = (−1)^n · Q(x_0, x_1). Then:\n\n    Q(x_{n+1}, x_{n+2})\n    = x_{n+2}² − x_{n+1}·x_{n+2} − x_{n+1}²\n    = (x_{n+1}+x_n)² − x_{n+1}(x_{n+1}+x_n) − x_{n+1}²\n    = x_{n+1}²+2x_{n+1}x_n+x_n² − x_{n+1}²−x_{n+1}x_n − x_{n+1}²\n    = −x_{n+1}² + x_{n+1}x_n + x_n²\n    = −(x_{n+1}² − x_{n+1}x_n − x_n²)\n    = −Q(x_n, x_{n+1})\n    = (−1)^{n+1} · Q(x_0, x_1)  ∎\n\nCorollary (H¹ orbit).\nFor Fibonacci (x_0=0, x_1=1): Q(0,1) = 1, so Q(x_n, x_{n+1}) = (−1)^n.\n\nFor general initial conditions:\n    Q(x_n, x_{n+1}) = (−1)^n · Q(x_0, x_1).\n\nUnder the change of variables:\n\n    u = y − x/2\n    v = (√5/2)·x\n\nThen:\n\n    u² − v² = (y−x/2)² − (5/4)x²\n            = y² − xy + x²/4 − 5x²/4\n            = y² − xy − x²\n            = Q(x,y)\n\nTherefore all C₂ states lie on u² − v² = (−1)^n · Q(x_0, x_1) in Minkowski(1,1).  ∎\n",
+    "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/9",
+    "tweet_url": "",
+    "image_url": "https://hleniqw2jziar4ttnu4mckf74cnfo5xljhlnix5etip5bcgaywaa.arweave.net/OsjUQtpOUAjyc204wSi_4JpXdutJ1tRfpJof0IjAxYA"
   }
 ]

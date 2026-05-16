@@ -68,5 +68,15 @@
     "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/7",
     "tweet_url": "",
     "image_url": "https://hyvh5jrd6om7aqdexdtnwzdmgtsym74zuhqt3rmbfrsqalaqhpaa.arweave.net/Pip-piPzmfBAZLjm22RsNOWGf5mh4T3FgSxlACwQO8A"
+  },
+  {
+    "id": "2605165670143",
+    "safecreative_url": "https://www.safecreative.org/work/2605165670143-ccfu-proof-8-fractal-similarity-dimension-d-1-for-branching-tree",
+    "title": "CCFU Proof 8 — Fractal Similarity Dimension D = 1 for φ-Branching Tree",
+    "date": "05/16/2026",
+    "text": "Given.\nLet φ = (1+√5)/2, so φ² = φ + 1.\nA Pythagoras tree with branch scales 1/φ and 1/φ².\nAssume the IFS satisfies the open set condition\n(no geometric overlaps between branches).\n\nIFS equation for similarity dimension D:\n\n    (1/φ)^D + (1/φ²)^D = 1\n\nClaim.\nD = 1 is the unique solution.\n\nProof.\n\n    (1/φ)¹ + (1/φ²)¹\n    = 1/φ + 1/φ²\n    = (φ + 1) / φ²\n    = φ² / φ²          [since φ + 1 = φ²]\n    = 1  ∎\n\nUniqueness.\nLet g(D) = φ^{−D} + φ^{−2D}.\ng is strictly decreasing in D (sum of decreasing exponentials).\ng(0) = 2 > 1, g(∞) = 0 < 1.\nTherefore g(D) = 1 has exactly one solution.\nSince g(1) = 1, D = 1 is the unique solution.  ∎\n\nNote.\nThis proves the similarity dimension. Under the open set condition,\nthe Hausdorff dimension equals this value.\nIf geometric overlaps occur in a specific realization,\nthe Hausdorff dimension may be lower.",
+    "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/8",
+    "tweet_url": "",
+    "image_url": "https://upp7id3cy7itzjeofa2uxcqhmwcsue4gcdq32olckg6rmoyvyyaa.arweave.net/o9_0D2LH0Tykjig1S4oHZYUqE4YQ4b05YlG9FjsVxgA"
   }
 ]

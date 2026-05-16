@@ -98,5 +98,15 @@
     "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/10",
     "tweet_url": "",
     "image_url": "https://v2gnduzo3ph2g4ww2oirsrfo33sztyyeockdlij6egkdcsdjhbgq.ardrive.net/rozR0y7bz6Ny1tORGUSu3uWZ4wRwlDWhPiGUMUhpOE0"
+  },
+  {
+    "id": "2605165673496",
+    "safecreative_url": "https://www.safecreative.org/work/2605165673496-ccfu-proof-11-lorentz-decomposition-a4-b-k",
+    "title": "CCFU Proof 11 — Lorentz Decomposition A₄ = B·K",
+    "date": "05/16/2026",
+    "text": "Given.\nspec(A₄) = {φ, 1/φ, +1, −1}\nA₄ᵀG₄A₄ = G₄  [from Proof 4]\nsig(G₄) = (3,1)  [from Proof 4]\n[Dependency: Proof 4]\nNote: an explicit companion-matrix realization of A₄ is given in Theory #15c / CCFU Paper I, but this proof uses only the spectral data and invariant form established in Proof 4.\n\nA₄ and all derived matrices share the same eigenbasis,\nso all spectral arguments are exact.\n\nDefine.\nB is the spectral square root of A₄² in the shared eigenbasis,\nwith spec(B) = {φ, 1/φ, 1, 1}. Set K = B⁻¹A₄.\n\nClaim.\n(a) B is a pure boost: BᵀG₄B = G₄, spec(B) = {φ, 1/φ, 1, 1}.\n(b) K is an involution: K² = I.\n(c) KᵀG₄K = G₄.\n(d) A₄ = B · K.\n\nProof of (a).\nspec(A₄²) = {φ², 1/φ², 1, 1}. All eigenvalues positive,\nso the spectral square root exists. spec(B) = {φ, 1/φ, 1, 1}.\nSince all eigenvalue pairs are reciprocal (φ·(1/φ) = 1, 1·1 = 1),\nB preserves G₄: BᵀG₄B = G₄.  ∎\n\nProof of (b).\nIn the shared eigenbasis:\n    spec(K) = spec(B⁻¹A₄)\n            = {φ/φ, (1/φ)/(1/φ), 1/1, (−1)/1}\n            = {1, 1, 1, −1}\nTherefore spec(K²) = {1, 1, 1, 1}.\nSince K² is diagonalizable with all eigenvalues 1: K² = I.  ∎\n\nProof of (c).\nKᵀG₄K = (B⁻¹A₄)ᵀG₄(B⁻¹A₄)\n       = A₄ᵀ(B⁻¹)ᵀG₄B⁻¹A₄\n       = A₄ᵀG₄A₄       [since BᵀG₄B = G₄ ⟹ (B⁻¹)ᵀG₄B⁻¹ = G₄]\n       = G₄  ∎\n\nProof of (d).\nB · K = B · B⁻¹ · A₄ = A₄  ∎",
+    "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/11",
+    "tweet_url": "",
+    "image_url": "https://xfhc2riihev3sh2udxe3c55jvtctawrjpisyhxsn2nphjq7uruuq.permagate.io/uU4tRQg5K7kfVB3JsXeprMUwWil6JYPeTdNedMP0jSk"
   }
 ]

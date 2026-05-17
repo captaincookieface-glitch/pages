@@ -168,5 +168,15 @@
     "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/17",
     "tweet_url": "",
     "image_url": "https://hvdzytejccaqoj2rn52443rf5vvm3k3qf375ors6bt2dkeu2adua.arweave.net/PUecTIkQgQcnUW91zm4l7WrNq3Au_9dGXgz0NRKaAOg"
+  },
+  {
+    "id": "2605175681207",
+    "safecreative_url": "https://www.safecreative.org/work/2605175681207-ccfu-proof-18-uniqueness-of-c2-among-1-recurrences",
+    "title": "CCFU Proof 18 — Uniqueness of C₂ Among ±1 Recurrences",
+    "date": "05/17/2026",
+    "text": "Given.\nAll second-order recurrences x(n+1) = a·x(n) + b·x(n-1)\nwith a, b ∈ {+1, −1}.\n\nClaim.\nC₂ (i.e., a=b=1) is, up to isomorphism, the unique such\nrecurrence with real hyperbolic roots and a reciprocal\nmagnitude pair.\n\nProof. There are exactly four cases.\n\nCase 1: (a,b) = (1,1).\n    λ² − λ − 1 = 0,  Δ = 5,  roots: φ, −1/φ.\n    Real roots, reciprocal magnitudes {φ, 1/φ}. ✓\n\nCase 2: (a,b) = (−1,1).\n    λ² + λ − 1 = 0,  Δ = 5,  roots: 1/φ, −φ.\n    Isomorphic to Case 1 via x_n → (−1)ⁿ x_n.\n    Same magnitudes, same chain. ✓\n\nCase 3: (a,b) = (1,−1).\n    λ² − λ + 1 = 0,  Δ = −3,  complex roots, |λ| = 1.\n    No real reciprocal pair. Chain breaks at step 1. ✗\n\nCase 4: (a,b) = (−1,−1).\n    λ² + λ + 1 = 0,  Δ = −3,  complex roots, |λ| = 1.\n    No real reciprocal pair. Chain breaks at step 1. ✗\n\nConclusion.\nOnly Cases 1 and 2 yield Δ = 5, real hyperbolic roots,\nand a reciprocal magnitude pair. These two are isomorphic.\nCases 3 and 4 give Δ = −3 with complex roots on the unit\ncircle; no growth/decay split, no real reciprocal pair,\nno factor completion.\n\nTherefore C₂ is, up to isomorphism, the unique minimal\nparameter-free second-order recurrence whose spectral chain\nreaches sig(3,2).  ∎\n\n[No dependencies. Self-contained.]",
+    "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/18",
+    "tweet_url": "",
+    "image_url": "https://teshjshrqv3gry2enykpwjct6yhhupqjcn2dgcg3gpks5zkfy3aa.ardrive.net/mSR0yPGFdmjjRG4U-yRT9g56PgkTdDMI2zPVLuVFxsA"
   }
 ]

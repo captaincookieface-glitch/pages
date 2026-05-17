@@ -158,5 +158,15 @@
     "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/16",
     "tweet_url": "",
     "image_url": "https://gjwkb7xe46abiwhpvw43f66xsd6whjy6ypt2jqiewb6pe2bvc3fa.arweave.net/Mmyg_uTngBRY7625svvXkP1jpx7D56TBBLB88mg1Fso"
+  },
+  {
+    "id": "2605175681047",
+    "safecreative_url": "https://www.safecreative.org/work/2605175681047-ccfu-proof-17-two-canonical-four-mode-completions-of-c2",
+    "title": "CCFU Proof 17 — Two Canonical Four-Mode Completions of C₂",
+    "date": "05/17/2026",
+    "text": "Given.\nThe C₂ companion matrix and its spectrum:\n\n    A₂ = [[1, 1],\n          [1, 0]]\n\n    λ² − λ − 1 = 0\n\n    spec(A₂) = {φ, −1/φ}, where φ = (1+√5)/2.\n\nCompletion 1 — Factor completion (sign/magnitude).\n\nEvery nonzero real eigenvalue has a unique factorization\nλ = sign(λ) · |λ|:\n\n    φ    = (+1) · φ\n    −1/φ = (−1) · (1/φ)\n\nExtract: signs {+1, −1}, magnitudes {φ, 1/φ}.\nUnion:\n\n    spec₁ = {φ, 1/φ, +1, −1}\n\nReciprocal pairing (λᵢλⱼ = 1):\n    (φ, 1/φ): sig(1,1)\n    +1 self-reciprocal: sig(1,0)\n    −1 self-reciprocal: sig(1,0)\n\nTotal:\n    sig₁ = (1,1) + (1,0) + (1,0) = (3,1)  ∎\n\nCompletion 2 — Symmetry completion (±-closure).\n\nClose the magnitudes {φ, 1/φ} under negation (λ → −λ):\n\n    spec₂ = {φ, −φ, 1/φ, −1/φ}\n\nReciprocal pairing:\n    (φ, 1/φ): sig(1,1)\n    (−φ, −1/φ): sig(1,1)\n\nTotal:\n    sig₂ = (1,1) + (1,1) = (2,2)  ∎\n\nNote on terminology.\nCompletion 1 is a unique real factorization, not a group closure.\nCompletion 2 is a group-theoretic closure under negation.\nBoth are canonically determined by spec(A₂) with no free choices.\n\nMinimal parent.\n\nCompletion 1 gives sig(3,1). Completion 2 gives sig(2,2).\n\nTo contain sig(3,1): p ≥ 3, q ≥ 1.\nTo contain sig(2,2): p ≥ 2, q ≥ 2.\nTogether: p ≥ 3, q ≥ 2.\nMinimal: sig(3,2), dim = 5.\nSufficiency: sig(3,2) contains sig(3,1) by dropping one negative\ndirection, and sig(2,2) by dropping one positive direction.\nThe lower bound is attained.\n\nThis recovers the Minimal Parent Theorem (Proof 5) with both\nsignatures now derived from spec(A₂) alone.  ∎\n\n[No dependencies. Self-contained. Recovers Proofs 4 and 5.]",
+    "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/17",
+    "tweet_url": "",
+    "image_url": "https://hvdzytejccaqoj2rn52443rf5vvm3k3qf375ors6bt2dkeu2adua.arweave.net/PUecTIkQgQcnUW91zm4l7WrNq3Au_9dGXgz0NRKaAOg"
   }
 ]

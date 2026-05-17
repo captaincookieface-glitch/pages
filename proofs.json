@@ -148,5 +148,15 @@
     "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/15",
     "tweet_url": "",
     "image_url": "https://lx5y5zxtrhezqfolx233vtholwt6ps3lidzs27474ifhm6n4qzfq.arweave.net/XfuO5vOJyZgVy763uszuXafny2tA8y1_n-IKdnm8hks"
+  },
+  {
+    "id": "2605175680835",
+    "safecreative_url": "https://www.safecreative.org/work/2605175680835-ccfu-proof-16-global-split-signature-sig-j-z-tgj-z-2-2-",
+    "title": "CCFU Proof 16 — Global Split Signature: sig(J(z)ᵀGJ(z)) = (2,2)",
+    "date": "05/17/2026",
+    "text": "Given.\nF(z,w) = (z² + βw, z) on C² = R⁴, β ∈ ℝ, β ≠ 0. Write z = a+ib, w = c+id.\n\nJacobian at arbitrary point:\n\n    J(z) = [[2a, −2b, β, 0],\n            [2b,  2a, 0, β],\n            [1,   0,  0, 0],\n            [0,   1,  0, 0]]\n\n    G = [[0, 0, 1, 0],\n         [0, 0, 0, 1],\n         [1, 0, 0, 0],\n         [0, 1, 0, 0]]\n\n    sig(G) = (2,2).\n\n[Dependency: Proof 3]\n\nClaim.\nsig(J(z)ᵀGJ(z)) = (2,2) for all z ∈ C and all w ∈ C, β ≠ 0. (Note: J is independent of w.)\n\nStep 1 — J(z) is invertible.\n\n    det(J(z)) = β².\n\nSince β ≠ 0: det(J(z)) = β² > 0. Therefore J(z) is invertible.  ∎\n\nStep 2 — Sylvester's Law of Inertia.\nFor any invertible matrix M and nondegenerate symmetric\nbilinear form G:\n\n    sig(MᵀGM) = sig(G).\n\nSince J(z) is invertible (Step 1) and G is nondegenerate\nwith sig(G) = (2,2):\n\n    sig(J(z)ᵀGJ(z)) = sig(G) = (2,2).  ∎\n\nDeterminant.\n\n    det(J(z)ᵀGJ(z)) = det(J(z))² · det(G) = β⁴ · 1 = β⁴.\n\nSummary of preservation hierarchy.\n\n[PROVEN — Proof 3]\nAt origin: J(0)ᵀGJ(0) = βG (conformal, exact form).\n\n[PROVEN — this proof]\nEverywhere: sig(J(z)ᵀGJ(z)) = (2,2) (signature preserved).\n\n[DISPROVEN — Proof 3]\nQ(F(z,w)) ≠ βQ(z,w) globally (form not preserved).\n\nThe differential signature is a global invariant of the map.\nThe form itself is not.",
+    "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/16",
+    "tweet_url": "",
+    "image_url": "https://gjwkb7xe46abiwhpvw43f66xsd6whjy6ypt2jqiewb6pe2bvc3fa.arweave.net/Mmyg_uTngBRY7625svvXkP1jpx7D56TBBLB88mg1Fso"
   }
 ]

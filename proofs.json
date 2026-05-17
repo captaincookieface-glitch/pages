@@ -138,5 +138,15 @@
     "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/14",
     "tweet_url": "",
     "image_url": "https://xkorsh24mynbywbs34kb6vw5lvcp44kvoxpt2qx3qvxexo6qofja.arweave.net/up0ZH1xmGhxYMt8UH1bdXUT-cVV13z1C-4VuS7vQcVI"
+  },
+  {
+    "id": "2605175680590",
+    "safecreative_url": "https://www.safecreative.org/work/2605175680590-ccfu-proof-15-one-step-lorentz-factor-1-5-2",
+    "title": "CCFU Proof 15 — One-Step Lorentz Factor γ₁ = √5/2",
+    "date": "05/17/2026",
+    "text": "Given.\nLet φ = (1+√5)/2, so φ² = φ + 1.\nC₂ one-step rapidity: η = ln φ.\n\nPart A — Lorentz factor.\n\n    γ₁ = cosh(ln φ)\n       = (φ + 1/φ) / 2\n\nSince 1/φ = φ − 1:\n\n    φ + 1/φ = 2φ − 1\n\nSquaring:\n\n    (2φ − 1)² = 4φ² − 4φ + 1\n              = 4(φ+1) − 4φ + 1    [since φ² = φ+1]\n              = 5\n\nSince 2φ − 1 > 0:  2φ − 1 = √5.\n\n    γ₁ = √5/2  ∎\n\nPart B — Reciprocal of 2φ.\n\n    1/(2φ) = 1/(1 + √5)\n           = (√5 − 1) / ((√5 + 1)(√5 − 1))\n           = (√5 − 1) / 4\n           = 0.30902...  ∎",
+    "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/15",
+    "tweet_url": "",
+    "image_url": "https://lx5y5zxtrhezqfolx233vtholwt6ps3lidzs27474ifhm6n4qzfq.arweave.net/XfuO5vOJyZgVy763uszuXafny2tA8y1_n-IKdnm8hks"
   }
 ]

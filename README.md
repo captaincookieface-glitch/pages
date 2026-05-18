@@ -1,2 +1,2 @@
 # pages
-Static canonical archive of Captain Cookie Face Universe aphorisms theories and simulators.
+Static canonical archive of Captain Cookie Face Universe contains Aphorisms Theories Simulators and Proofs.

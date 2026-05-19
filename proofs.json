@@ -178,5 +178,15 @@
     "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/18",
     "tweet_url": "",
     "image_url": "https://teshjshrqv3gry2enykpwjct6yhhupqjcn2dgcg3gpks5zkfy3aa.ardrive.net/mSR0yPGFdmjjRG4U-yRT9g56PgkTdDMI2zPVLuVFxsA"
+  },
+  {
+    "id": "2605195700865",
+    "safecreative_url": "https://www.safecreative.org/work/2605195700865-ccfu-proof-19-explicit-a4-companion-matrix-from-c2",
+    "title": "CCFU Proof 19 — Explicit A₄: Companion Matrix from C₂",
+    "date": "05/19/2026",
+    "text": "Given.\nspec(A₂) = {φ, −1/φ}, where φ = (1+√5)/2.\n\nBy Proof 17 (factor completion), the canonical four-mode spectrum is:\n    {φ, 1/φ, +1, −1}\n\nStep 1 — Characteristic polynomial.\n\n    p(λ) = (λ − φ)(λ − 1/φ)(λ − 1)(λ + 1)\n         = (λ² − √5·λ + 1)(λ² − 1)\n         = λ⁴ − √5·λ³ + √5·λ − 1  ∎\n\nStep 2 — Companion matrix.\n\n    A₄ = [[0, 0, 0, 1],\n          [1, 0, 0, −√5],\n          [0, 1, 0, 0],\n          [0, 0, 1, √5]]\n\nThis is the companion matrix of p(λ).\nBy construction, spec(A₄) = {φ, 1/φ, +1, −1}.  ∎\n\nStep 3 — Invariant form.\nLet D = diag(φ, 1/φ, +1, −1) and define:\n\n    G̃ = [[0, 1, 0, 0],\n         [1, 0, 0, 0],\n         [0, 0, 1, 0],\n         [0, 0, 0, 1]]\n\n    sig(G̃) = (3,1).\n\nEvery nonzero entry G̃ᵢⱼ satisfies λᵢλⱼ = 1, so DᵀG̃D = G̃.\nLet P be the eigenvector matrix (A₄ = PDP⁻¹, invertible\nsince the four eigenvalues are distinct).\nDefine G₄ = P⁻ᵀG̃P⁻¹.\nThen A₄ᵀG₄A₄ = G₄.  ∎\n\nStep 4 — Determinant.\n\n    det(A₄) = φ · (1/φ) · 1 · (−1) = −1.\n\nFor later use.\nSince A₄ᵀG₄A₄ = G₄, also (A₄²)ᵀG₄A₄² = G₄.\nMoreover det(A₄²) = 1\nand spec(A₄²) = {φ², 1/φ², 1, 1}.\nThus A₄² is a G₄-orthogonal, determinant-one map with\npositive hyperbolic spectrum. This is the boost component\nused in the translation-length proof (Proof 12).\n\nConclusion.\nA₄ is an explicit real 4×4 companion matrix,\nconstructed from spec(A₂) alone via the factor completion\nof Proof 17. It preserves G₄ with sig(3,1) and has det = −1.\nNo free numerical input is introduced; the √5 scale is\nforced by Δ(C₂) = 5.\n\nThis closes the external dependency of Proof 4 on Theory #15c.\n\n[Dependency: Proof 17. No external references.]",
+    "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/19",
+    "tweet_url": "",
+    "image_url": "https://axhkka7atfs24qmxqwmaxn2qq2t2pewpevrge5cmkq2si2g6xtbq.turbo-gateway.com/Bc6lA-CZZa5Bl4WYC7dQhqenks8lYmJ0TFQ1JGjevMM"
   }
 ]

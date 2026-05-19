@@ -1783,6 +1783,16 @@
       "nft_url": "https://opensea.io/item/base/0xfa583a819f70dd23213384b50ee1a20a5f083fa6/74",
       "tweet_url": "https://x.com/captaincoo39471/status/2056294420778016869",
       "image_url": "https://xjehu4y2gsfg63yv3qujaewwgkbkx3zht2222wu2ggekhws7wukq.arweave.net/ukh6cxo0im9vFdwokBLWMoKr7yeeta1amjGIo9pftRU"
+    },
+    {
+      "id": "2605195701046",
+      "safecreative_url": "https://www.safecreative.org/work/2605195701046-the-signature-is-global",
+      "title": "The Signature Is Global",
+      "date": "05/19/2026",
+      "text": "sig(J(z)ᵀGJ(z)) = (2,2)\nfor all z, β ∈ ℝ, β ≠ 0.\nNot only at the fixed point.\nQ is not globally preserved.\nThe differential signature is.\nSylvester’s Law: invertible J preserves the signature of G under pullback.\ndet(J(z)) = β².\nThe rest follows.​​​​​​​​​​​​​​​​",
+      "nft_url": "https://opensea.io/item/base/0xfa583a819f70dd23213384b50ee1a20a5f083fa6/75",
+      "tweet_url": "https://x.com/captaincoo39471/status/2056616291528540422",
+      "image_url": "https://ayolkbaknlliw32txrt5d5ctxjcxbathpymnnbhciwkvrr3nbrga.turbo-gateway.com/Bhy1BApq1otvU7xn0fRTukVwgmd-GNaE4kWVWMdtDEw"
     }
   ]
 }

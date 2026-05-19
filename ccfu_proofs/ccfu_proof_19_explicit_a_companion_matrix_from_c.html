@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CCFU Proof 19 — Explicit A₄: Companion Matrix from C₂</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #fff; }
+    .block { margin-bottom: 20px; padding: 15px; border: 1px solid #eee; word-wrap: break-word; }
+    .key { color: #000; font-size: 2em !important; text-transform: capitalize; font-weight: bold; }
+    .hash { word-break: break-all; color: #4287f5; }
+    a { color: #4287f5; text-decoration: underline; }
+    pre { white-space: pre-wrap; }
+    button { font-family: inherit; padding: 6px 10px; border: 1px solid #ccc; background: #f9f9f9; cursor: pointer; }
+    h1 { margin-bottom: 10px; font-size: 32px; }
+    nav { background-color: #e1e1e1; padding: 10px; }
+    nav > ul { display: flex; flex-wrap: wrap; list-style: none; padding: 0; margin: 0; }
+    nav > ul > li, nav > ul > li > a { display: flex; flex-direction: column; text-align: center; margin: 0; }
+    nav ul li img { max-width: 80px; width: 100%; height: auto; border-radius: 40px; }
+    .arrow { width: 50px; height: 80px; font-size: 38px; }
+  </style>
+</head>
+<body>
+<article itemscope itemtype="https://schema.org/CreativeWork">
+  <meta itemprop="identifier" content="2605195700865">
+  <meta itemprop="dateCreated" content="05/19/2026">
+<h1 itemprop="name">CCFU Proof 19 — Explicit A₄: Companion Matrix from C₂</h1>
+<nav aria-label="Breadcrumb" class="breadcrumb">
+  <ul>
+    <li><a href="../"><img src="../assets/images/AFB9C382-3B34-4925-B318-E7083E758055.png" alt="Home"/><span>Home</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><a href="./"><img src="../assets/images/proofs-1024.svg" alt="CCFU"/><span>CCFU Proofs</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><img src="../assets/images/proofs-1024.svg" alt="CCFU"/><span>CCFU Proof 19 — Explicit A₄: Companion Matrix from C₂</span></li>
+  </ul>
+</nav>
+  <div class="block" id="rendered">
+
+    <div class="block">
+      <div class="key">id</div>
+      <pre>2605195700865</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">safecreative_url</div>
+      <a href="https://www.safecreative.org/work/2605195700865-ccfu-proof-19-explicit-a4-companion-matrix-from-c2" target="_blank">https://www.safecreative.org/work/2605195700865-ccfu-proof-19-explicit-a4-companion-matrix-from-c2</a>
+    </div>
+
+    <div class="block">
+      <div class="key">title</div>
+      <pre>CCFU Proof 19 — Explicit A₄: Companion Matrix from C₂</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">date</div>
+      <pre>05/19/2026</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">text</div>
+      <pre>Given.
+spec(A₂) = {φ, −1/φ}, where φ = (1+√5)/2.
+
+By Proof 17 (factor completion), the canonical four-mode spectrum is:
+    {φ, 1/φ, +1, −1}
+
+Step 1 — Characteristic polynomial.
+
+    p(λ) = (λ − φ)(λ − 1/φ)(λ − 1)(λ + 1)
+         = (λ² − √5·λ + 1)(λ² − 1)
+         = λ⁴ − √5·λ³ + √5·λ − 1  ∎
+
+Step 2 — Companion matrix.
+
+    A₄ = [[0, 0, 0, 1],
+          [1, 0, 0, −√5],
+          [0, 1, 0, 0],
+          [0, 0, 1, √5]]
+
+This is the companion matrix of p(λ).
+By construction, spec(A₄) = {φ, 1/φ, +1, −1}.  ∎
+
+Step 3 — Invariant form.
+Let D = diag(φ, 1/φ, +1, −1) and define:
+
+    G̃ = [[0, 1, 0, 0],
+         [1, 0, 0, 0],
+         [0, 0, 1, 0],
+         [0, 0, 0, 1]]
+
+    sig(G̃) = (3,1).
+
+Every nonzero entry G̃ᵢⱼ satisfies λᵢλⱼ = 1, so DᵀG̃D = G̃.
+Let P be the eigenvector matrix (A₄ = PDP⁻¹, invertible
+since the four eigenvalues are distinct).
+Define G₄ = P⁻ᵀG̃P⁻¹.
+Then A₄ᵀG₄A₄ = G₄.  ∎
+
+Step 4 — Determinant.
+
+    det(A₄) = φ · (1/φ) · 1 · (−1) = −1.
+
+For later use.
+Since A₄ᵀG₄A₄ = G₄, also (A₄²)ᵀG₄A₄² = G₄.
+Moreover det(A₄²) = 1
+and spec(A₄²) = {φ², 1/φ², 1, 1}.
+Thus A₄² is a G₄-orthogonal, determinant-one map with
+positive hyperbolic spectrum. This is the boost component
+used in the translation-length proof (Proof 12).
+
+Conclusion.
+A₄ is an explicit real 4×4 companion matrix,
+constructed from spec(A₂) alone via the factor completion
+of Proof 17. It preserves G₄ with sig(3,1) and has det = −1.
+No free numerical input is introduced; the √5 scale is
+forced by Δ(C₂) = 5.
+
+This closes the external dependency of Proof 4 on Theory #15c.
+
+[Dependency: Proof 17. No external references.]</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">nft_url</div>
+      <a href="https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/19" target="_blank">https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/19</a>
+    </div>
+
+    <div class="block">
+      <div class="key">tweet_url</div>
+      <pre></pre>
+    </div>
+
+  </div>
+  <div class="block">
+    <div class="key">SHA-256</div>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <div class="hash" id="hashResult"></div>
+      <button id="copyHashBtn" type="button">Copy</button>
+    </div>
+  </div>
+
+  <div class="block">
+    <img src="https://axhkka7atfs24qmxqwmaxn2qq2t2pewpevrge5cmkq2si2g6xtbq.turbo-gateway.com/Bc6lA-CZZa5Bl4WYC7dQhqenks8lYmJ0TFQ1JGjevMM" 
+     alt="CCFU Proof 19 — Explicit A₄: Companion Matrix from C₂" 
+     style="max-width: 100%; height: auto;" />
+  </div>
+
+</article>
+<script>
+(async () => {
+  const entry = {
+    id: `2605195700865`,
+    safecreative_url: `https://www.safecreative.org/work/2605195700865-ccfu-proof-19-explicit-a4-companion-matrix-from-c2`,
+    title: `CCFU Proof 19 — Explicit A₄: Companion Matrix from C₂`,
+    date: `05/19/2026`,
+    text: `Given.
+spec(A₂) = {φ, −1/φ}, where φ = (1+√5)/2.
+
+By Proof 17 (factor completion), the canonical four-mode spectrum is:
+    {φ, 1/φ, +1, −1}
+
+Step 1 — Characteristic polynomial.
+
+    p(λ) = (λ − φ)(λ − 1/φ)(λ − 1)(λ + 1)
+         = (λ² − √5·λ + 1)(λ² − 1)
+         = λ⁴ − √5·λ³ + √5·λ − 1  ∎
+
+Step 2 — Companion matrix.
+
+    A₄ = [[0, 0, 0, 1],
+          [1, 0, 0, −√5],
+          [0, 1, 0, 0],
+          [0, 0, 1, √5]]
+
+This is the companion matrix of p(λ).
+By construction, spec(A₄) = {φ, 1/φ, +1, −1}.  ∎
+
+Step 3 — Invariant form.
+Let D = diag(φ, 1/φ, +1, −1) and define:
+
+    G̃ = [[0, 1, 0, 0],
+         [1, 0, 0, 0],
+         [0, 0, 1, 0],
+         [0, 0, 0, 1]]
+
+    sig(G̃) = (3,1).
+
+Every nonzero entry G̃ᵢⱼ satisfies λᵢλⱼ = 1, so DᵀG̃D = G̃.
+Let P be the eigenvector matrix (A₄ = PDP⁻¹, invertible
+since the four eigenvalues are distinct).
+Define G₄ = P⁻ᵀG̃P⁻¹.
+Then A₄ᵀG₄A₄ = G₄.  ∎
+
+Step 4 — Determinant.
+
+    det(A₄) = φ · (1/φ) · 1 · (−1) = −1.
+
+For later use.
+Since A₄ᵀG₄A₄ = G₄, also (A₄²)ᵀG₄A₄² = G₄.
+Moreover det(A₄²) = 1
+and spec(A₄²) = {φ², 1/φ², 1, 1}.
+Thus A₄² is a G₄-orthogonal, determinant-one map with
+positive hyperbolic spectrum. This is the boost component
+used in the translation-length proof (Proof 12).
+
+Conclusion.
+A₄ is an explicit real 4×4 companion matrix,
+constructed from spec(A₂) alone via the factor completion
+of Proof 17. It preserves G₄ with sig(3,1) and has det = −1.
+No free numerical input is introduced; the √5 scale is
+forced by Δ(C₂) = 5.
+
+This closes the external dependency of Proof 4 on Theory #15c.
+
+[Dependency: Proof 17. No external references.]`,
+    nft_url: `https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/19`,
+    tweet_url: ``
+  };
+  const canonicalString = [entry.id, entry.safecreative_url, entry.title, entry.date, entry.text, entry.nft_url, entry.tweet_url].join('\n---\n');
+  const data = new TextEncoder().encode(canonicalString);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashHex = [...new Uint8Array(hashBuffer)].map(b => b.toString(16).padStart(2, '0')).join('');
+  document.getElementById('hashResult').textContent = hashHex;
+  document.getElementById('copyHashBtn').addEventListener('click', () => { navigator.clipboard.writeText(hashHex); alert('Hash copied'); });
+})();
+</script>
+</body></html>

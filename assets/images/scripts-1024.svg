@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!-- Transparent background - no fill -->
+  
+  <!-- Terminal/console window -->
+  <rect x="162" y="182" width="700" height="560" rx="40" ry="40" fill="#2d3748" stroke="#4a5568" stroke-width="6"/>
+  
+  <!-- Terminal title bar -->
+  <rect x="162" y="182" width="700" height="80" rx="40" ry="40" fill="#4a5568"/>
+  <rect x="162" y="222" width="700" height="40" fill="#4a5568"/>
+  
+  <!-- Title bar dots -->
+  <circle cx="220" cy="222" r="14" fill="#fc8181"/>
+  <circle cx="260" cy="222" r="14" fill="#f6e05e"/>
+  <circle cx="300" cy="222" r="14" fill="#68d391"/>
+  
+  <!-- Title text -->
+  <text x="512" y="228" font-family="monospace" font-size="28" fill="#a0aec0" text-anchor="middle">scripts</text>
+  
+  <!-- Code lines -->
+  <text x="210" y="330" font-family="monospace" font-size="42" fill="#68d391">$</text>
+  <text x="245" y="330" font-family="monospace" font-size="42" fill="#e2e8f0">python3 verify.py</text>
+  
+  <text x="210" y="400" font-family="monospace" font-size="38" fill="#90cdf4">&gt;&gt;&gt;</text>
+  <text x="310" y="400" font-family="monospace" font-size="38" fill="#f6e05e">dim Stab = 14</text>
+  
+  <text x="210" y="470" font-family="monospace" font-size="38" fill="#90cdf4">&gt;&gt;&gt;</text>
+  <text x="310" y="470" font-family="monospace" font-size="38" fill="#f6e05e">Killing (8,6)</text>
+  
+  <text x="210" y="540" font-family="monospace" font-size="38" fill="#90cdf4">&gt;&gt;&gt;</text>
+  <text x="310" y="540" font-family="monospace" font-size="38" fill="#f6e05e">g₂(split)</text>
+  
+  <text x="210" y="620" font-family="monospace" font-size="42" fill="#68d391">✓ VERIFIED</text>
+  
+  <text x="210" y="690" font-family="monospace" font-size="42" fill="#68d391">$</text>
+  <rect x="245" y="665" width="22" height="35" fill="#68d391" opacity="0.8">
+    <animate attributeName="opacity" values="0.8;0;0.8" dur="1.2s" repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Subtle shadow/glow -->
+  <rect x="162" y="742" width="700" height="8" rx="4" fill="#1a202c" opacity="0.15"/>
+</svg>

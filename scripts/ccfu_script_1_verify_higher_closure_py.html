@@ -1,0 +1,1974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CCFU Script 1 — verify_higher_closure.py</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #fff; }
+    .block { margin-bottom: 20px; padding: 15px; border: 1px solid #eee; word-wrap: break-word; }
+    .key { color: #000; font-size: 2em !important; text-transform: capitalize; font-weight: bold; }
+    .hash { word-break: break-all; color: #4287f5; }
+    a { color: #4287f5; text-decoration: underline; }
+    pre { white-space: pre-wrap; }
+    code { background: #f4f4f4; padding: 2px 4px; font-size: 0.9em; }
+    pre > code { display: block; padding: 12px; overflow-x: auto; white-space: pre; }
+    button { font-family: inherit; padding: 6px 10px; border: 1px solid #ccc; background: #f9f9f9; cursor: pointer; }
+    h1 { margin-bottom: 10px; font-size: 32px; }
+    nav { background-color: #e1e1e1; padding: 10px; }
+    nav > ul { display: flex; flex-wrap: wrap; list-style: none; padding: 0; margin: 0; }
+    nav > ul > li, nav > ul > li > a { display: flex; flex-direction: column; text-align: center; margin: 0; }
+    nav ul li img { max-width: 80px; width: 100%; height: auto; border-radius: 40px; }
+    .arrow { width: 50px; height: 80px; font-size: 38px; }
+  </style>
+</head>
+<body>
+<article itemscope itemtype="https://schema.org/CreativeWork">
+  <meta itemprop="identifier" content="2605225741400">
+  <meta itemprop="dateCreated" content="05/22/2026">
+<h1 itemprop="name">CCFU Script 1 — verify_higher_closure.py</h1>
+<nav aria-label="Breadcrumb" class="breadcrumb">
+  <ul>
+    <li><a href="../"><img src="../assets/images/AFB9C382-3B34-4925-B318-E7083E758055.png" alt="Home"/><span>Home</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><a href="./"><img src="../assets/images/scripts-1024.svg" alt="CCFU"/><span>CCFU Scripts</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><img src="../assets/images/scripts-1024.svg" alt="CCFU"/><span>CCFU Script 1 — verify_higher_closure.py</span></li>
+  </ul>
+</nav>
+  <div class="block" id="rendered">
+
+    <div class="block">
+      <div class="key">id</div>
+      <pre>2605225741400</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">safecreative_url</div>
+      <a href="https://www.safecreative.org/work/2605225741400-ccfu-script-1-verify_higher_closure-py" target="_blank">https://www.safecreative.org/work/2605225741400-ccfu-script-1-verify_higher_closure-py</a>
+    </div>
+
+    <div class="block">
+      <div class="key">title</div>
+      <pre>CCFU Script 1 — verify_higher_closure.py</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">date</div>
+      <pre>05/22/2026</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">text</div>
+      <details><summary style="cursor:pointer; color:#4287f5; margin-bottom:8px;">Show source code</summary><pre><code>&quot;&quot;&quot;
+verify_higher_closure.py
+========================
+Verifies the internal computational claims of Proof 21 (Higher Alternating Closure).
+All computations exact over Q (Fraction). No numpy. No float.
+No external dependencies — Poly class is implemented inline.
+
+Conventions
+-----------
+DIM = 7 is the ambient dimension of V_W = R ⊕ W ⊕ W*.
+Coordinates: index 0 = τ (R-summand), 1,2,3 = W, 4,5,6 = W*.
+3-forms are stored as dicts {(i,j,k): coeff}, populated on all permutations
+of every triple with appropriate signs, so a lookup by any tuple works.
+
+Action convention for an X ∈ gl(V) on a 3-form ω:
+  (X·ω)(i,j,k) = Σ_l X[l][i]·ω(l,j,k) + X[l][j]·ω(i,l,k) + X[l][k]·ω(i,j,l).
+This is the standard Lie-derivative convention (free index = position in form,
+summed index = first index of the matrix). action_on_lambda3,
+infinitesimal_stabilizer_constraints, and the Part 6 inline check
+all use this exact convention.
+
+Parts
+-----
+  1. dim SL(W)-invariant 3-forms on V_W = R⊕W⊕W* equals 3.
+  2. b_Ω/6 has the predicted block structure
+     [symbolic proof in (a,b,c) over Q, plus numerical illustrations];
+     det(b_Ω/6) is also checked directly symbolically, hence
+     det(b_Ω) = 6⁷ · a⁹b⁶c⁶ / 64 = 4374·a⁹b⁶c⁶.
+  3. sig(b_Ω) = (3,4) and dim Stab(Ω_{1,1,1}) = 14 — both exact.
+     The identification with G₂_split uses the standard classification theorem
+     for stable 3-forms in dimension 7.
+  4. Ω_W and Ω_old as 3-forms on R⁷: exact integer witness H with
+     H*Ω_W = 2·Ω_old; rescaling by 2^(-1/3) gives exact GL(7,R)
+     equivalence. A determinant obstruction proves there is no exact
+     GL(7,Q)-equivalence Ω_W ~ Ω_old.
+  5. On W⊕W* (dim 6): dim Stab = 16 (exact). Not G₂.
+  6. SL(W) preserves Ω_W: all 8 sl(3) generators verified exact.
+
+Explicit runtime checks use require(), so they still run under python3 -O.
+Pure Python + fractions.Fraction.
+
+Run: python3 verify_higher_closure.py
+&quot;&quot;&quot;
+
+from fractions import Fraction
+from itertools import permutations, combinations
+
+DIM = 7          # ambient dimension of V_W
+ZERO = Fraction(0)
+ONE  = Fraction(1)
+
+
+def require(condition, message):
+    &quot;&quot;&quot;Like assert, but unaffected by python3 -O (which strips assertions).&quot;&quot;&quot;
+    if not condition:
+        raise AssertionError(message)
+
+
+# ============================================================
+# Generic linear-algebra / combinatorial helpers
+# ============================================================
+
+def permutation_sign(seq):
+    &quot;&quot;&quot;Sign (parity of inversions) of a permutation given as a sequence.&quot;&quot;&quot;
+    items = list(seq)
+    sign = 1
+    length = len(items)
+    for i in range(length):
+        for j in range(i + 1, length):
+            if items[i] &gt; items[j]:
+                sign = -sign
+    return sign
+
+
+def sorted_triples(dim):
+    &quot;&quot;&quot;All sorted triples (i,j,k) with 0 ≤ i &lt; j &lt; k &lt; dim.&quot;&quot;&quot;
+    return [(i, j, k)
+            for i in range(dim)
+            for j in range(i + 1, dim)
+            for k in range(j + 1, dim)]
+
+
+def antisymmetric_form(signed_sorted):
+    &quot;&quot;&quot;
+    Build a 3-form dict from values on sorted triples.
+
+    signed_sorted: {(i,j,k): value} with i&lt;j&lt;k.
+    `value` may be int / Fraction / Poly — anything that supports * by ±1.
+    Raw ints are promoted to Fraction so downstream arithmetic stays exact.
+    &quot;&quot;&quot;
+    form = {}
+    for sorted_triple, value in signed_sorted.items():
+        if isinstance(value, int):
+            base = Fraction(value)
+        else:
+            base = value
+        for perm in permutations(sorted_triple):
+            form[perm] = base * permutation_sign(perm)
+    return form
+
+
+def zero_matrix(rows, cols=None):
+    &quot;&quot;&quot;rows × cols matrix of ZERO. Square if cols omitted.&quot;&quot;&quot;
+    if cols is None:
+        cols = rows
+    return [[ZERO] * cols for _ in range(rows)]
+
+
+def row_reduce(matrix, num_cols):
+    &quot;&quot;&quot;Reduced row-echelon over Q (in place). Returns rank.&quot;&quot;&quot;
+    rank = 0
+    num_rows = len(matrix)
+    for col in range(num_cols):
+        pivot_row = None
+        for row in range(rank, num_rows):
+            if matrix[row][col] != ZERO:
+                pivot_row = row
+                break
+        if pivot_row is None:
+            continue
+        matrix[rank], matrix[pivot_row] = matrix[pivot_row], matrix[rank]
+        for row in range(num_rows):
+            if row != rank and matrix[row][col] != ZERO:
+                factor = matrix[row][col] / matrix[rank][col]
+                for c in range(num_cols):
+                    matrix[row][c] -= factor * matrix[rank][c]
+        rank += 1
+    return rank
+
+
+def kernel_dimension(stacked_rows, num_cols):
+    &quot;&quot;&quot;Dim of the kernel of a system Ax = 0 given by stacked rows.&quot;&quot;&quot;
+    work = [row[:] for row in stacked_rows]
+    return num_cols - row_reduce(work, num_cols)
+
+
+def exact_det(matrix, n):
+    &quot;&quot;&quot;Determinant by Leibniz over Q or any compatible exact commutative ring.&quot;&quot;&quot;
+    total = ZERO
+    for perm in permutations(range(n)):
+        sign = permutation_sign(perm)
+        product = ONE
+        for i in range(n):
+            product *= matrix[i][perm[i]]
+        total += sign * product
+    return total
+
+
+def prime_factorization_abs_integer(n):
+    &quot;&quot;&quot;Prime factorization of |n| as {prime: exponent}; n must be nonzero.&quot;&quot;&quot;
+    n = abs(int(n))
+    if n == 0:
+        raise ValueError(&quot;factorization of zero is undefined&quot;)
+    factors = {}
+    divisor = 2
+    while divisor * divisor &lt;= n:
+        while n % divisor == 0:
+            factors[divisor] = factors.get(divisor, 0) + 1
+            n //= divisor
+        divisor += 1 if divisor == 2 else 2   # after 2, test odd divisors only
+    if n &gt; 1:
+        factors[n] = factors.get(n, 0) + 1
+    return factors
+
+
+def is_rational_nth_power(value, exponent):
+    &quot;&quot;&quot;
+    True iff value ∈ Q is an exponent-th power of a rational number.
+
+    For value = m/n in lowest terms, this is equivalent to every prime
+    exponent in |m| and |n| being divisible by `exponent`, with the usual
+    sign obstruction for even exponent.
+    &quot;&quot;&quot;
+    if exponent &lt;= 0:
+        raise ValueError(&quot;exponent must be positive&quot;)
+
+    value = Fraction(value)
+    if value == 0:
+        return True
+    if value &lt; 0 and exponent % 2 == 0:
+        return False
+
+    for factorization_target in (value.numerator, value.denominator):
+        for power in prime_factorization_abs_integer(factorization_target).values():
+            if power % exponent != 0:
+                return False
+    return True
+
+
+def exact_signature(symmetric_matrix, n):
+    &quot;&quot;&quot;
+    Signature (p, q) of a symmetric n×n matrix over Q, computed by
+    exact congruence diagonalization (LDLᵀ with full pivoting).
+    &quot;&quot;&quot;
+    S = [[symmetric_matrix[i][j] for j in range(n)] for i in range(n)]
+    diagonals = []
+
+    for step in range(n):
+        pivot = -1
+        for i in range(step, n):
+            if S[i][i] != ZERO:
+                pivot = i
+                break
+
+        if pivot == -1:
+            found = False
+            for i in range(step, n):
+                for j in range(i + 1, n):
+                    if S[i][j] != ZERO:
+                        for k in range(n):
+                            S[i][k] += S[j][k]
+                        for k in range(n):
+                            S[k][i] += S[k][j]
+                        pivot = i
+                        found = True
+                        break
+                if found:
+                    break
+            if not found:
+                break
+
+        if pivot != step:
+            S[step], S[pivot] = S[pivot], S[step]
+            for k in range(n):
+                S[k][step], S[k][pivot] = S[k][pivot], S[k][step]
+
+        diag = S[step][step]
+        if diag == ZERO:
+            continue
+        diagonals.append(diag)
+
+        for i in range(step + 1, n):
+            if S[i][step] == ZERO:
+                continue
+            factor = S[i][step] / diag
+            for j in range(step, n):
+                S[i][j] -= factor * S[step][j]
+            for j in range(step, n):
+                S[j][i] -= factor * S[j][step]
+
+    positive = sum(1 for d in diagonals if d &gt; 0)
+    negative = sum(1 for d in diagonals if d &lt; 0)
+    return positive, negative
+
+
+# ============================================================
+# Multivariate polynomial in (a, b, c) over Q
+# ============================================================
+
+class Poly:
+    &quot;&quot;&quot;
+    Multivariate polynomial in three variables a, b, c over Q.
+
+    Stored as a dict {(deg_a, deg_b, deg_c): Fraction}, with zero coefficients
+    pruned. Supports +, -, *, **, /scalar, ==.
+    Acts as a drop-in replacement for Fraction in the verifier's arithmetic,
+    so build_omega_abc and hitchin_form_b_over_6 can run symbolically without
+    any change.
+
+    Two polynomials are equal iff their pruned dicts are equal — this is a
+    rigorous polynomial-identity check, not a sample-based one.
+    &quot;&quot;&quot;
+    __slots__ = ('terms',)
+
+    def __init__(self, terms=None):
+        if terms is None:
+            self.terms = {}
+        else:
+            self.terms = {k: Fraction(v) for k, v in terms.items() if v != 0}
+
+    @staticmethod
+    def constant(value):
+        v = Fraction(value)
+        return Poly({(0, 0, 0): v}) if v != 0 else Poly()
+
+    @staticmethod
+    def variable(index):
+        &quot;&quot;&quot;0 = a, 1 = b, 2 = c.&quot;&quot;&quot;
+        exponents = [0, 0, 0]
+        exponents[index] = 1
+        return Poly({tuple(exponents): Fraction(1)})
+
+    # ----- arithmetic -----
+
+    def _coerce(self, other):
+        if isinstance(other, Poly):
+            return other
+        return Poly.constant(other)
+
+    def __add__(self, other):
+        other = self._coerce(other)
+        out = dict(self.terms)
+        for k, v in other.terms.items():
+            new = out.get(k, Fraction(0)) + v
+            if new == 0:
+                out.pop(k, None)
+            else:
+                out[k] = new
+        result = Poly()
+        result.terms = out
+        return result
+
+    def __radd__(self, other):
+        return self.__add__(other)
+
+    def __neg__(self):
+        return Poly({k: -v for k, v in self.terms.items()})
+
+    def __sub__(self, other):
+        return self + (-self._coerce(other))
+
+    def __rsub__(self, other):
+        return self._coerce(other) - self
+
+    def __mul__(self, other):
+        other = self._coerce(other)
+        out = {}
+        for k1, v1 in self.terms.items():
+            for k2, v2 in other.terms.items():
+                k = (k1[0] + k2[0], k1[1] + k2[1], k1[2] + k2[2])
+                new = out.get(k, Fraction(0)) + v1 * v2
+                if new == 0:
+                    out.pop(k, None)
+                else:
+                    out[k] = new
+        result = Poly()
+        result.terms = out
+        return result
+
+    def __rmul__(self, other):
+        return self.__mul__(other)
+
+    def __pow__(self, exponent):
+        if not isinstance(exponent, int) or exponent &lt; 0:
+            raise ValueError(&quot;Poly power must be non-negative int&quot;)
+        if exponent == 0:
+            return Poly.constant(1)
+        result = self
+        for _ in range(exponent - 1):
+            result = result * self
+        return result
+
+    def __truediv__(self, other):
+        # Only scalar division. Division by a non-constant Poly would in
+        # general leave Q[a,b,c], so we don't implement it.
+        if isinstance(other, Poly):
+            if len(other.terms) == 1 and (0, 0, 0) in other.terms:
+                divisor = other.terms[(0, 0, 0)]
+            else:
+                raise ValueError(&quot;Poly division by non-constant unsupported&quot;)
+        else:
+            divisor = Fraction(other)
+        if divisor == 0:
+            raise ZeroDivisionError(&quot;division by zero polynomial&quot;)
+        return Poly({k: v / divisor for k, v in self.terms.items()})
+
+    # ----- comparison -----
+
+    def __eq__(self, other):
+        if not isinstance(other, Poly):
+            other = Poly.constant(other)
+        return self.terms == other.terms
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __bool__(self):
+        return bool(self.terms)
+
+    def __hash__(self):
+        return hash(frozenset(self.terms.items()))
+
+    def __repr__(self):
+        if not self.terms:
+            return &quot;0&quot;
+        chunks = []
+        for exponents in sorted(self.terms.keys(), reverse=True):
+            coef = self.terms[exponents]
+            mono_parts = []
+            for var, deg in zip(&quot;abc&quot;, exponents):
+                if deg == 1:
+                    mono_parts.append(var)
+                elif deg &gt; 1:
+                    mono_parts.append(f&quot;{var}^{deg}&quot;)
+            mono = &quot;·&quot;.join(mono_parts)
+            if not mono:
+                chunks.append(f&quot;{coef}&quot;)
+            elif coef == 1:
+                chunks.append(mono)
+            elif coef == -1:
+                chunks.append(f&quot;-{mono}&quot;)
+            else:
+                chunks.append(f&quot;{coef}·{mono}&quot;)
+        return &quot; + &quot;.join(chunks).replace(&quot;+ -&quot;, &quot;- &quot;)
+
+
+# ============================================================
+# Lie-algebra structure: sl(3) and its lift to gl(V_W)
+# ============================================================
+
+def sl3_generators():
+    &quot;&quot;&quot;
+    Eight standard generators of sl(3, R):
+      six off-diagonal E_{ij} (i ≠ j),
+      plus H₁ = E₁₁ - E₂₂, H₂ = E₂₂ - E₃₃.
+    &quot;&quot;&quot;
+    gens = []
+    for i in range(3):
+        for j in range(3):
+            if i != j:
+                E = zero_matrix(3, 3)
+                E[i][j] = ONE
+                gens.append(E)
+
+    H1 = zero_matrix(3, 3); H1[0][0] = ONE;  H1[1][1] = -ONE
+    H2 = zero_matrix(3, 3); H2[1][1] = ONE;  H2[2][2] = -ONE
+    gens.append(H1)
+    gens.append(H2)
+    return gens
+
+
+def lift_sl3_to_gl_VW(X_sl3):
+    &quot;&quot;&quot;
+    X ∈ sl(3) → X_V ∈ gl(7), the Lie-algebra lift of the SL(W)-action
+    on V_W = R ⊕ W ⊕ W*.
+    At the group level: g = diag(1, A, A⁻ᵀ).
+    Differentiating at the identity gives X_V = diag(0, X, -Xᵀ).
+    &quot;&quot;&quot;
+    X_V = zero_matrix(DIM, DIM)
+    for i in range(3):
+        for j in range(3):
+            X_V[1 + i][1 + j] = X_sl3[i][j]
+            X_V[4 + i][4 + j] = -X_sl3[j][i]
+    return X_V
+
+
+# ============================================================
+# Action of gl(7) on Λ³(R⁷) and infinitesimal stabilizer
+# ============================================================
+
+def action_on_lambda3(X_gl7):
+    &quot;&quot;&quot;
+    35×35 matrix M of the action of X ∈ gl(7) on Λ³(R⁷*),
+    in the STANDARD Lie-derivative convention.
+
+      M[row][col] = coefficient of e_{basis[row]} in X · e_{basis[col]}.
+
+    For a 3-form ω stored as a vector w (w[col] = ω_{basis[col]}), we have
+      (M · w)[row] = (X · ω)_{basis[row]}
+                   = Σ_l X[l][row[0]]·ω(l, row[1], row[2]) + (cyclic).
+
+    Implementation note. We iterate over the SOURCE basis (col), so for each
+    source triple (i,j,k) and substituting position `slot` with value `l` we
+    obtain a target row = sorted_index([i,j,k] with [slot] := l). The matrix
+    entry needed to match the standard convention X[summed][form_position]
+    is X[source[slot]][l]: the summed index is source[slot] (the value that
+    left the source on its way to becoming target's missing index), and the
+    matching index is l (the new value that entered).
+    &quot;&quot;&quot;
+    basis = sorted_triples(DIM)
+    size = len(basis)
+    basis_index = {triple: idx for idx, triple in enumerate(basis)}
+    M = zero_matrix(size, size)
+
+    for col, (i, j, k) in enumerate(basis):
+        contributions = [ZERO] * size
+        for slot, source_index in enumerate((i, j, k)):
+            for l in range(DIM):
+                coef = X_gl7[source_index][l]    # standard Lie convention
+                if coef == ZERO:
+                    continue
+                replaced = [i, j, k]
+                replaced[slot] = l
+                if len(set(replaced)) != 3:
+                    continue          # duplicate index ⇒ vanishes
+                target = basis_index[tuple(sorted(replaced))]
+                contributions[target] += coef * permutation_sign(replaced)
+
+        for row in range(size):
+            M[row][col] = contributions[row]
+
+    return M
+
+
+def infinitesimal_stabilizer_constraints(omega, dim):
+    &quot;&quot;&quot;
+    Build the (#triples) × (dim²) constraint matrix for X·ω = 0, X ∈ gl(dim).
+
+    Row index r ↔ sorted triple (i,j,k).
+    Col index c ↔ pair (a,b) with c = a·dim + b (matrix entry X[a][b]).
+    Entry encodes the contribution of X[a][b] to (X·ω)(i,j,k).
+    &quot;&quot;&quot;
+    triples = sorted_triples(dim)
+    matrix = zero_matrix(len(triples), dim * dim)
+
+    def value_at(i, j, k):
+        return omega.get((i, j, k), ZERO)
+
+    for row_idx, (i, j, k) in enumerate(triples):
+        for col_idx in range(dim * dim):
+            from_index = col_idx // dim    # gl-matrix row &quot;a&quot;
+            to_index   = col_idx % dim     # gl-matrix col &quot;b&quot;
+            entry = ZERO
+            if to_index == i: entry += value_at(from_index, j, k)
+            if to_index == j: entry += value_at(i, from_index, k)
+            if to_index == k: entry += value_at(i, j, from_index)
+            matrix[row_idx][col_idx] = entry
+
+    return matrix
+
+
+def stabilizer_dim(omega, dim):
+    &quot;&quot;&quot;
+    dim of {X ∈ gl(dim) : X·ω = 0}, computed exactly.
+    Returns (stabilizer_dim, rank_of_constraints).
+    &quot;&quot;&quot;
+    constraints = infinitesimal_stabilizer_constraints(omega, dim)
+    rank = row_reduce(constraints, dim * dim)
+    return dim * dim - rank, rank
+
+
+# ============================================================
+# 3-form Ω_{a,b,c} on V_W, Hitchin form, and pullback
+# ============================================================
+
+def build_omega_abc(coef_pairing, coef_volW, coef_volWstar):
+    &quot;&quot;&quot;
+    Ω_{a,b,c} on V_W = R⊕W⊕W*, with coordinates
+      e₀ = τ,  e₁,e₂,e₃ ∈ W,  e₄,e₅,e₆ ∈ W*.
+
+      Ω = a · τ ∧ (e₁∧e₄ + e₂∧e₅ + e₃∧e₆)   (the canonical pairing ev)
+          + b · e₁∧e₂∧e₃                      (vol_W)
+          + c · e₄∧e₅∧e₆                      (vol_{W*})
+
+    Coefficients may be int / Fraction / Poly; arithmetic propagates
+    transparently.
+    &quot;&quot;&quot;
+    signed_sorted = {
+        (0, 1, 4): coef_pairing, (0, 2, 5): coef_pairing, (0, 3, 6): coef_pairing,
+        (1, 2, 3): coef_volW,
+        (4, 5, 6): coef_volWstar,
+    }
+    return antisymmetric_form(signed_sorted)
+
+
+def hitchin_form_b_over_6(omega):
+    &quot;&quot;&quot;
+    Returns the matrix  b_Ω / 6,  where
+
+      b_Ω(X, Y) · vol = (ι_X Ω) ∧ (ι_Y Ω) ∧ Ω
+
+    is the standard Hitchin quadratic invariant (one common normalization).
+    The /6 is convenient because the resulting matrix has small rational
+    entries; det(b_Ω) = 6⁷ · det(b_Ω/6).
+
+    In components:
+      (b_Ω/6)[row][col] = (1/6) · Σ  sign(partition) ·
+                          ω(row, γ₁, γ₂) · ω(col, γ₃, γ₄) · ω(γ₅, γ₆, γ₇),
+    summed over ordered partitions of {0,…,6} into blocks
+    (γ₁γ₂)(γ₃γ₄)(γ₅γ₆γ₇).
+    &quot;&quot;&quot;
+    def value_at(i, j, k):
+        return omega.get((i, j, k), ZERO)
+
+    all_indices = list(range(DIM))
+    b_matrix = zero_matrix(DIM, DIM)
+
+    for row in range(DIM):
+        for col in range(DIM):
+            total = ZERO
+            for pair_first in combinations(all_indices, 2):
+                rest_after_first = [x for x in all_indices if x not in pair_first]
+                for pair_second in combinations(rest_after_first, 2):
+                    last_triple = tuple(x for x in rest_after_first
+                                        if x not in pair_second)
+                    if len(last_triple) != 3:
+                        continue
+
+                    val_row    = value_at(row, pair_first[0], pair_first[1])
+                    val_col    = value_at(col, pair_second[0], pair_second[1])
+                    val_triple = value_at(last_triple[0], last_triple[1], last_triple[2])
+                    if val_row == ZERO or val_col == ZERO or val_triple == ZERO:
+                        continue
+
+                    full_perm = list(pair_first) + list(pair_second) + list(last_triple)
+                    if len(set(full_perm)) != DIM:
+                        continue
+
+                    total += permutation_sign(full_perm) * val_row * val_col * val_triple
+
+            b_matrix[row][col] = total / Fraction(6)
+
+    return b_matrix
+
+
+def pullback_3form(H, omega, dim):
+    &quot;&quot;&quot;(H*ω)_{ijk} = Σ_{abc} H[a][i] H[b][j] H[c][k] · ω_{abc}.&quot;&quot;&quot;
+    pulled = {}
+    for i in range(dim):
+        for j in range(dim):
+            for k in range(dim):
+                val = ZERO
+                for a in range(dim):
+                    for b in range(dim):
+                        for c in range(dim):
+                            coef = omega.get((a, b, c), ZERO)
+                            if coef == ZERO:
+                                continue
+                            val += H[a][i] * H[b][j] * H[c][k] * coef
+                pulled[(i, j, k)] = val
+    return pulled
+
+
+# ============================================================
+# PART 1: dim SL(W)-invariant 3-forms = 3
+# ============================================================
+
+print(&quot;=&quot; * 60)
+print(&quot;PART 1: SL(W)-invariant 3-forms on V_W&quot;)
+print(&quot;=&quot; * 60)
+
+# Stack the action matrices for all sl(3) generators.
+# ω is SL(W)-invariant iff (stacked matrix) · ω = 0.
+stacked_constraints = []
+for X_sl3 in sl3_generators():
+    X_V = lift_sl3_to_gl_VW(X_sl3)
+    action_matrix = action_on_lambda3(X_V)
+    for row in action_matrix:
+        stacked_constraints.append(row)
+
+invariant_dim = kernel_dimension(stacked_constraints, 35)
+print(f&quot;  dim SL(W)-invariant 3-forms = {invariant_dim}&quot;)
+require(invariant_dim == 3, f&quot;Expected 3, got {invariant_dim}&quot;)
+print(&quot;  ✓ VERIFIED: exactly 3 invariants.\n&quot;)
+
+
+# ============================================================
+# PART 2: SYMBOLIC verification of b_Ω/6 block structure
+# ============================================================
+
+print(&quot;=&quot; * 60)
+print(&quot;PART 2: Symbolic proof of det(b_Ω) = 4374·a⁹b⁶c⁶&quot;)
+print(&quot;=&quot; * 60)
+
+# Build Ω with symbolic a, b, c ∈ Q[a,b,c]; run hitchin_form_b_over_6 on it;
+# check every entry of the resulting matrix against the predicted formula
+# AS POLYNOMIALS. Equality of polynomials in Q[a,b,c] is a definitive
+# identity (no sampling, no Schwartz-Zippel — direct comparison of
+# coefficient dicts).
+#
+# Predicted (b_Ω/6) block structure:
+#   (b/6)[0,0]      = -a³
+#   (b/6)[i,i+3]    = (b/6)[i+3,i] = abc/2     for i = 1, 2, 3
+#   all other entries = 0
+
+a_sym = Poly.variable(0)
+b_sym = Poly.variable(1)
+c_sym = Poly.variable(2)
+
+Omega_sym = build_omega_abc(a_sym, b_sym, c_sym)
+b_over_6_sym = hitchin_form_b_over_6(Omega_sym)
+
+expected_diag   = -(a_sym ** 3)
+expected_offdiag = (a_sym * b_sym * c_sym) / 2
+
+structure_ok = True
+mismatches = []
+
+for r in range(DIM):
+    for c in range(DIM):
+        if r == 0 and c == 0:
+            target = expected_diag
+        elif 1 &lt;= r &lt;= 3 and c == r + 3:
+            target = expected_offdiag
+        elif 4 &lt;= r &lt;= 6 and c == r - 3:
+            target = expected_offdiag
+        else:
+            target = Poly()    # zero polynomial
+
+        if b_over_6_sym[r][c] != target:
+            structure_ok = False
+            mismatches.append((r, c, b_over_6_sym[r][c], target))
+
+if structure_ok:
+    print(&quot;  Symbolic check: every entry of b_Ω/6 in Q[a,b,c] matches the&quot;)
+    print(f&quot;  predicted block structure (49 polynomial identities, all hold).&quot;)
+    print(f&quot;  (b/6)[0][0]          = {b_over_6_sym[0][0]!r}        (expected: {expected_diag!r})&quot;)
+    print(f&quot;  (b/6)[1][4]          = {b_over_6_sym[1][4]!r}    (expected: {expected_offdiag!r})&quot;)
+    print(f&quot;  (b/6)[2][5]          = {b_over_6_sym[2][5]!r}    (expected: {expected_offdiag!r})&quot;)
+    print(f&quot;  (b/6)[3][6]          = {b_over_6_sym[3][6]!r}    (expected: {expected_offdiag!r})&quot;)
+    print(f&quot;  ✓ VERIFIED: block structure proven symbolically over Q[a,b,c].&quot;)
+else:
+    for (r, c, got, want) in mismatches[:5]:
+        print(f&quot;  ✗ Mismatch at [{r}][{c}]: got {got!r}, expected {want!r}&quot;)
+    require(False, f&quot;Symbolic block-structure verification failed &quot;
+                   f&quot;({len(mismatches)} mismatches).&quot;)
+
+# Direct symbolic determinant check. This is redundant once the block structure
+# has been proven, but it makes the determinant identity explicit in the
+# verifier output.
+det_b6_sym_direct = exact_det(b_over_6_sym, DIM)
+expected_det_b6_sym = (a_sym ** 9) * (b_sym ** 6) * (c_sym ** 6) / 64
+require(det_b6_sym_direct == expected_det_b6_sym,
+        f&quot;Expected det(b_Ω/6)={expected_det_b6_sym!r}, &quot;
+        f&quot;got {det_b6_sym_direct!r}&quot;)
+print(f&quot;  Direct symbolic determinant check: det(b_Ω/6) = {det_b6_sym_direct!r} ✓&quot;)
+
+# Det formula also follows transparently from the block structure:
+#   det(b/6) = (-a³) · ((abc/2) · (abc/2))³ · sign of off-diag block permutation
+#            = (-a³) · (a²b²c²/4)³ · (-1)³           [each anti-diag pair → −]
+# Carefully:
+#   The matrix splits as 1×1 block (−a³) and three 2×2 blocks of the form
+#     [[0, abc/2], [abc/2, 0]],  each with det = −a²b²c²/4.
+#   Total: (−a³) · (−a²b²c²/4)³ = a⁹b⁶c⁶ / 64.
+# Hence det(b_Ω) = 6⁷ · a⁹b⁶c⁶ / 64 = 4374 · a⁹b⁶c⁶.
+print()
+print(&quot;  Consequence (block-structure determinant of a 1+2+2+2 block matrix):&quot;)
+print(&quot;     det(b_Ω/6) = (-a³) · (-a²b²c²/4)³ = a⁹b⁶c⁶/64&quot;)
+print(&quot;     det(b_Ω)   = 6⁷ · a⁹b⁶c⁶/64       = 4374·a⁹b⁶c⁶&quot;)
+print()
+
+# Numerical sanity demonstrations (illustrative, not part of the proof):
+print(&quot;  Numerical illustrations:&quot;)
+for (alpha, beta, gamma) in [(1, 1, 1), (2, 3, 7), (-2, 3, -5)]:
+    Omega_num = build_omega_abc(alpha, beta, gamma)
+    b_num = hitchin_form_b_over_6(Omega_num)
+    det_b6 = Fraction(alpha**9 * beta**6 * gamma**6, 64)
+    det_b  = det_b6 * 6**7
+    require(b_num[0][0] == Fraction(-alpha**3), &quot;block diag mismatch&quot;)
+    require(b_num[1][4] == Fraction(alpha*beta*gamma, 2), &quot;block offdiag mismatch&quot;)
+    print(f&quot;    (a,b,c)=({alpha},{beta},{gamma}): &quot;
+          f&quot;det(b_Ω/6) = {det_b6}, det(b_Ω) = {det_b}  ✓&quot;)
+print()
+
+
+# ============================================================
+# PART 3: Ω_{1,1,1} ⇒ sig(b_Ω) = (3,4) and dim Stab = 14
+# ============================================================
+
+print(&quot;=&quot; * 60)
+print(&quot;PART 3: Ω_{1,1,1} — sig(b_Ω) = (3,4), dim Stab = 14&quot;)
+print(&quot;=&quot; * 60)
+
+Omega_111 = build_omega_abc(1, 1, 1)
+b_111     = hitchin_form_b_over_6(Omega_111)
+
+# Sanity from the block structure (a = b = c = 1):
+#   b/6 = diag(-1) ⊕ [[0, 1/2], [1/2, 0]]³
+#   Each off-diagonal block has eigenvalues ±1/2 → signature (1,1).
+#   Three blocks → (3,3). Plus the −1 entry → total (3,4).
+# Multiplying by 6 &gt; 0 preserves signature, so sig(b_Ω) = sig(b_Ω/6) = (3,4).
+pos, neg = exact_signature(b_111, DIM)
+print(f&quot;  sig(b_Ω) = sig(b_Ω/6) = ({pos},{neg}) &quot;
+      f&quot;(exact congruence diagonalization)&quot;)
+require((pos, neg) == (3, 4), f&quot;Expected (3,4), got ({pos},{neg})&quot;)
+print(&quot;  ✓ sig = (3,4). Exact.&quot;)
+print(&quot;  Note: dim Stab = 14 and sig = (3,4) are the numerical invariants of&quot;)
+print(&quot;        G₂_split. Identifying the stabilizer with G₂_split itself requires&quot;)
+print(&quot;        the standard classification theorem for stable 3-forms in dimension 7;&quot;)
+print(&quot;        this script verifies the computational invariants, not that external theorem.\n&quot;)
+
+stab_dim_VW, _ = stabilizer_dim(Omega_111, DIM)
+print(f&quot;  dim Stab(Ω_{{1,1,1}}) = {stab_dim_VW} (exact)&quot;)
+require(stab_dim_VW == 14, f&quot;Expected 14, got {stab_dim_VW}&quot;)
+print()
+
+
+# ============================================================
+# PART 4: Ω_W ~ Ω_old as 3-forms on R⁷
+# ============================================================
+
+print(&quot;=&quot; * 60)
+print(&quot;PART 4: Ω_W ~ Ω_old as 3-forms on R⁷&quot;)
+print(&quot;=&quot; * 60)
+
+# We exhibit an integer matrix H with det(H) = 8 (so H ∈ GL(7,Q), NOT GL(7,Z))
+# satisfying  H*Ω_W = 2·Ω_old.
+# To get H'*Ω_W = Ω_old exactly over R, rescale: H' := 2^(-1/3) · H. Then
+#   H'*Ω_W = (2^(-1/3))³ · H*Ω_W = (1/2) · 2 · Ω_old = Ω_old.
+#
+# The fact that this displayed rescaling is irrational is not by itself a proof
+# of non-equivalence over Q: a different rational witness might have existed.
+# We therefore add a determinant obstruction below. For any K ∈ GL(7,Q),
+# covariance of the Hitchin bilinear form gives
+#   B_{K*Ω} = det(K) · Kᵀ B_Ω K,
+# hence
+#   det(B_{K*Ω}) = det(K)^9 det(B_Ω).
+# Thus exact rational equivalence K*Ω_W = Ω_old would force
+#   det(B_old) / det(B_W) = det(K)^9,
+# i.e. the determinant ratio must be a ninth power in Q.
+
+H_witness = [
+    [Fraction(0), Fraction(0), Fraction(0), Fraction( 1), Fraction(0), Fraction(0), Fraction( 0)],
+    [Fraction(1), Fraction(0), Fraction(0), Fraction( 0), Fraction(-1), Fraction(0), Fraction( 0)],
+    [Fraction(0), Fraction(1), Fraction(0), Fraction( 0), Fraction(0), Fraction(-1), Fraction( 0)],
+    [Fraction(0), Fraction(0), Fraction(1), Fraction( 0), Fraction(0), Fraction(0), Fraction( 1)],
+    [Fraction(1), Fraction(0), Fraction(0), Fraction( 0), Fraction(1), Fraction(0), Fraction( 0)],
+    [Fraction(0), Fraction(1), Fraction(0), Fraction( 0), Fraction(0), Fraction(1), Fraction( 0)],
+    [Fraction(0), Fraction(0), Fraction(1), Fraction( 0), Fraction(0), Fraction(0), Fraction(-1)],
+]
+
+Omega_W = antisymmetric_form({
+    (0, 1, 4): +1, (0, 2, 5): +1, (0, 3, 6): +1,
+    (1, 2, 3): +1,
+    (4, 5, 6): +1,
+})
+# Ω_old: classical 7-term Fano-plane representative (used in proofs 22–27).
+# In the same GL(7,R)-orbit as Ω_W.
+Omega_old = antisymmetric_form({
+    (0, 1, 2): +1, (0, 3, 4): -1, (0, 5, 6): -1,
+    (1, 3, 5): -1, (2, 4, 5): +1,
+    (1, 4, 6): +1, (2, 3, 6): +1,
+})
+
+pulled = pullback_3form(H_witness, Omega_W, DIM)
+max_diff = ZERO
+for i in range(DIM):
+    for j in range(DIM):
+        for k in range(DIM):
+            expected = Omega_old.get((i, j, k), ZERO) * 2
+            actual   = pulled.get((i, j, k),    ZERO)
+            diff = abs(actual - expected)
+            if diff &gt; max_diff:
+                max_diff = diff
+
+print(f&quot;  Exact witness H (integer entries): max|H*Ω_W − 2·Ω_old| = {max_diff}&quot;)
+
+det_H = exact_det(H_witness, DIM)
+print(f&quot;  det(H) = {det_H}  →  H ∈ GL(7,Q) ⊂ GL(7,R),  H ∉ GL(7,Z)&quot;)
+require(det_H != ZERO, &quot;det(H) = 0, not invertible!&quot;)
+require(max_diff == ZERO, f&quot;Exact witness failed! diff={max_diff}&quot;)
+
+B_W_over_6 = hitchin_form_b_over_6(Omega_W)
+B_old_over_6 = hitchin_form_b_over_6(Omega_old)
+det_B_W_over_6 = exact_det(B_W_over_6, DIM)
+det_B_old_over_6 = exact_det(B_old_over_6, DIM)
+det_ratio = det_B_old_over_6 / det_B_W_over_6
+
+print(f&quot;  det(B_ΩW/6)   = {det_B_W_over_6}&quot;)
+print(f&quot;  det(B_Ωold/6) = {det_B_old_over_6}&quot;)
+print(f&quot;  determinant ratio det(B_old)/det(B_W) = {det_ratio}&quot;)
+require(det_ratio == Fraction(64), f&quot;Expected determinant ratio 64, got {det_ratio}&quot;)
+require(not is_rational_nth_power(det_ratio, 9),
+        &quot;Unexpected: determinant ratio 64 is a ninth power in Q&quot;)
+print(&quot;  Determinant obstruction over Q: 64 is not a ninth power in Q.&quot;)
+print(&quot;  Equivalently: v_2(q^9) ∈ 9Z for rational q, but v_2(64) = 6 ∉ 9Z.&quot;)
+print(&quot;  Therefore no K ∈ GL(7,Q) can satisfy K*Ω_W = Ω_old exactly.&quot;)
+print(&quot;  Rescaling H' = 2^(-1/3)·H ∈ GL(7,R) gives H'*Ω_W = Ω_old exactly.&quot;)
+print(&quot;  ✓ VERIFIED: Ω_W and Ω_old lie in the same GL(7,R)-orbit, not the same&quot;)
+print(&quot;    exact GL(7,Q)-orbit. Over Q the witness gives Ω_W ~ 2·Ω_old.\n&quot;)
+
+
+# ============================================================
+# PART 5: dim=6 (W⊕W*) → classical stabilizer (not G₂)
+# ============================================================
+
+print(&quot;=&quot; * 60)
+print(&quot;PART 5: On W⊕W* (dim 6), stabilizer is classical&quot;)
+print(&quot;=&quot; * 60)
+
+# Ω₆ = vol_W + vol_{W*} on R⁶, coordinates 0,1,2 = W and 3,4,5 = W*.
+Omega_6 = antisymmetric_form({
+    (0, 1, 2): +1,
+    (3, 4, 5): +1,
+})
+
+stab_dim_6, rank_6 = stabilizer_dim(Omega_6, 6)
+print(f&quot;  Ω₆ = vol_W + vol_{{W*}} on R⁶&quot;)
+print(f&quot;  rank = {rank_6}, dim Stab = {stab_dim_6}&quot;)
+require(stab_dim_6 == 16, f&quot;Expected 16, got {stab_dim_6}&quot;)
+print(f&quot;  ✓ dim Stab = {stab_dim_6} &gt; 14 → NOT G₂ (classical).\n&quot;)
+
+
+# ============================================================
+# PART 6: SL(W) preserves Ω_W (exact algebraic proof)
+# ============================================================
+
+print(&quot;=&quot; * 60)
+print(&quot;PART 6: SL(W) preserves Ω_W&quot;)
+print(&quot;=&quot; * 60)
+
+# Exact proof. For A ∈ SL(W), the action on V_W = R⊕W⊕W* is
+#   g = diag(1, A, A⁻ᵀ).
+# Then:
+#   g*(τ ∧ ev)    = τ ∧ ev
+#                  ← The pairing ev ∈ W* ⊗ W is invariant because the
+#                    actions on W (by A) and on W* (by A⁻ᵀ) are
+#                    contragredient: (A⁻ᵀφ)(Aw) = φ(A⁻¹·A·w) = φ(w).
+#   g*(vol_W)     = det(A) · vol_W      = vol_W      (det A = 1)
+#   g*(vol_{W*})  = det(A⁻ᵀ) · vol_{W*} = vol_{W*}   (det A⁻ᵀ = 1)
+# Hence g*(Ω_W) = Ω_W. QED.
+#
+# Computational check on all 8 sl(3) generators (infinitesimal form):
+# X · Ω_W must vanish identically.
+
+all_zero = True
+generators_count = 0
+for gen_idx, X_sl3 in enumerate(sl3_generators()):
+    generators_count += 1
+    X_V = lift_sl3_to_gl_VW(X_sl3)
+
+    for (i, j, k) in sorted_triples(DIM):
+        val = ZERO
+        for l in range(DIM):
+            val += (X_V[l][i] * Omega_W.get((l, j, k), ZERO)
+                  + X_V[l][j] * Omega_W.get((i, l, k), ZERO)
+                  + X_V[l][k] * Omega_W.get((i, j, l), ZERO))
+        if val != ZERO:
+            all_zero = False
+            print(f&quot;  ✗ Generator {gen_idx}: X·Ω[{i},{j},{k}] = {val}&quot;)
+            break
+
+require(all_zero, &quot;SL(W) does not preserve Ω_W!&quot;)
+print(f&quot;  All {generators_count} sl(3) generators annihilate Ω_W.&quot;)
+print(&quot;  ✓ VERIFIED: SL(W) preserves Ω_W. Exact (Fraction).\n&quot;)
+
+
+# ============================================================
+# SUMMARY
+# ============================================================
+
+print(&quot;=&quot; * 60)
+print(&quot;SUMMARY&quot;)
+print(&quot;=&quot; * 60)
+print(&quot;  1. dim SL(W)-invariant 3-forms = 3                       ✓&quot;)
+print(&quot;  2. det(b_Ω) = 4374·a⁹b⁶c⁶  (symbolic proof in Q[a,b,c])  ✓&quot;)
+print(&quot;  3. Ω_{1,1,1}: dim Stab = 14, sig(b_Ω) = (3,4)            ✓&quot;)
+print(&quot;     (G₂_split identification uses a standard external classification theorem)&quot;)
+print(&quot;  4. Ω_W ~ Ω_old over R; NOT GL(7,Q)-equivalent, since det-ratio 64 ∉ Q^9 ✓&quot;)
+print(&quot;  5. dim=6: dim Stab = 16 &gt; 14 → not G₂ (classical)        ✓&quot;)
+print(&quot;  6. SL(W) preserves Ω_W (all 8 sl(3) generators)          ✓&quot;)
+print(&quot;  All internal computational claims of Proof 21 verified.&quot;)
+print(&quot;  External G₂_split identification rests on the standard classification/stable-form theorem.&quot;)</code></pre></details>
+    </div>
+
+    <div class="block">
+      <div class="key">nft_url</div>
+      <a href="https://opensea.io/item/base/0x8a3ee2dbaa1c33f3cb3d927497f4ae798b598b65/1" target="_blank">https://opensea.io/item/base/0x8a3ee2dbaa1c33f3cb3d927497f4ae798b598b65/1</a>
+    </div>
+
+    <div class="block">
+      <div class="key">tweet_url</div>
+      <pre></pre>
+    </div>
+
+  </div>
+  <div class="block">
+    <div class="key">SHA-256</div>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <div class="hash" id="hashResult"></div>
+      <button id="copyHashBtn" type="button">Copy</button>
+    </div>
+  </div>
+
+  <div class="block">
+    <img src="https://3c7a4pgqrbqn7mej5yjojtobxwcz2pd6t2i2dp7u5qnb6znxpriq.turbo-gateway.com/2L4OPNCIYN-wie4S5M3BvYWdPH6ekaG_9OwaH2W3fFE" 
+     alt="CCFU Script 1 — verify_higher_closure.py" 
+     style="max-width: 100%; height: auto;" />
+  </div>
+
+</article>
+<script>
+(async () => {
+  const entry = {
+    id: `2605225741400`,
+    safecreative_url: `https://www.safecreative.org/work/2605225741400-ccfu-script-1-verify_higher_closure-py`,
+    title: `CCFU Script 1 — verify_higher_closure.py`,
+    date: `05/22/2026`,
+    text: `"""
+verify_higher_closure.py
+========================
+Verifies the internal computational claims of Proof 21 (Higher Alternating Closure).
+All computations exact over Q (Fraction). No numpy. No float.
+No external dependencies — Poly class is implemented inline.
+
+Conventions
+-----------
+DIM = 7 is the ambient dimension of V_W = R ⊕ W ⊕ W*.
+Coordinates: index 0 = τ (R-summand), 1,2,3 = W, 4,5,6 = W*.
+3-forms are stored as dicts {(i,j,k): coeff}, populated on all permutations
+of every triple with appropriate signs, so a lookup by any tuple works.
+
+Action convention for an X ∈ gl(V) on a 3-form ω:
+  (X·ω)(i,j,k) = Σ_l X[l][i]·ω(l,j,k) + X[l][j]·ω(i,l,k) + X[l][k]·ω(i,j,l).
+This is the standard Lie-derivative convention (free index = position in form,
+summed index = first index of the matrix). action_on_lambda3,
+infinitesimal_stabilizer_constraints, and the Part 6 inline check
+all use this exact convention.
+
+Parts
+-----
+  1. dim SL(W)-invariant 3-forms on V_W = R⊕W⊕W* equals 3.
+  2. b_Ω/6 has the predicted block structure
+     [symbolic proof in (a,b,c) over Q, plus numerical illustrations];
+     det(b_Ω/6) is also checked directly symbolically, hence
+     det(b_Ω) = 6⁷ · a⁹b⁶c⁶ / 64 = 4374·a⁹b⁶c⁶.
+  3. sig(b_Ω) = (3,4) and dim Stab(Ω_{1,1,1}) = 14 — both exact.
+     The identification with G₂_split uses the standard classification theorem
+     for stable 3-forms in dimension 7.
+  4. Ω_W and Ω_old as 3-forms on R⁷: exact integer witness H with
+     H*Ω_W = 2·Ω_old; rescaling by 2^(-1/3) gives exact GL(7,R)
+     equivalence. A determinant obstruction proves there is no exact
+     GL(7,Q)-equivalence Ω_W ~ Ω_old.
+  5. On W⊕W* (dim 6): dim Stab = 16 (exact). Not G₂.
+  6. SL(W) preserves Ω_W: all 8 sl(3) generators verified exact.
+
+Explicit runtime checks use require(), so they still run under python3 -O.
+Pure Python + fractions.Fraction.
+
+Run: python3 verify_higher_closure.py
+"""
+
+from fractions import Fraction
+from itertools import permutations, combinations
+
+DIM = 7          # ambient dimension of V_W
+ZERO = Fraction(0)
+ONE  = Fraction(1)
+
+
+def require(condition, message):
+    """Like assert, but unaffected by python3 -O (which strips assertions)."""
+    if not condition:
+        raise AssertionError(message)
+
+
+# ============================================================
+# Generic linear-algebra / combinatorial helpers
+# ============================================================
+
+def permutation_sign(seq):
+    """Sign (parity of inversions) of a permutation given as a sequence."""
+    items = list(seq)
+    sign = 1
+    length = len(items)
+    for i in range(length):
+        for j in range(i + 1, length):
+            if items[i] > items[j]:
+                sign = -sign
+    return sign
+
+
+def sorted_triples(dim):
+    """All sorted triples (i,j,k) with 0 ≤ i < j < k < dim."""
+    return [(i, j, k)
+            for i in range(dim)
+            for j in range(i + 1, dim)
+            for k in range(j + 1, dim)]
+
+
+def antisymmetric_form(signed_sorted):
+    """
+    Build a 3-form dict from values on sorted triples.
+
+    signed_sorted: {(i,j,k): value} with i<j<k.
+    \`value\` may be int / Fraction / Poly — anything that supports * by ±1.
+    Raw ints are promoted to Fraction so downstream arithmetic stays exact.
+    """
+    form = {}
+    for sorted_triple, value in signed_sorted.items():
+        if isinstance(value, int):
+            base = Fraction(value)
+        else:
+            base = value
+        for perm in permutations(sorted_triple):
+            form[perm] = base * permutation_sign(perm)
+    return form
+
+
+def zero_matrix(rows, cols=None):
+    """rows × cols matrix of ZERO. Square if cols omitted."""
+    if cols is None:
+        cols = rows
+    return [[ZERO] * cols for _ in range(rows)]
+
+
+def row_reduce(matrix, num_cols):
+    """Reduced row-echelon over Q (in place). Returns rank."""
+    rank = 0
+    num_rows = len(matrix)
+    for col in range(num_cols):
+        pivot_row = None
+        for row in range(rank, num_rows):
+            if matrix[row][col] != ZERO:
+                pivot_row = row
+                break
+        if pivot_row is None:
+            continue
+        matrix[rank], matrix[pivot_row] = matrix[pivot_row], matrix[rank]
+        for row in range(num_rows):
+            if row != rank and matrix[row][col] != ZERO:
+                factor = matrix[row][col] / matrix[rank][col]
+                for c in range(num_cols):
+                    matrix[row][c] -= factor * matrix[rank][c]
+        rank += 1
+    return rank
+
+
+def kernel_dimension(stacked_rows, num_cols):
+    """Dim of the kernel of a system Ax = 0 given by stacked rows."""
+    work = [row[:] for row in stacked_rows]
+    return num_cols - row_reduce(work, num_cols)
+
+
+def exact_det(matrix, n):
+    """Determinant by Leibniz over Q or any compatible exact commutative ring."""
+    total = ZERO
+    for perm in permutations(range(n)):
+        sign = permutation_sign(perm)
+        product = ONE
+        for i in range(n):
+            product *= matrix[i][perm[i]]
+        total += sign * product
+    return total
+
+
+def prime_factorization_abs_integer(n):
+    """Prime factorization of |n| as {prime: exponent}; n must be nonzero."""
+    n = abs(int(n))
+    if n == 0:
+        raise ValueError("factorization of zero is undefined")
+    factors = {}
+    divisor = 2
+    while divisor * divisor <= n:
+        while n % divisor == 0:
+            factors[divisor] = factors.get(divisor, 0) + 1
+            n //= divisor
+        divisor += 1 if divisor == 2 else 2   # after 2, test odd divisors only
+    if n > 1:
+        factors[n] = factors.get(n, 0) + 1
+    return factors
+
+
+def is_rational_nth_power(value, exponent):
+    """
+    True iff value ∈ Q is an exponent-th power of a rational number.
+
+    For value = m/n in lowest terms, this is equivalent to every prime
+    exponent in |m| and |n| being divisible by \`exponent\`, with the usual
+    sign obstruction for even exponent.
+    """
+    if exponent <= 0:
+        raise ValueError("exponent must be positive")
+
+    value = Fraction(value)
+    if value == 0:
+        return True
+    if value < 0 and exponent % 2 == 0:
+        return False
+
+    for factorization_target in (value.numerator, value.denominator):
+        for power in prime_factorization_abs_integer(factorization_target).values():
+            if power % exponent != 0:
+                return False
+    return True
+
+
+def exact_signature(symmetric_matrix, n):
+    """
+    Signature (p, q) of a symmetric n×n matrix over Q, computed by
+    exact congruence diagonalization (LDLᵀ with full pivoting).
+    """
+    S = [[symmetric_matrix[i][j] for j in range(n)] for i in range(n)]
+    diagonals = []
+
+    for step in range(n):
+        pivot = -1
+        for i in range(step, n):
+            if S[i][i] != ZERO:
+                pivot = i
+                break
+
+        if pivot == -1:
+            found = False
+            for i in range(step, n):
+                for j in range(i + 1, n):
+                    if S[i][j] != ZERO:
+                        for k in range(n):
+                            S[i][k] += S[j][k]
+                        for k in range(n):
+                            S[k][i] += S[k][j]
+                        pivot = i
+                        found = True
+                        break
+                if found:
+                    break
+            if not found:
+                break
+
+        if pivot != step:
+            S[step], S[pivot] = S[pivot], S[step]
+            for k in range(n):
+                S[k][step], S[k][pivot] = S[k][pivot], S[k][step]
+
+        diag = S[step][step]
+        if diag == ZERO:
+            continue
+        diagonals.append(diag)
+
+        for i in range(step + 1, n):
+            if S[i][step] == ZERO:
+                continue
+            factor = S[i][step] / diag
+            for j in range(step, n):
+                S[i][j] -= factor * S[step][j]
+            for j in range(step, n):
+                S[j][i] -= factor * S[j][step]
+
+    positive = sum(1 for d in diagonals if d > 0)
+    negative = sum(1 for d in diagonals if d < 0)
+    return positive, negative
+
+
+# ============================================================
+# Multivariate polynomial in (a, b, c) over Q
+# ============================================================
+
+class Poly:
+    """
+    Multivariate polynomial in three variables a, b, c over Q.
+
+    Stored as a dict {(deg_a, deg_b, deg_c): Fraction}, with zero coefficients
+    pruned. Supports +, -, *, **, /scalar, ==.
+    Acts as a drop-in replacement for Fraction in the verifier's arithmetic,
+    so build_omega_abc and hitchin_form_b_over_6 can run symbolically without
+    any change.
+
+    Two polynomials are equal iff their pruned dicts are equal — this is a
+    rigorous polynomial-identity check, not a sample-based one.
+    """
+    __slots__ = ('terms',)
+
+    def __init__(self, terms=None):
+        if terms is None:
+            self.terms = {}
+        else:
+            self.terms = {k: Fraction(v) for k, v in terms.items() if v != 0}
+
+    @staticmethod
+    def constant(value):
+        v = Fraction(value)
+        return Poly({(0, 0, 0): v}) if v != 0 else Poly()
+
+    @staticmethod
+    def variable(index):
+        """0 = a, 1 = b, 2 = c."""
+        exponents = [0, 0, 0]
+        exponents[index] = 1
+        return Poly({tuple(exponents): Fraction(1)})
+
+    # ----- arithmetic -----
+
+    def _coerce(self, other):
+        if isinstance(other, Poly):
+            return other
+        return Poly.constant(other)
+
+    def __add__(self, other):
+        other = self._coerce(other)
+        out = dict(self.terms)
+        for k, v in other.terms.items():
+            new = out.get(k, Fraction(0)) + v
+            if new == 0:
+                out.pop(k, None)
+            else:
+                out[k] = new
+        result = Poly()
+        result.terms = out
+        return result
+
+    def __radd__(self, other):
+        return self.__add__(other)
+
+    def __neg__(self):
+        return Poly({k: -v for k, v in self.terms.items()})
+
+    def __sub__(self, other):
+        return self + (-self._coerce(other))
+
+    def __rsub__(self, other):
+        return self._coerce(other) - self
+
+    def __mul__(self, other):
+        other = self._coerce(other)
+        out = {}
+        for k1, v1 in self.terms.items():
+            for k2, v2 in other.terms.items():
+                k = (k1[0] + k2[0], k1[1] + k2[1], k1[2] + k2[2])
+                new = out.get(k, Fraction(0)) + v1 * v2
+                if new == 0:
+                    out.pop(k, None)
+                else:
+                    out[k] = new
+        result = Poly()
+        result.terms = out
+        return result
+
+    def __rmul__(self, other):
+        return self.__mul__(other)
+
+    def __pow__(self, exponent):
+        if not isinstance(exponent, int) or exponent < 0:
+            raise ValueError("Poly power must be non-negative int")
+        if exponent == 0:
+            return Poly.constant(1)
+        result = self
+        for _ in range(exponent - 1):
+            result = result * self
+        return result
+
+    def __truediv__(self, other):
+        # Only scalar division. Division by a non-constant Poly would in
+        # general leave Q[a,b,c], so we don't implement it.
+        if isinstance(other, Poly):
+            if len(other.terms) == 1 and (0, 0, 0) in other.terms:
+                divisor = other.terms[(0, 0, 0)]
+            else:
+                raise ValueError("Poly division by non-constant unsupported")
+        else:
+            divisor = Fraction(other)
+        if divisor == 0:
+            raise ZeroDivisionError("division by zero polynomial")
+        return Poly({k: v / divisor for k, v in self.terms.items()})
+
+    # ----- comparison -----
+
+    def __eq__(self, other):
+        if not isinstance(other, Poly):
+            other = Poly.constant(other)
+        return self.terms == other.terms
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __bool__(self):
+        return bool(self.terms)
+
+    def __hash__(self):
+        return hash(frozenset(self.terms.items()))
+
+    def __repr__(self):
+        if not self.terms:
+            return "0"
+        chunks = []
+        for exponents in sorted(self.terms.keys(), reverse=True):
+            coef = self.terms[exponents]
+            mono_parts = []
+            for var, deg in zip("abc", exponents):
+                if deg == 1:
+                    mono_parts.append(var)
+                elif deg > 1:
+                    mono_parts.append(f"{var}^{deg}")
+            mono = "·".join(mono_parts)
+            if not mono:
+                chunks.append(f"{coef}")
+            elif coef == 1:
+                chunks.append(mono)
+            elif coef == -1:
+                chunks.append(f"-{mono}")
+            else:
+                chunks.append(f"{coef}·{mono}")
+        return " + ".join(chunks).replace("+ -", "- ")
+
+
+# ============================================================
+# Lie-algebra structure: sl(3) and its lift to gl(V_W)
+# ============================================================
+
+def sl3_generators():
+    """
+    Eight standard generators of sl(3, R):
+      six off-diagonal E_{ij} (i ≠ j),
+      plus H₁ = E₁₁ - E₂₂, H₂ = E₂₂ - E₃₃.
+    """
+    gens = []
+    for i in range(3):
+        for j in range(3):
+            if i != j:
+                E = zero_matrix(3, 3)
+                E[i][j] = ONE
+                gens.append(E)
+
+    H1 = zero_matrix(3, 3); H1[0][0] = ONE;  H1[1][1] = -ONE
+    H2 = zero_matrix(3, 3); H2[1][1] = ONE;  H2[2][2] = -ONE
+    gens.append(H1)
+    gens.append(H2)
+    return gens
+
+
+def lift_sl3_to_gl_VW(X_sl3):
+    """
+    X ∈ sl(3) → X_V ∈ gl(7), the Lie-algebra lift of the SL(W)-action
+    on V_W = R ⊕ W ⊕ W*.
+    At the group level: g = diag(1, A, A⁻ᵀ).
+    Differentiating at the identity gives X_V = diag(0, X, -Xᵀ).
+    """
+    X_V = zero_matrix(DIM, DIM)
+    for i in range(3):
+        for j in range(3):
+            X_V[1 + i][1 + j] = X_sl3[i][j]
+            X_V[4 + i][4 + j] = -X_sl3[j][i]
+    return X_V
+
+
+# ============================================================
+# Action of gl(7) on Λ³(R⁷) and infinitesimal stabilizer
+# ============================================================
+
+def action_on_lambda3(X_gl7):
+    """
+    35×35 matrix M of the action of X ∈ gl(7) on Λ³(R⁷*),
+    in the STANDARD Lie-derivative convention.
+
+      M[row][col] = coefficient of e_{basis[row]} in X · e_{basis[col]}.
+
+    For a 3-form ω stored as a vector w (w[col] = ω_{basis[col]}), we have
+      (M · w)[row] = (X · ω)_{basis[row]}
+                   = Σ_l X[l][row[0]]·ω(l, row[1], row[2]) + (cyclic).
+
+    Implementation note. We iterate over the SOURCE basis (col), so for each
+    source triple (i,j,k) and substituting position \`slot\` with value \`l\` we
+    obtain a target row = sorted_index([i,j,k] with [slot] := l). The matrix
+    entry needed to match the standard convention X[summed][form_position]
+    is X[source[slot]][l]: the summed index is source[slot] (the value that
+    left the source on its way to becoming target's missing index), and the
+    matching index is l (the new value that entered).
+    """
+    basis = sorted_triples(DIM)
+    size = len(basis)
+    basis_index = {triple: idx for idx, triple in enumerate(basis)}
+    M = zero_matrix(size, size)
+
+    for col, (i, j, k) in enumerate(basis):
+        contributions = [ZERO] * size
+        for slot, source_index in enumerate((i, j, k)):
+            for l in range(DIM):
+                coef = X_gl7[source_index][l]    # standard Lie convention
+                if coef == ZERO:
+                    continue
+                replaced = [i, j, k]
+                replaced[slot] = l
+                if len(set(replaced)) != 3:
+                    continue          # duplicate index ⇒ vanishes
+                target = basis_index[tuple(sorted(replaced))]
+                contributions[target] += coef * permutation_sign(replaced)
+
+        for row in range(size):
+            M[row][col] = contributions[row]
+
+    return M
+
+
+def infinitesimal_stabilizer_constraints(omega, dim):
+    """
+    Build the (#triples) × (dim²) constraint matrix for X·ω = 0, X ∈ gl(dim).
+
+    Row index r ↔ sorted triple (i,j,k).
+    Col index c ↔ pair (a,b) with c = a·dim + b (matrix entry X[a][b]).
+    Entry encodes the contribution of X[a][b] to (X·ω)(i,j,k).
+    """
+    triples = sorted_triples(dim)
+    matrix = zero_matrix(len(triples), dim * dim)
+
+    def value_at(i, j, k):
+        return omega.get((i, j, k), ZERO)
+
+    for row_idx, (i, j, k) in enumerate(triples):
+        for col_idx in range(dim * dim):
+            from_index = col_idx // dim    # gl-matrix row "a"
+            to_index   = col_idx % dim     # gl-matrix col "b"
+            entry = ZERO
+            if to_index == i: entry += value_at(from_index, j, k)
+            if to_index == j: entry += value_at(i, from_index, k)
+            if to_index == k: entry += value_at(i, j, from_index)
+            matrix[row_idx][col_idx] = entry
+
+    return matrix
+
+
+def stabilizer_dim(omega, dim):
+    """
+    dim of {X ∈ gl(dim) : X·ω = 0}, computed exactly.
+    Returns (stabilizer_dim, rank_of_constraints).
+    """
+    constraints = infinitesimal_stabilizer_constraints(omega, dim)
+    rank = row_reduce(constraints, dim * dim)
+    return dim * dim - rank, rank
+
+
+# ============================================================
+# 3-form Ω_{a,b,c} on V_W, Hitchin form, and pullback
+# ============================================================
+
+def build_omega_abc(coef_pairing, coef_volW, coef_volWstar):
+    """
+    Ω_{a,b,c} on V_W = R⊕W⊕W*, with coordinates
+      e₀ = τ,  e₁,e₂,e₃ ∈ W,  e₄,e₅,e₆ ∈ W*.
+
+      Ω = a · τ ∧ (e₁∧e₄ + e₂∧e₅ + e₃∧e₆)   (the canonical pairing ev)
+          + b · e₁∧e₂∧e₃                      (vol_W)
+          + c · e₄∧e₅∧e₆                      (vol_{W*})
+
+    Coefficients may be int / Fraction / Poly; arithmetic propagates
+    transparently.
+    """
+    signed_sorted = {
+        (0, 1, 4): coef_pairing, (0, 2, 5): coef_pairing, (0, 3, 6): coef_pairing,
+        (1, 2, 3): coef_volW,
+        (4, 5, 6): coef_volWstar,
+    }
+    return antisymmetric_form(signed_sorted)
+
+
+def hitchin_form_b_over_6(omega):
+    """
+    Returns the matrix  b_Ω / 6,  where
+
+      b_Ω(X, Y) · vol = (ι_X Ω) ∧ (ι_Y Ω) ∧ Ω
+
+    is the standard Hitchin quadratic invariant (one common normalization).
+    The /6 is convenient because the resulting matrix has small rational
+    entries; det(b_Ω) = 6⁷ · det(b_Ω/6).
+
+    In components:
+      (b_Ω/6)[row][col] = (1/6) · Σ  sign(partition) ·
+                          ω(row, γ₁, γ₂) · ω(col, γ₃, γ₄) · ω(γ₅, γ₆, γ₇),
+    summed over ordered partitions of {0,…,6} into blocks
+    (γ₁γ₂)(γ₃γ₄)(γ₅γ₆γ₇).
+    """
+    def value_at(i, j, k):
+        return omega.get((i, j, k), ZERO)
+
+    all_indices = list(range(DIM))
+    b_matrix = zero_matrix(DIM, DIM)
+
+    for row in range(DIM):
+        for col in range(DIM):
+            total = ZERO
+            for pair_first in combinations(all_indices, 2):
+                rest_after_first = [x for x in all_indices if x not in pair_first]
+                for pair_second in combinations(rest_after_first, 2):
+                    last_triple = tuple(x for x in rest_after_first
+                                        if x not in pair_second)
+                    if len(last_triple) != 3:
+                        continue
+
+                    val_row    = value_at(row, pair_first[0], pair_first[1])
+                    val_col    = value_at(col, pair_second[0], pair_second[1])
+                    val_triple = value_at(last_triple[0], last_triple[1], last_triple[2])
+                    if val_row == ZERO or val_col == ZERO or val_triple == ZERO:
+                        continue
+
+                    full_perm = list(pair_first) + list(pair_second) + list(last_triple)
+                    if len(set(full_perm)) != DIM:
+                        continue
+
+                    total += permutation_sign(full_perm) * val_row * val_col * val_triple
+
+            b_matrix[row][col] = total / Fraction(6)
+
+    return b_matrix
+
+
+def pullback_3form(H, omega, dim):
+    """(H*ω)_{ijk} = Σ_{abc} H[a][i] H[b][j] H[c][k] · ω_{abc}."""
+    pulled = {}
+    for i in range(dim):
+        for j in range(dim):
+            for k in range(dim):
+                val = ZERO
+                for a in range(dim):
+                    for b in range(dim):
+                        for c in range(dim):
+                            coef = omega.get((a, b, c), ZERO)
+                            if coef == ZERO:
+                                continue
+                            val += H[a][i] * H[b][j] * H[c][k] * coef
+                pulled[(i, j, k)] = val
+    return pulled
+
+
+# ============================================================
+# PART 1: dim SL(W)-invariant 3-forms = 3
+# ============================================================
+
+print("=" * 60)
+print("PART 1: SL(W)-invariant 3-forms on V_W")
+print("=" * 60)
+
+# Stack the action matrices for all sl(3) generators.
+# ω is SL(W)-invariant iff (stacked matrix) · ω = 0.
+stacked_constraints = []
+for X_sl3 in sl3_generators():
+    X_V = lift_sl3_to_gl_VW(X_sl3)
+    action_matrix = action_on_lambda3(X_V)
+    for row in action_matrix:
+        stacked_constraints.append(row)
+
+invariant_dim = kernel_dimension(stacked_constraints, 35)
+print(f"  dim SL(W)-invariant 3-forms = {invariant_dim}")
+require(invariant_dim == 3, f"Expected 3, got {invariant_dim}")
+print("  ✓ VERIFIED: exactly 3 invariants.\\n")
+
+
+# ============================================================
+# PART 2: SYMBOLIC verification of b_Ω/6 block structure
+# ============================================================
+
+print("=" * 60)
+print("PART 2: Symbolic proof of det(b_Ω) = 4374·a⁹b⁶c⁶")
+print("=" * 60)
+
+# Build Ω with symbolic a, b, c ∈ Q[a,b,c]; run hitchin_form_b_over_6 on it;
+# check every entry of the resulting matrix against the predicted formula
+# AS POLYNOMIALS. Equality of polynomials in Q[a,b,c] is a definitive
+# identity (no sampling, no Schwartz-Zippel — direct comparison of
+# coefficient dicts).
+#
+# Predicted (b_Ω/6) block structure:
+#   (b/6)[0,0]      = -a³
+#   (b/6)[i,i+3]    = (b/6)[i+3,i] = abc/2     for i = 1, 2, 3
+#   all other entries = 0
+
+a_sym = Poly.variable(0)
+b_sym = Poly.variable(1)
+c_sym = Poly.variable(2)
+
+Omega_sym = build_omega_abc(a_sym, b_sym, c_sym)
+b_over_6_sym = hitchin_form_b_over_6(Omega_sym)
+
+expected_diag   = -(a_sym ** 3)
+expected_offdiag = (a_sym * b_sym * c_sym) / 2
+
+structure_ok = True
+mismatches = []
+
+for r in range(DIM):
+    for c in range(DIM):
+        if r == 0 and c == 0:
+            target = expected_diag
+        elif 1 <= r <= 3 and c == r + 3:
+            target = expected_offdiag
+        elif 4 <= r <= 6 and c == r - 3:
+            target = expected_offdiag
+        else:
+            target = Poly()    # zero polynomial
+
+        if b_over_6_sym[r][c] != target:
+            structure_ok = False
+            mismatches.append((r, c, b_over_6_sym[r][c], target))
+
+if structure_ok:
+    print("  Symbolic check: every entry of b_Ω/6 in Q[a,b,c] matches the")
+    print(f"  predicted block structure (49 polynomial identities, all hold).")
+    print(f"  (b/6)[0][0]          = {b_over_6_sym[0][0]!r}        (expected: {expected_diag!r})")
+    print(f"  (b/6)[1][4]          = {b_over_6_sym[1][4]!r}    (expected: {expected_offdiag!r})")
+    print(f"  (b/6)[2][5]          = {b_over_6_sym[2][5]!r}    (expected: {expected_offdiag!r})")
+    print(f"  (b/6)[3][6]          = {b_over_6_sym[3][6]!r}    (expected: {expected_offdiag!r})")
+    print(f"  ✓ VERIFIED: block structure proven symbolically over Q[a,b,c].")
+else:
+    for (r, c, got, want) in mismatches[:5]:
+        print(f"  ✗ Mismatch at [{r}][{c}]: got {got!r}, expected {want!r}")
+    require(False, f"Symbolic block-structure verification failed "
+                   f"({len(mismatches)} mismatches).")
+
+# Direct symbolic determinant check. This is redundant once the block structure
+# has been proven, but it makes the determinant identity explicit in the
+# verifier output.
+det_b6_sym_direct = exact_det(b_over_6_sym, DIM)
+expected_det_b6_sym = (a_sym ** 9) * (b_sym ** 6) * (c_sym ** 6) / 64
+require(det_b6_sym_direct == expected_det_b6_sym,
+        f"Expected det(b_Ω/6)={expected_det_b6_sym!r}, "
+        f"got {det_b6_sym_direct!r}")
+print(f"  Direct symbolic determinant check: det(b_Ω/6) = {det_b6_sym_direct!r} ✓")
+
+# Det formula also follows transparently from the block structure:
+#   det(b/6) = (-a³) · ((abc/2) · (abc/2))³ · sign of off-diag block permutation
+#            = (-a³) · (a²b²c²/4)³ · (-1)³           [each anti-diag pair → −]
+# Carefully:
+#   The matrix splits as 1×1 block (−a³) and three 2×2 blocks of the form
+#     [[0, abc/2], [abc/2, 0]],  each with det = −a²b²c²/4.
+#   Total: (−a³) · (−a²b²c²/4)³ = a⁹b⁶c⁶ / 64.
+# Hence det(b_Ω) = 6⁷ · a⁹b⁶c⁶ / 64 = 4374 · a⁹b⁶c⁶.
+print()
+print("  Consequence (block-structure determinant of a 1+2+2+2 block matrix):")
+print("     det(b_Ω/6) = (-a³) · (-a²b²c²/4)³ = a⁹b⁶c⁶/64")
+print("     det(b_Ω)   = 6⁷ · a⁹b⁶c⁶/64       = 4374·a⁹b⁶c⁶")
+print()
+
+# Numerical sanity demonstrations (illustrative, not part of the proof):
+print("  Numerical illustrations:")
+for (alpha, beta, gamma) in [(1, 1, 1), (2, 3, 7), (-2, 3, -5)]:
+    Omega_num = build_omega_abc(alpha, beta, gamma)
+    b_num = hitchin_form_b_over_6(Omega_num)
+    det_b6 = Fraction(alpha**9 * beta**6 * gamma**6, 64)
+    det_b  = det_b6 * 6**7
+    require(b_num[0][0] == Fraction(-alpha**3), "block diag mismatch")
+    require(b_num[1][4] == Fraction(alpha*beta*gamma, 2), "block offdiag mismatch")
+    print(f"    (a,b,c)=({alpha},{beta},{gamma}): "
+          f"det(b_Ω/6) = {det_b6}, det(b_Ω) = {det_b}  ✓")
+print()
+
+
+# ============================================================
+# PART 3: Ω_{1,1,1} ⇒ sig(b_Ω) = (3,4) and dim Stab = 14
+# ============================================================
+
+print("=" * 60)
+print("PART 3: Ω_{1,1,1} — sig(b_Ω) = (3,4), dim Stab = 14")
+print("=" * 60)
+
+Omega_111 = build_omega_abc(1, 1, 1)
+b_111     = hitchin_form_b_over_6(Omega_111)
+
+# Sanity from the block structure (a = b = c = 1):
+#   b/6 = diag(-1) ⊕ [[0, 1/2], [1/2, 0]]³
+#   Each off-diagonal block has eigenvalues ±1/2 → signature (1,1).
+#   Three blocks → (3,3). Plus the −1 entry → total (3,4).
+# Multiplying by 6 > 0 preserves signature, so sig(b_Ω) = sig(b_Ω/6) = (3,4).
+pos, neg = exact_signature(b_111, DIM)
+print(f"  sig(b_Ω) = sig(b_Ω/6) = ({pos},{neg}) "
+      f"(exact congruence diagonalization)")
+require((pos, neg) == (3, 4), f"Expected (3,4), got ({pos},{neg})")
+print("  ✓ sig = (3,4). Exact.")
+print("  Note: dim Stab = 14 and sig = (3,4) are the numerical invariants of")
+print("        G₂_split. Identifying the stabilizer with G₂_split itself requires")
+print("        the standard classification theorem for stable 3-forms in dimension 7;")
+print("        this script verifies the computational invariants, not that external theorem.\\n")
+
+stab_dim_VW, _ = stabilizer_dim(Omega_111, DIM)
+print(f"  dim Stab(Ω_{{1,1,1}}) = {stab_dim_VW} (exact)")
+require(stab_dim_VW == 14, f"Expected 14, got {stab_dim_VW}")
+print()
+
+
+# ============================================================
+# PART 4: Ω_W ~ Ω_old as 3-forms on R⁷
+# ============================================================
+
+print("=" * 60)
+print("PART 4: Ω_W ~ Ω_old as 3-forms on R⁷")
+print("=" * 60)
+
+# We exhibit an integer matrix H with det(H) = 8 (so H ∈ GL(7,Q), NOT GL(7,Z))
+# satisfying  H*Ω_W = 2·Ω_old.
+# To get H'*Ω_W = Ω_old exactly over R, rescale: H' := 2^(-1/3) · H. Then
+#   H'*Ω_W = (2^(-1/3))³ · H*Ω_W = (1/2) · 2 · Ω_old = Ω_old.
+#
+# The fact that this displayed rescaling is irrational is not by itself a proof
+# of non-equivalence over Q: a different rational witness might have existed.
+# We therefore add a determinant obstruction below. For any K ∈ GL(7,Q),
+# covariance of the Hitchin bilinear form gives
+#   B_{K*Ω} = det(K) · Kᵀ B_Ω K,
+# hence
+#   det(B_{K*Ω}) = det(K)^9 det(B_Ω).
+# Thus exact rational equivalence K*Ω_W = Ω_old would force
+#   det(B_old) / det(B_W) = det(K)^9,
+# i.e. the determinant ratio must be a ninth power in Q.
+
+H_witness = [
+    [Fraction(0), Fraction(0), Fraction(0), Fraction( 1), Fraction(0), Fraction(0), Fraction( 0)],
+    [Fraction(1), Fraction(0), Fraction(0), Fraction( 0), Fraction(-1), Fraction(0), Fraction( 0)],
+    [Fraction(0), Fraction(1), Fraction(0), Fraction( 0), Fraction(0), Fraction(-1), Fraction( 0)],
+    [Fraction(0), Fraction(0), Fraction(1), Fraction( 0), Fraction(0), Fraction(0), Fraction( 1)],
+    [Fraction(1), Fraction(0), Fraction(0), Fraction( 0), Fraction(1), Fraction(0), Fraction( 0)],
+    [Fraction(0), Fraction(1), Fraction(0), Fraction( 0), Fraction(0), Fraction(1), Fraction( 0)],
+    [Fraction(0), Fraction(0), Fraction(1), Fraction( 0), Fraction(0), Fraction(0), Fraction(-1)],
+]
+
+Omega_W = antisymmetric_form({
+    (0, 1, 4): +1, (0, 2, 5): +1, (0, 3, 6): +1,
+    (1, 2, 3): +1,
+    (4, 5, 6): +1,
+})
+# Ω_old: classical 7-term Fano-plane representative (used in proofs 22–27).
+# In the same GL(7,R)-orbit as Ω_W.
+Omega_old = antisymmetric_form({
+    (0, 1, 2): +1, (0, 3, 4): -1, (0, 5, 6): -1,
+    (1, 3, 5): -1, (2, 4, 5): +1,
+    (1, 4, 6): +1, (2, 3, 6): +1,
+})
+
+pulled = pullback_3form(H_witness, Omega_W, DIM)
+max_diff = ZERO
+for i in range(DIM):
+    for j in range(DIM):
+        for k in range(DIM):
+            expected = Omega_old.get((i, j, k), ZERO) * 2
+            actual   = pulled.get((i, j, k),    ZERO)
+            diff = abs(actual - expected)
+            if diff > max_diff:
+                max_diff = diff
+
+print(f"  Exact witness H (integer entries): max|H*Ω_W − 2·Ω_old| = {max_diff}")
+
+det_H = exact_det(H_witness, DIM)
+print(f"  det(H) = {det_H}  →  H ∈ GL(7,Q) ⊂ GL(7,R),  H ∉ GL(7,Z)")
+require(det_H != ZERO, "det(H) = 0, not invertible!")
+require(max_diff == ZERO, f"Exact witness failed! diff={max_diff}")
+
+B_W_over_6 = hitchin_form_b_over_6(Omega_W)
+B_old_over_6 = hitchin_form_b_over_6(Omega_old)
+det_B_W_over_6 = exact_det(B_W_over_6, DIM)
+det_B_old_over_6 = exact_det(B_old_over_6, DIM)
+det_ratio = det_B_old_over_6 / det_B_W_over_6
+
+print(f"  det(B_ΩW/6)   = {det_B_W_over_6}")
+print(f"  det(B_Ωold/6) = {det_B_old_over_6}")
+print(f"  determinant ratio det(B_old)/det(B_W) = {det_ratio}")
+require(det_ratio == Fraction(64), f"Expected determinant ratio 64, got {det_ratio}")
+require(not is_rational_nth_power(det_ratio, 9),
+        "Unexpected: determinant ratio 64 is a ninth power in Q")
+print("  Determinant obstruction over Q: 64 is not a ninth power in Q.")
+print("  Equivalently: v_2(q^9) ∈ 9Z for rational q, but v_2(64) = 6 ∉ 9Z.")
+print("  Therefore no K ∈ GL(7,Q) can satisfy K*Ω_W = Ω_old exactly.")
+print("  Rescaling H' = 2^(-1/3)·H ∈ GL(7,R) gives H'*Ω_W = Ω_old exactly.")
+print("  ✓ VERIFIED: Ω_W and Ω_old lie in the same GL(7,R)-orbit, not the same")
+print("    exact GL(7,Q)-orbit. Over Q the witness gives Ω_W ~ 2·Ω_old.\\n")
+
+
+# ============================================================
+# PART 5: dim=6 (W⊕W*) → classical stabilizer (not G₂)
+# ============================================================
+
+print("=" * 60)
+print("PART 5: On W⊕W* (dim 6), stabilizer is classical")
+print("=" * 60)
+
+# Ω₆ = vol_W + vol_{W*} on R⁶, coordinates 0,1,2 = W and 3,4,5 = W*.
+Omega_6 = antisymmetric_form({
+    (0, 1, 2): +1,
+    (3, 4, 5): +1,
+})
+
+stab_dim_6, rank_6 = stabilizer_dim(Omega_6, 6)
+print(f"  Ω₆ = vol_W + vol_{{W*}} on R⁶")
+print(f"  rank = {rank_6}, dim Stab = {stab_dim_6}")
+require(stab_dim_6 == 16, f"Expected 16, got {stab_dim_6}")
+print(f"  ✓ dim Stab = {stab_dim_6} > 14 → NOT G₂ (classical).\\n")
+
+
+# ============================================================
+# PART 6: SL(W) preserves Ω_W (exact algebraic proof)
+# ============================================================
+
+print("=" * 60)
+print("PART 6: SL(W) preserves Ω_W")
+print("=" * 60)
+
+# Exact proof. For A ∈ SL(W), the action on V_W = R⊕W⊕W* is
+#   g = diag(1, A, A⁻ᵀ).
+# Then:
+#   g*(τ ∧ ev)    = τ ∧ ev
+#                  ← The pairing ev ∈ W* ⊗ W is invariant because the
+#                    actions on W (by A) and on W* (by A⁻ᵀ) are
+#                    contragredient: (A⁻ᵀφ)(Aw) = φ(A⁻¹·A·w) = φ(w).
+#   g*(vol_W)     = det(A) · vol_W      = vol_W      (det A = 1)
+#   g*(vol_{W*})  = det(A⁻ᵀ) · vol_{W*} = vol_{W*}   (det A⁻ᵀ = 1)
+# Hence g*(Ω_W) = Ω_W. QED.
+#
+# Computational check on all 8 sl(3) generators (infinitesimal form):
+# X · Ω_W must vanish identically.
+
+all_zero = True
+generators_count = 0
+for gen_idx, X_sl3 in enumerate(sl3_generators()):
+    generators_count += 1
+    X_V = lift_sl3_to_gl_VW(X_sl3)
+
+    for (i, j, k) in sorted_triples(DIM):
+        val = ZERO
+        for l in range(DIM):
+            val += (X_V[l][i] * Omega_W.get((l, j, k), ZERO)
+                  + X_V[l][j] * Omega_W.get((i, l, k), ZERO)
+                  + X_V[l][k] * Omega_W.get((i, j, l), ZERO))
+        if val != ZERO:
+            all_zero = False
+            print(f"  ✗ Generator {gen_idx}: X·Ω[{i},{j},{k}] = {val}")
+            break
+
+require(all_zero, "SL(W) does not preserve Ω_W!")
+print(f"  All {generators_count} sl(3) generators annihilate Ω_W.")
+print("  ✓ VERIFIED: SL(W) preserves Ω_W. Exact (Fraction).\\n")
+
+
+# ============================================================
+# SUMMARY
+# ============================================================
+
+print("=" * 60)
+print("SUMMARY")
+print("=" * 60)
+print("  1. dim SL(W)-invariant 3-forms = 3                       ✓")
+print("  2. det(b_Ω) = 4374·a⁹b⁶c⁶  (symbolic proof in Q[a,b,c])  ✓")
+print("  3. Ω_{1,1,1}: dim Stab = 14, sig(b_Ω) = (3,4)            ✓")
+print("     (G₂_split identification uses a standard external classification theorem)")
+print("  4. Ω_W ~ Ω_old over R; NOT GL(7,Q)-equivalent, since det-ratio 64 ∉ Q^9 ✓")
+print("  5. dim=6: dim Stab = 16 > 14 → not G₂ (classical)        ✓")
+print("  6. SL(W) preserves Ω_W (all 8 sl(3) generators)          ✓")
+print("  All internal computational claims of Proof 21 verified.")
+print("  External G₂_split identification rests on the standard classification/stable-form theorem.")`,
+    nft_url: `https://opensea.io/item/base/0x8a3ee2dbaa1c33f3cb3d927497f4ae798b598b65/1`,
+    tweet_url: ``
+  };
+  const canonicalString = [entry.id, entry.safecreative_url, entry.title, entry.date, entry.text, entry.nft_url, entry.tweet_url].join('\n---\n');
+  const data = new TextEncoder().encode(canonicalString);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashHex = [...new Uint8Array(hashBuffer)].map(b => b.toString(16).padStart(2, '0')).join('');
+  document.getElementById('hashResult').textContent = hashHex;
+  document.getElementById('copyHashBtn').addEventListener('click', () => { navigator.clipboard.writeText(hashHex); alert('Hash copied'); });
+})();
+</script>
+</body></html>

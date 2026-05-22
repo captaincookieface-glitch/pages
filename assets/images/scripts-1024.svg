@@ -1,5 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
-  <!-- Transparent background - no fill -->
+  <!-- White background -->
+  <rect width="1024" height="1024" fill="#ffffff"/>
   
   <!-- Terminal/console window -->
   <rect x="162" y="182" width="700" height="560" rx="40" ry="40" fill="#2d3748" stroke="#4a5568" stroke-width="6"/>

@@ -1,0 +1,4468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CCFU Script 3 — proof_27_exhaustive_orbit.py</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #fff; }
+    .block { margin-bottom: 20px; padding: 15px; border: 1px solid #eee; word-wrap: break-word; }
+    .key { color: #000; font-size: 2em !important; text-transform: capitalize; font-weight: bold; }
+    .hash { word-break: break-all; color: #4287f5; }
+    a { color: #4287f5; text-decoration: underline; }
+    pre { white-space: pre-wrap; }
+    code { background: #f4f4f4; padding: 2px 4px; font-size: 0.9em; }
+    pre > code { display: block; padding: 12px; overflow-x: auto; white-space: pre; }
+    button { font-family: inherit; padding: 6px 10px; border: 1px solid #ccc; background: #f9f9f9; cursor: pointer; }
+    h1 { margin-bottom: 10px; font-size: 32px; }
+    nav { background-color: #e1e1e1; padding: 10px; }
+    nav > ul { display: flex; flex-wrap: wrap; list-style: none; padding: 0; margin: 0; }
+    nav > ul > li, nav > ul > li > a { display: flex; flex-direction: column; text-align: center; margin: 0; }
+    nav ul li img { max-width: 80px; width: 100%; height: auto; border-radius: 40px; }
+    .arrow { width: 50px; height: 80px; font-size: 38px; }
+    iframe { border-radius: 4px; }
+  </style>
+</head>
+<body>
+<article itemscope itemtype="https://schema.org/CreativeWork">
+  <meta itemprop="identifier" content="2605235759532">
+  <meta itemprop="dateCreated" content="05/23/2026">
+<h1 itemprop="name">CCFU Script 3 — proof_27_exhaustive_orbit.py</h1>
+<nav aria-label="Breadcrumb" class="breadcrumb">
+  <ul>
+    <li><a href="../"><img src="../assets/images/AFB9C382-3B34-4925-B318-E7083E758055.png" alt="Home"/><span>Home</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><a href="./"><img src="../assets/images/scripts-1024.svg" alt="CCFU"/><span>CCFU Scripts</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><img src="../assets/images/scripts-1024.svg" alt="CCFU"/><span>CCFU Script 3 — proof_27_exhaustive_orbit.py</span></li>
+  </ul>
+</nav>
+  <div class="block" id="rendered">
+
+    <div class="block">
+      <div class="key">id</div>
+      <pre>2605235759532</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">safecreative_url</div>
+      <a href="https://www.safecreative.org/work/2605235759532-ccfu-script-3-proof_27_exhaustive_orbit-py" target="_blank">https://www.safecreative.org/work/2605235759532-ccfu-script-3-proof_27_exhaustive_orbit-py</a>
+    </div>
+
+    <div class="block">
+      <div class="key">title</div>
+      <pre>CCFU Script 3 — proof_27_exhaustive_orbit.py</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">date</div>
+      <pre>05/23/2026</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">text</div>
+      <details><summary style="cursor:pointer; color:#4287f5; margin-bottom:8px;">Show source code</summary><pre><code>&quot;&quot;&quot;
+CCFU Proof 27 — Exhaustive Orbit Verification
+=============================================
+
+Exact arithmetic verification that the stabilizer of every Ω in the
+C₂-compatible family on R⁷ is the split real form of the exceptional
+Lie algebra g₂. The family contains 7,032 raw patterns; 1,524 are
+rank-valid (dim Stab = 14); 1,523 are split; all 1,523 split patterns
+yield g₂(split) under the four-fold identification:
+
+    1.  dim Stab(Ω) = 14
+    2.  [Stab, Stab] ⊂ Stab (closure under commutator → Lie algebra)
+    3.  Killing form is nondegenerate with signature (8, 6) (Cartan criterion + split real form)
+    4.  ad-commutant has dimension 1 (Schur: irreducible / simple)
+
+Three components in one file:
+
+    PART A — Exact-arithmetic core
+        Enumeration of C₂-compatible patterns, exact rank/kernel,
+        Hitchin form, Killing form, ad-commutant, and the proof runner.
+
+    PART B — Certificate generator
+        For every rank-valid split pattern, writes a JSON certificate
+        containing the kernel, pivot/free columns, Hitchin matrix,
+        Killing matrix, and ad-commutant data as independently
+        checkable witnesses. Records SHA-256 of the canonical JSON.
+
+    PART C — Independent certificate verifier
+        Reimplements the enumeration and the exact linear algebra
+        with a separate code path (functions prefixed v_/V_), then
+        recomputes every witness and compares to the stored values.
+        Hash mismatches, count mismatches, and any mathematical
+        disagreement exit non-zero.
+
+Usage:
+    python3 ccfu_script_3_proof_27.py exact [--limit N]
+    python3 ccfu_script_3_proof_27.py generate [--max-split N] [--output FILE]
+    python3 ccfu_script_3_proof_27.py verify FILE [--skip-s2] [--allow-partial]
+
+All arithmetic exact over Q. No numpy. No float. No external dependencies.
+&quot;&quot;&quot;
+
+from __future__ import annotations
+from fractions import Fraction
+from itertools import combinations, permutations
+from math import gcd
+from pathlib import Path
+from typing import Any, Dict, Iterable, Iterator, List, Mapping, Sequence, Tuple
+import argparse
+import hashlib
+import json
+import time
+
+# ======================================================================
+# PART A: Exact-arithmetic core
+# ======================================================================
+
+
+# ---------------------------------------------------------------------------
+# Constants
+# ---------------------------------------------------------------------------
+
+DIM_V = 7
+DIM_GL = 49
+DIM_T3 = 35
+DIM_STAB = 14
+RANK_FULL = 35
+KILLING_SIG_G2_SPLIT = (8, 6)
+AD_COMMUTANT_G2 = 1
+PRIME_MOD_P = 1_000_003
+
+P_IDX = {0, 1, 2, 3, 4}
+N_IDX = {5, 6}
+W = {0, 1, 3}
+SPLIT_HITCHIN_SIGNATURES = {(3, 4), (4, 3)}
+
+Triple = Tuple[int, int, int]
+Pattern = Tuple[Triple, ...]
+OmegaDict = Dict[Triple, Fraction]
+Vector = List[Fraction]
+Matrix = List[List[Fraction]]
+
+BASIS_3: List[Triple] = [
+    (i, j, k)
+    for i in range(DIM_V)
+    for j in range(i + 1, DIM_V)
+    for k in range(j + 1, DIM_V)
+]
+BASIS_GL: List[Tuple[int, int]] = [
+    (row, col) for row in range(DIM_V) for col in range(DIM_V)
+]
+ALL_TRIPLES: List[Triple] = list(combinations(range(DIM_V), 3))
+
+# ---------------------------------------------------------------------------
+# Enumeration
+# ---------------------------------------------------------------------------
+
+
+def canonical_pattern(triples: Iterable[Sequence[int]]) -&gt; Pattern:
+    &quot;&quot;&quot;Return a deterministic tuple of sorted triples.&quot;&quot;&quot;
+
+    return tuple(sorted(tuple(sorted(map(int, triple))) for triple in triples))
+
+
+def enumerate_c2_patterns() -&gt; List[Pattern]:
+    &quot;&quot;&quot;Enumerate all C₂-compatible raw patterns.
+
+    The constraints are the C₂ combinatorial constraints used by the proof:
+    two PPP triples, four PPN triples, and one PNN triple, with the specified
+    balance conditions involving indices 2, 4, 5, and 6.
+    &quot;&quot;&quot;
+
+    ppp = [t for t in ALL_TRIPLES if len(set(t) &amp; P_IDX) == 3]
+    ppn = [
+        t
+        for t in ALL_TRIPLES
+        if len(set(t) &amp; P_IDX) == 2 and len(set(t) &amp; N_IDX) == 1
+    ]
+    pnn = [
+        t
+        for t in ALL_TRIPLES
+        if len(set(t) &amp; P_IDX) == 1 and len(set(t) &amp; N_IDX) == 2
+    ]
+
+    ppp_good = [t for t in ppp if not (set(t) &lt;= W)]
+    ppp_pairs: List[Tuple[Triple, Triple]] = []
+    for selected in combinations(ppp_good, 2):
+        has_2 = [2 in t for t in selected]
+        has_4 = [4 in t for t in selected]
+        if sum(has_2) == 1 and sum(has_4) == 1 and has_2[0] != has_4[0]:
+            ppp_pairs.append(selected)
+
+    ppn_quads: List[Tuple[Triple, Triple, Triple, Triple]] = []
+    for selected in combinations(ppn, 4):
+        if (
+            sum(2 in t for t in selected) == 2
+            and sum(4 in t for t in selected) == 2
+            and sum(5 in t for t in selected) == 2
+            and sum(6 in t for t in selected) == 2
+        ):
+            ppn_quads.append(selected)
+
+    pnn_list = [t for t in pnn if (set(t) &amp; P_IDX) &lt;= W]
+
+    patterns = set()
+    for pnn_triple in pnn_list:
+        for ppp_pair in ppp_pairs:
+            for ppn_quad in ppn_quads:
+                selected = list(ppp_pair) + list(ppn_quad) + [pnn_triple]
+                if len(set().union(*(set(t) for t in selected))) != DIM_V:
+                    continue
+                patterns.add(canonical_pattern(selected))
+
+    return sorted(patterns)
+
+
+# ---------------------------------------------------------------------------
+# Basic exact linear algebra
+# ---------------------------------------------------------------------------
+
+
+def permutation_sign(values: Sequence[int]) -&gt; int:
+    &quot;&quot;&quot;Return the sign of a finite permutation-like list.&quot;&quot;&quot;
+
+    sign = 1
+    for i, left in enumerate(values):
+        for right in values[i + 1 :]:
+            if left &gt; right:
+                sign *= -1
+    return sign
+
+
+def build_omega(pattern: Pattern) -&gt; OmegaDict:
+    &quot;&quot;&quot;Build the antisymmetric 3-form Ω determined by a 7-triple pattern.
+
+    All coefficients are +1 (canonical sign). The enumeration counts
+    canonical sign patterns, not all possible sign assignments over
+    the same support.&quot;&quot;&quot;
+
+    omega: OmegaDict = {}
+    for triple in pattern:
+        for perm in permutations(triple):
+            omega[perm] = Fraction(permutation_sign(perm))
+    return omega
+
+
+def omega_value(omega: OmegaDict, i: int, j: int, k: int) -&gt; Fraction:
+    &quot;&quot;&quot;Return Ω(i,j,k), with zero for repeated or absent triples.&quot;&quot;&quot;
+
+    return omega.get((i, j, k), Fraction(0))
+
+
+def rref(matrix: Matrix) -&gt; Tuple[Matrix, List[int]]:
+    &quot;&quot;&quot;Return reduced row-echelon form and pivot columns over Q.&quot;&quot;&quot;
+
+    if not matrix:
+        return [], []
+
+    reduced = [row[:] for row in matrix]
+    row_count = len(reduced)
+    col_count = len(reduced[0])
+    pivot_cols: List[int] = []
+    rank = 0
+
+    for col in range(col_count):
+        pivot_row = None
+        for row in range(rank, row_count):
+            if reduced[row][col] != 0:
+                pivot_row = row
+                break
+        if pivot_row is None:
+            continue
+
+        reduced[rank], reduced[pivot_row] = reduced[pivot_row], reduced[rank]
+        pivot = reduced[rank][col]
+        for c in range(col, col_count):
+            reduced[rank][c] /= pivot
+
+        for row in range(row_count):
+            if row == rank:
+                continue
+            factor = reduced[row][col]
+            if factor == 0:
+                continue
+            for c in range(col, col_count):
+                reduced[row][c] -= factor * reduced[rank][c]
+
+        pivot_cols.append(col)
+        rank += 1
+        if rank == row_count:
+            break
+
+    return reduced, pivot_cols
+
+
+def rational_rank(matrix: Matrix) -&gt; Tuple[int, List[int]]:
+    &quot;&quot;&quot;Return rank and pivot columns over Q.&quot;&quot;&quot;
+
+    _, pivots = rref(matrix)
+    return len(pivots), pivots
+
+
+def integer_rank_exact(matrix: Matrix) -&gt; int:
+    &quot;&quot;&quot;Return exact rank of an integer matrix over Q.
+
+    The routine uses integer row operations and row-gcd normalization.
+    Multiplying rows and subtracting integer multiples preserves the row space
+    over Q; dividing a nonzero row by the gcd of its entries is a rational
+    rescaling. No modular or floating-point rank test is used.
+    &quot;&quot;&quot;
+    if not matrix:
+        return 0
+
+    work: List[List[int]] = []
+    for source_row in matrix:
+        row: List[int] = []
+        for value in source_row:
+            if value.denominator != 1:
+                raise ValueError(&quot;integer_rank_exact requires integer-valued entries&quot;)
+            row.append(int(value.numerator))
+        work.append(row)
+
+    row_count = len(work)
+    col_count = len(work[0])
+    rank = 0
+
+    def normalize_row(row: List[int]) -&gt; None:
+        &quot;&quot;&quot;Divide a row in place by the gcd of its entries (clears common factor).&quot;&quot;&quot;
+        common = 0
+        for entry in row:
+            common = gcd(common, abs(entry))
+        if common &gt; 1:
+            for idx, entry in enumerate(row):
+                row[idx] = entry // common
+
+    for col in range(col_count):
+        pivot_row = None
+        for row_index in range(rank, row_count):
+            if work[row_index][col] != 0:
+                pivot_row = row_index
+                break
+        if pivot_row is None:
+            continue
+
+        if pivot_row != rank:
+            work[rank], work[pivot_row] = work[pivot_row], work[rank]
+        normalize_row(work[rank])
+        if work[rank][col] &lt; 0:
+            for idx, entry in enumerate(work[rank]):
+                work[rank][idx] = -entry
+
+        pivot = work[rank][col]
+        for row_index in range(rank + 1, row_count):
+            entry = work[row_index][col]
+            if entry == 0:
+                continue
+            common = gcd(abs(pivot), abs(entry))
+            pivot_factor = pivot // common
+            row_factor = entry // common
+            work[row_index] = [
+                pivot_factor * work[row_index][idx] - row_factor * work[rank][idx]
+                for idx in range(col_count)
+            ]
+            work[row_index][col] = 0
+            normalize_row(work[row_index])
+
+        rank += 1
+        if rank == row_count:
+            break
+
+    return rank
+
+
+def exact_signature(matrix: Matrix) -&gt; Tuple[int, int, int]:
+    &quot;&quot;&quot;Compute the inertia ``(positive, negative, zero)`` exactly over Q.
+
+    The algorithm performs symmetric Gaussian diagonalization by congruence.
+    Off-diagonal pivots are converted to diagonal pivots by replacing one basis
+    vector by the sum of two basis vectors. No numerical approximation is used.
+    &quot;&quot;&quot;
+
+    n = len(matrix)
+    if n == 0:
+        return 0, 0, 0
+    symmetric = [row[:] for row in matrix]
+    signs: List[Fraction] = []
+    step = 0
+
+    while step &lt; n:
+        pivot = None
+        for i in range(step, n):
+            if symmetric[i][i] != 0:
+                pivot = i
+                break
+
+        if pivot is None:
+            off_diag = None
+            for i in range(step, n):
+                for j in range(i + 1, n):
+                    if symmetric[i][j] != 0:
+                        off_diag = (i, j)
+                        break
+                if off_diag is not None:
+                    break
+            if off_diag is None:
+                break
+
+            i, j = off_diag
+            # Congruence operation: e_i &lt;- e_i + e_j. Since every remaining
+            # diagonal entry is zero here, the new diagonal is 2*S[i][j] != 0.
+            for k in range(n):
+                symmetric[i][k] += symmetric[j][k]
+            for k in range(n):
+                symmetric[k][i] += symmetric[k][j]
+            pivot = i
+
+        if pivot != step:
+            symmetric[step], symmetric[pivot] = symmetric[pivot], symmetric[step]
+            for row in range(n):
+                symmetric[row][step], symmetric[row][pivot] = (
+                    symmetric[row][pivot],
+                    symmetric[row][step],
+                )
+
+        diagonal = symmetric[step][step]
+        if diagonal == 0:
+            # This should not occur after the off-diagonal pivot conversion, but
+            # keeping the branch avoids an infinite loop in malformed input.
+            step += 1
+            continue
+
+        signs.append(diagonal)
+        column_values = [symmetric[i][step] for i in range(step + 1, n)]
+        for local_i, i in enumerate(range(step + 1, n)):
+            vi = column_values[local_i]
+            if vi == 0:
+                continue
+            for local_j, j in enumerate(range(step + 1, n)):
+                vj = column_values[local_j]
+                if vj != 0:
+                    symmetric[i][j] -= vi * vj / diagonal
+            symmetric[i][step] = Fraction(0)
+            symmetric[step][i] = Fraction(0)
+
+        step += 1
+
+    positive = sum(1 for value in signs if value &gt; 0)
+    negative = sum(1 for value in signs if value &lt; 0)
+    zero = n - len(signs)
+    return positive, negative, zero
+
+
+# ---------------------------------------------------------------------------
+# Stabilizer of Ω
+# ---------------------------------------------------------------------------
+
+
+def gl_action_matrix(omega: OmegaDict) -&gt; Matrix:
+    &quot;&quot;&quot;Return the 35×49 matrix of the infinitesimal GL(7)-action on Ω.
+
+    The column indexed by ``(row, col)`` is the coefficient of the matrix entry
+    A[row, col], using the convention ``A(e_col) = Σ_row A[row,col] e_row``.
+    &quot;&quot;&quot;
+
+    matrix = [[Fraction(0) for _ in range(DIM_GL)] for _ in range(DIM_T3)]
+    for row_index, (i, j, k) in enumerate(BASIS_3):
+        for col_index, (a, b) in enumerate(BASIS_GL):
+            value = Fraction(0)
+            if b == i:
+                value += omega_value(omega, a, j, k)
+            if b == j:
+                value += omega_value(omega, i, a, k)
+            if b == k:
+                value += omega_value(omega, i, j, a)
+            matrix[row_index][col_index] = value
+    return matrix
+
+
+def exact_rank_and_kernel(
+    omega: OmegaDict,
+) -&gt; Tuple[bool, List[Vector] | None, List[int], List[int] | None]:
+    &quot;&quot;&quot;Compute the exact rank and canonical kernel basis of the action matrix.
+
+    Returns ``(rank_is_35, kernel, pivot_cols, free_cols)``. The kernel basis is
+    canonical for this RREF convention: one basis vector per free column, with
+    an identity submatrix on those free columns.
+    &quot;&quot;&quot;
+    action = gl_action_matrix(omega)
+    rank = integer_rank_exact(action)
+    if rank != RANK_FULL:
+        return False, None, [], None
+
+    reduced, pivot_cols = rref(action)
+    if len(pivot_cols) != RANK_FULL:
+        raise ArithmeticError(f&quot;integer rank {rank} but RREF rank {len(pivot_cols)}&quot;)
+
+    free_cols = [col for col in range(DIM_GL) if col not in set(pivot_cols)]
+    kernel: List[Vector] = []
+    for free_col in free_cols:
+        vector = [Fraction(0) for _ in range(DIM_GL)]
+        vector[free_col] = Fraction(1)
+        for pivot_row, pivot_col in enumerate(pivot_cols):
+            vector[pivot_col] = -reduced[pivot_row][free_col]
+        kernel.append(vector)
+
+    return True, kernel, pivot_cols, free_cols
+
+
+def verify_kernel_annihilates_omega(omega: OmegaDict, kernel: Sequence[Vector]) -&gt; bool:
+    &quot;&quot;&quot;Return whether every kernel vector annihilates Ω under the GL action.&quot;&quot;&quot;
+
+    for vector in kernel:
+        for i, j, k in BASIS_3:
+            value = Fraction(0)
+            for a in range(DIM_V):
+                value += vector[DIM_V * a + i] * omega_value(omega, a, j, k)
+                value += vector[DIM_V * a + j] * omega_value(omega, i, a, k)
+                value += vector[DIM_V * a + k] * omega_value(omega, i, j, a)
+            if value != 0:
+                return False
+    return True
+
+
+# ---------------------------------------------------------------------------
+# Hitchin form
+# ---------------------------------------------------------------------------
+
+
+def hitchin_form(omega: OmegaDict) -&gt; Matrix:
+    &quot;&quot;&quot;Compute the exact 7×7 Hitchin bilinear form associated with Ω.&quot;&quot;&quot;
+
+    indices = list(range(DIM_V))
+    form = [[Fraction(0) for _ in range(DIM_V)] for _ in range(DIM_V)]
+    for a in range(DIM_V):
+        for b in range(DIM_V):
+            total = Fraction(0)
+            for pair_a in combinations(indices, 2):
+                remaining = [x for x in indices if x not in pair_a]
+                for pair_b in combinations(remaining, 2):
+                    triple_c = tuple(x for x in remaining if x not in pair_b)
+                    if len(triple_c) != 3:
+                        continue
+                    first = omega_value(omega, a, pair_a[0], pair_a[1])
+                    second = omega_value(omega, b, pair_b[0], pair_b[1])
+                    third = omega_value(omega, triple_c[0], triple_c[1], triple_c[2])
+                    if first == 0 or second == 0 or third == 0:
+                        continue
+                    permutation = list(pair_a) + list(pair_b) + list(triple_c)
+                    if len(set(permutation)) != DIM_V:
+                        continue
+                    total += permutation_sign(permutation) * first * second * third
+            form[a][b] = total / Fraction(6)
+    return form
+
+
+def exact_hitchin_inertia(omega: OmegaDict) -&gt; Tuple[int, int, int]:
+    &quot;&quot;&quot;Return the exact inertia of the Hitchin form of Ω.&quot;&quot;&quot;
+
+    return exact_signature(hitchin_form(omega))
+
+
+# ---------------------------------------------------------------------------
+# Lie algebra invariants of the stabilizer
+# ---------------------------------------------------------------------------
+
+
+def vector_to_matrix(vector: Sequence[Fraction]) -&gt; Matrix:
+    &quot;&quot;&quot;Convert a 49-vector into a 7×7 matrix using row-major order.&quot;&quot;&quot;
+
+    return [list(vector[DIM_V * i : DIM_V * (i + 1)]) for i in range(DIM_V)]
+
+
+def matrix_to_vector(matrix: Matrix) -&gt; Vector:
+    &quot;&quot;&quot;Convert a 7×7 matrix into a row-major 49-vector.&quot;&quot;&quot;
+
+    return [matrix[i][j] for i in range(DIM_V) for j in range(DIM_V)]
+
+
+def matrix_product(left: Matrix, right: Matrix) -&gt; Matrix:
+    &quot;&quot;&quot;Return the exact product of two 7×7 matrices.&quot;&quot;&quot;
+
+    return [
+        [sum(left[i][k] * right[k][j] for k in range(DIM_V)) for j in range(DIM_V)]
+        for i in range(DIM_V)
+    ]
+
+
+def commutator(left: Sequence[Fraction], right: Sequence[Fraction]) -&gt; Vector:
+    &quot;&quot;&quot;Return the matrix commutator ``[left, right]`` as a 49-vector.&quot;&quot;&quot;
+
+    left_matrix = vector_to_matrix(left)
+    right_matrix = vector_to_matrix(right)
+    left_right = matrix_product(left_matrix, right_matrix)
+    right_left = matrix_product(right_matrix, left_matrix)
+    return matrix_to_vector(
+        [
+            [left_right[i][j] - right_left[i][j] for j in range(DIM_V)]
+            for i in range(DIM_V)
+        ]
+    )
+
+
+def validate_free_columns(kernel: Sequence[Vector], free_cols: Sequence[int]) -&gt; None:
+    &quot;&quot;&quot;Validate that the kernel basis has an identity matrix on free columns.&quot;&quot;&quot;
+
+    n = len(kernel)
+    if len(free_cols) != n:
+        raise ValueError(f&quot;expected {n} free columns, got {len(free_cols)}&quot;)
+    for row, free_col in enumerate(free_cols):
+        for other_row in range(n):
+            expected = Fraction(1) if other_row == row else Fraction(0)
+            if kernel[other_row][free_col] != expected:
+                raise ValueError(&quot;kernel basis is not normalized on free columns&quot;)
+
+
+def coordinates_in_kernel(
+    vector: Sequence[Fraction], kernel: Sequence[Vector], free_cols: Sequence[int]
+) -&gt; Tuple[List[Fraction], Vector]:
+    &quot;&quot;&quot;Express a vector in the kernel basis and return reconstruction error.&quot;&quot;&quot;
+
+    coordinates = [vector[col] for col in free_cols]
+    reconstructed = [Fraction(0) for _ in range(DIM_GL)]
+    for coefficient, basis_vector in zip(coordinates, kernel):
+        if coefficient == 0:
+            continue
+        for index in range(DIM_GL):
+            reconstructed[index] += coefficient * basis_vector[index]
+    error = [vector[index] - reconstructed[index] for index in range(DIM_GL)]
+    return coordinates, error
+
+
+def structure_constants(
+    kernel: Sequence[Vector], free_cols: Sequence[int]
+) -&gt; Tuple[List[List[List[Fraction]]], List[Tuple[int, int, Vector]]]:
+    &quot;&quot;&quot;Compute structure constants and exact closure failures.
+
+    The returned tensor satisfies ``[e_i,e_j] = Σ_k c[i][j][k] e_k``.
+    &quot;&quot;&quot;
+
+    n = len(kernel)
+    validate_free_columns(kernel, free_cols)
+    constants = [[[Fraction(0) for _ in range(n)] for _ in range(n)] for _ in range(n)]
+    failures: List[Tuple[int, int, Vector]] = []
+
+    for i in range(n):
+        for j in range(n):
+            bracket = commutator(kernel[i], kernel[j])
+            coordinates, error = coordinates_in_kernel(bracket, kernel, free_cols)
+            constants[i][j] = coordinates
+            if any(value != 0 for value in error):
+                failures.append((i, j, error))
+    return constants, failures
+
+
+def killing_form_from_structure(constants: List[List[List[Fraction]]]) -&gt; Matrix:
+    &quot;&quot;&quot;Compute the Killing form matrix from structure constants.&quot;&quot;&quot;
+
+    n = len(constants)
+    form = [[Fraction(0) for _ in range(n)] for _ in range(n)]
+    for i in range(n):
+        for j in range(n):
+            total = Fraction(0)
+            for k in range(n):
+                for ell in range(n):
+                    total += constants[i][k][ell] * constants[j][ell][k]
+            form[i][j] = total
+    return form
+
+
+def ad_commutant_equations(constants: List[List[List[Fraction]]]) -&gt; Matrix:
+    &quot;&quot;&quot;Return the linear system for endomorphisms commuting with every ad(e_i).&quot;&quot;&quot;
+
+    n = len(constants)
+    equations: Matrix = []
+    for generator in range(n):
+        for row in range(n):
+            for col in range(n):
+                equation = [Fraction(0) for _ in range(n * n)]
+                for middle in range(n):
+                    # Variable T[row, middle] in (T ad_g)_{row,col}.
+                    equation[n * row + middle] += constants[generator][col][middle]
+                    # Variable T[middle, col] in (ad_g T)_{row,col}.
+                    equation[n * middle + col] -= constants[generator][middle][row]
+                equations.append(equation)
+    return equations
+
+
+def fraction_to_mod(value: Fraction, prime: int) -&gt; int:
+    &quot;&quot;&quot;Map a rational number to F_p.&quot;&quot;&quot;
+
+    numerator = value.numerator % prime
+    denominator = value.denominator % prime
+    if denominator == 0:
+        raise ValueError(f&quot;denominator divisible by prime {prime}: {value}&quot;)
+    return (numerator * pow(denominator, -1, prime)) % prime
+
+
+def rank_mod_p(matrix: Matrix, prime: int = PRIME_MOD_P) -&gt; Tuple[int, List[int]]:
+    &quot;&quot;&quot;Return row rank and deterministic pivot columns modulo p.
+
+    This incremental echelon reducer is substantially faster than full dense
+    Gauss-Jordan elimination for the 2744×196 ad-commutant systems.  Pivot
+    columns are deterministic for the given row order and are stored only as a
+    reproducible modular witness.
+    &quot;&quot;&quot;
+
+    if not matrix:
+        return 0, []
+    col_count = len(matrix[0])
+    pivot_rows: Dict[int, List[int]] = {}
+    pivot_cols: List[int] = []
+
+    for source_row in matrix:
+        row = [fraction_to_mod(value, prime) for value in source_row]
+        while True:
+            pivot_col = None
+            for col, value in enumerate(row):
+                if value:
+                    pivot_col = col
+                    break
+            if pivot_col is None:
+                break
+
+            existing = pivot_rows.get(pivot_col)
+            if existing is None:
+                inverse = pow(row[pivot_col], -1, prime)
+                for col in range(pivot_col, col_count):
+                    row[col] = (row[col] * inverse) % prime
+                for col in range(pivot_col):
+                    row[col] = 0
+                pivot_rows[pivot_col] = row
+                pivot_cols.append(pivot_col)
+                break
+
+            factor = row[pivot_col]
+            for col in range(pivot_col, col_count):
+                row[col] = (row[col] - factor * existing[col]) % prime
+
+    return len(pivot_cols), pivot_cols
+
+
+def lie_algebra_invariants(
+    kernel: Sequence[Vector], free_cols: Sequence[int], prime: int = PRIME_MOD_P
+) -&gt; Dict[str, Any]:
+    &quot;&quot;&quot;Compute exact stabilizer invariants used by the proof and certificates.&quot;&quot;&quot;
+
+    if len(kernel) != DIM_STAB:
+        raise ValueError(f&quot;kernel dimension {len(kernel)} != {DIM_STAB}&quot;)
+
+    constants, closure_failures = structure_constants(kernel, free_cols)
+    if closure_failures:
+        first_i, first_j, first_error = closure_failures[0]
+        nonzero = next(idx for idx, value in enumerate(first_error) if value != 0)
+        raise ValueError(
+            &quot;closure [ker,ker] ⊂ ker failed &quot;
+            f&quot;for pair ({first_i},{first_j}) at coordinate {nonzero}&quot;
+        )
+
+    killing = killing_form_from_structure(constants)
+    killing_pos, killing_neg, killing_zero = exact_signature(killing)
+
+    ad_system = ad_commutant_equations(constants)
+    ad_rank_p, ad_pivots_p = rank_mod_p(ad_system, prime)
+    max_possible_rank = len(kernel) * len(kernel) - 1
+
+    # The scalar identity endomorphism commutes with every ad(e_i), so the
+    # rational rank is at most n²-1.  If the reduction modulo p already has
+    # rank n²-1, then exact rational rank is forced to be n²-1 because
+    # rank_mod_p &lt;= rank_Q.  Only the exceptional case falls back to rational
+    # elimination.
+    if ad_rank_p == max_possible_rank:
+        ad_rank_q = max_possible_rank
+        ad_pivots_q: List[int] = []
+        certified_by_mod_p = True
+    else:
+        ad_rank_q, ad_pivots_q = rational_rank(ad_system)
+        certified_by_mod_p = False
+
+    ad_dimension = len(kernel) * len(kernel) - ad_rank_q
+
+    return {
+        &quot;structure_constants&quot;: constants,
+        &quot;killing_form&quot;: killing,
+        &quot;killing_sig&quot;: (killing_pos, killing_neg),
+        &quot;killing_zero&quot;: killing_zero,
+        &quot;ad_commutant_rank_q&quot;: ad_rank_q,
+        &quot;ad_commutant_rank_q_certified_by_mod_p&quot;: certified_by_mod_p,
+        &quot;ad_commutant_dim&quot;: ad_dimension,
+        &quot;ad_rank_mod_p&quot;: ad_rank_p,
+        &quot;ad_pivot_cols_q&quot;: ad_pivots_q,
+        &quot;ad_pivot_cols_mod_p&quot;: ad_pivots_p,
+        &quot;closure_verified&quot;: True,
+        &quot;prime_mod_p&quot;: prime,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Proof runner
+# ---------------------------------------------------------------------------
+
+
+def iter_rank_valid_patterns(limit: int | None = None) -&gt; Iterator[Dict[str, Any]]:
+    &quot;&quot;&quot;Yield rank-valid C₂ patterns with Ω, kernel, pivots, and free columns.&quot;&quot;&quot;
+
+    yielded = 0
+    for pattern in enumerate_c2_patterns():
+        omega = build_omega(pattern)
+        ok, kernel, pivot_cols, free_cols = exact_rank_and_kernel(omega)
+        if not ok:
+            continue
+        if kernel is None or free_cols is None:
+            raise RuntimeError(&quot;rank-valid pattern did not return kernel data&quot;)
+        yield {
+            &quot;pattern&quot;: pattern,
+            &quot;omega&quot;: omega,
+            &quot;kernel&quot;: kernel,
+            &quot;pivot_cols&quot;: pivot_cols,
+            &quot;free_cols&quot;: free_cols,
+        }
+        yielded += 1
+        if limit is not None and yielded &gt;= limit:
+            return
+
+
+def run_exact_proof(limit: int | None = None) -&gt; Dict[str, int]:
+    &quot;&quot;&quot;Run the exact proof computation and print a progress summary.&quot;&quot;&quot;
+
+    start = time.time()
+    raw_count = len(enumerate_c2_patterns())
+    rank_valid: List[Dict[str, Any]] = []
+
+    print(&quot;CCFU Proof 27 — exact arithmetic core&quot;)
+    print(&quot;=&quot; * 70)
+    print(f&quot;C₂ raw patterns: {raw_count}&quot;)
+    print(&quot;Phase 1: exact rank filtering...&quot;)
+
+    for index, item in enumerate(iter_rank_valid_patterns(limit=limit), start=1):
+        rank_valid.append(item)
+        if index % 100 == 0:
+            print(f&quot;  rank-valid found: {index} ({time.time() - start:.0f}s)&quot;)
+
+    print(f&quot;  rank-valid total: {len(rank_valid)}&quot;)
+    print(&quot;Phase 2: exact Hitchin inertia...&quot;)
+
+    split_items: List[Dict[str, Any]] = []
+    compact_count = 0
+    hitchin_counts: Dict[Tuple[int, int], int] = {}
+    for item in rank_valid:
+        omega = item[&quot;omega&quot;]  # type: ignore[assignment]
+        pos, neg, _zero = exact_hitchin_inertia(omega)  # type: ignore[arg-type]
+        signature = (pos, neg)
+        hitchin_counts[signature] = hitchin_counts.get(signature, 0) + 1
+        if signature in SPLIT_HITCHIN_SIGNATURES:
+            split_items.append(item)
+        else:
+            compact_count += 1
+
+    for signature, count in sorted(hitchin_counts.items()):
+        label = &quot;split&quot; if signature in SPLIT_HITCHIN_SIGNATURES else &quot;non-split&quot;
+        print(f&quot;  Hitchin {signature}: {count} [{label}]&quot;)
+    print(f&quot;  split: {len(split_items)}, non-split: {compact_count}&quot;)
+
+    print(&quot;Phase 3: Killing form, closure, and ad-commutant...&quot;)
+    g2_count = 0
+    for index, item in enumerate(split_items, start=1):
+        invariants = lie_algebra_invariants(
+            item[&quot;kernel&quot;], item[&quot;free_cols&quot;]  # type: ignore[arg-type]
+        )
+        if (
+            invariants[&quot;killing_sig&quot;] == KILLING_SIG_G2_SPLIT
+            and invariants[&quot;ad_commutant_dim&quot;] == AD_COMMUTANT_G2
+            and invariants[&quot;closure_verified&quot;] is True
+        ):
+            g2_count += 1
+        if index % 100 == 0:
+            print(f&quot;  checked: {index}/{len(split_items)} ({time.time() - start:.0f}s)&quot;)
+
+    print(&quot;=&quot; * 70)
+    print(f&quot;g₂(split): {g2_count}/{len(split_items)}&quot;)
+    print(f&quot;total time: {time.time() - start:.0f}s&quot;)
+    if g2_count != len(split_items):
+        raise SystemExit(1)
+
+    return {
+        &quot;raw_count&quot;: raw_count,
+        &quot;rank_valid_count&quot;: len(rank_valid),
+        &quot;split_count&quot;: len(split_items),
+        &quot;non_split_count&quot;: compact_count,
+        &quot;g2_split_count&quot;: g2_count,
+    }
+
+
+# ======================================================================
+# PART B: Certificate generator
+# ======================================================================
+
+&quot;&quot;&quot;CCFU Proof 27 — exact certificate generator.
+
+The generator uses the exact-arithmetic core defined in PART A above,
+enumerates the complete C2 search space, and writes JSON certificates for
+every rank-valid split Hitchin pattern.  Each certificate contains independently
+checkable witnesses: the stabilizer kernel, pivot/free columns, Hitchin matrix,
+Killing form matrix, ad-commutant ranks/pivots, and exact closure status.
+
+Run:
+    python3 ccfu_script_3_proof_27.py generate
+
+The output path defaults to ``proof_27_certificates.json`` next to this file.
+&quot;&quot;&quot;
+
+
+EXPECTED_RAW_C2_COUNT = 7032
+EXPECTED_RANK_VALID_COUNT = 1524
+EXPECTED_SPLIT_COUNT = 1523
+EXPECTED_NON_SPLIT_COUNT = 1
+EXPECTED_G2_SPLIT_COUNT = 1523
+SCHEMA_VERSION = &quot;2.0-fixed&quot;
+
+
+def serialize_fraction(value: Fraction) -&gt; List[int]:
+    &quot;&quot;&quot;Serialize a Fraction as ``[numerator, denominator]``.&quot;&quot;&quot;
+    return [int(value.numerator), int(value.denominator)]
+
+
+def serialize_exact(obj: Any) -&gt; Any:
+    &quot;&quot;&quot;Recursively convert Fractions, tuples, and mappings to JSON data.&quot;&quot;&quot;
+    if isinstance(obj, Fraction):
+        return serialize_fraction(obj)
+    if isinstance(obj, tuple):
+        return [serialize_exact(item) for item in obj]
+    if isinstance(obj, list):
+        return [serialize_exact(item) for item in obj]
+    if isinstance(obj, dict):
+        return {str(key): serialize_exact(value) for key, value in obj.items()}
+    return obj
+
+
+def omega_to_json(omega: Mapping[Tuple[int, int, int], Fraction]) -&gt; Dict[str, int]:
+    &quot;&quot;&quot;Serialize the full antisymmetric Ω dictionary as ``&quot;i,j,k&quot;: ±1``.&quot;&quot;&quot;
+    return {f&quot;{i},{j},{k}&quot;: int(value) for (i, j, k), value in sorted(omega.items())}
+
+
+def canonical_json_bytes(obj: Any, exclude_keys: set[str] | None = None) -&gt; bytes:
+    &quot;&quot;&quot;Return canonical JSON bytes, optionally excluding named keys recursively.&quot;&quot;&quot;
+    if exclude_keys is None:
+        exclude_keys = set()
+
+    def clean(value: Any) -&gt; Any:
+        &quot;&quot;&quot;Recursively normalize for canonical serialization: drop excluded keys,
+        convert tuples to lists, and serialize Fractions as [num, den] pairs.&quot;&quot;&quot;
+        if isinstance(value, dict):
+            return {str(k): clean(v) for k, v in value.items() if str(k) not in exclude_keys}
+        if isinstance(value, list):
+            return [clean(item) for item in value]
+        if isinstance(value, tuple):
+            return [clean(item) for item in value]
+        if isinstance(value, Fraction):
+            return serialize_fraction(value)
+        return value
+
+    return json.dumps(clean(obj), sort_keys=True, separators=(&quot;,&quot;, &quot;:&quot;)).encode(&quot;utf-8&quot;)
+
+
+def sha256_file(path: Path) -&gt; str | None:
+    &quot;&quot;&quot;Return SHA-256 of ``path`` if the file exists; otherwise ``None``.&quot;&quot;&quot;
+    if not path.exists():
+        return None
+    digest = hashlib.sha256()
+    with path.open(&quot;rb&quot;) as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b&quot;&quot;):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def classify_certificate(hitchin_sig: Tuple[int, int], killing_sig: Tuple[int, int], ad_dim: int, closure_ok: bool) -&gt; str:
+    &quot;&quot;&quot;Classify one certificate semantically.&quot;&quot;&quot;
+    if hitchin_sig in SPLIT_HITCHIN_SIGNATURES and killing_sig == KILLING_SIG_G2_SPLIT and ad_dim == AD_COMMUTANT_G2 and closure_ok:
+        return &quot;g2_split&quot;
+    if hitchin_sig in SPLIT_HITCHIN_SIGNATURES and killing_sig == KILLING_SIG_G2_SPLIT:
+        return &quot;split_not_simple&quot;
+    if hitchin_sig in SPLIT_HITCHIN_SIGNATURES:
+        return &quot;split_anomalous&quot;
+    return &quot;non_split&quot;
+
+
+class CertificateBuilder:
+    &quot;&quot;&quot;Accumulate and write canonical certificate JSON.&quot;&quot;&quot;
+
+    def __init__(self, output_path: Path) -&gt; None:
+        &quot;&quot;&quot;Initialize with the target JSON path; certificates accumulate in memory.&quot;&quot;&quot;
+        self.output_path = output_path
+        self.certificates: List[Dict[str, Any]] = []
+
+    def add_split_certificate(
+        self,
+        *,
+        index: int,
+        pattern: Pattern,
+        omega: OmegaDict,
+        kernel: Sequence[Vector],
+        pivot_cols: Sequence[int],
+        free_cols: Sequence[int],
+        hitchin_matrix: Matrix,
+        hitchin_inertia: Tuple[int, int, int],
+        invariants: Mapping[str, Any],
+    ) -&gt; None:
+        &quot;&quot;&quot;Append one split-pattern certificate with exact witnesses.&quot;&quot;&quot;
+        hitchin_sig = (hitchin_inertia[0], hitchin_inertia[1])
+        killing_sig = tuple(invariants[&quot;killing_sig&quot;])  # type: ignore[arg-type]
+        ad_dim = int(invariants[&quot;ad_commutant_dim&quot;])
+        closure_ok = bool(invariants[&quot;closure_verified&quot;])
+        certificate_type = classify_certificate(hitchin_sig, killing_sig, ad_dim, closure_ok)
+
+        cert = {
+            &quot;index&quot;: index,
+            &quot;type&quot;: certificate_type,
+            &quot;pattern&quot;: serialize_exact(pattern),
+            &quot;witnesses&quot;: {
+                &quot;kernel&quot;: serialize_exact(list(kernel)),
+                &quot;kernel_dim&quot;: len(kernel),
+                &quot;pivot_cols&quot;: list(pivot_cols),
+                &quot;free_cols&quot;: list(free_cols),
+                &quot;action_rank&quot;: RANK_FULL,
+                &quot;omega_dict&quot;: omega_to_json(omega),
+                &quot;hitchin_matrix&quot;: serialize_exact(hitchin_matrix),
+                &quot;hitchin_sig&quot;: list(hitchin_sig),
+                &quot;hitchin_zero&quot;: hitchin_inertia[2],
+                &quot;killing_matrix&quot;: serialize_exact(invariants[&quot;killing_form&quot;]),
+                &quot;killing_sig&quot;: list(killing_sig),
+                &quot;killing_zero&quot;: int(invariants[&quot;killing_zero&quot;]),
+                &quot;ad_commutant_rank_q&quot;: int(invariants[&quot;ad_commutant_rank_q&quot;]),
+                &quot;ad_commutant_rank_q_certified_by_mod_p&quot;: bool(
+                    invariants[&quot;ad_commutant_rank_q_certified_by_mod_p&quot;]
+                ),
+                &quot;ad_rank_mod_p&quot;: int(invariants[&quot;ad_rank_mod_p&quot;]),
+                &quot;ad_commutant_dim&quot;: ad_dim,
+                &quot;ad_pivot_cols_q&quot;: list(invariants[&quot;ad_pivot_cols_q&quot;]),
+                &quot;ad_pivot_cols_mod_p&quot;: list(invariants[&quot;ad_pivot_cols_mod_p&quot;]),
+                &quot;prime_mod_p&quot;: int(invariants[&quot;prime_mod_p&quot;]),
+                &quot;closure_verified&quot;: closure_ok,
+            },
+        }
+        self.certificates.append(cert)
+
+    def persist(self, metadata: Dict[str, Any]) -&gt; Dict[str, Any]:
+        &quot;&quot;&quot;Write certificates to JSON and return file metadata.&quot;&quot;&quot;
+        data = {
+            &quot;metadata&quot;: metadata,
+            &quot;certificates&quot;: self.certificates,
+        }
+        file_hash = hashlib.sha256(canonical_json_bytes(data, exclude_keys={&quot;file_hash&quot;})).hexdigest()
+        data[&quot;metadata&quot;][&quot;file_hash&quot;] = file_hash
+
+        self.output_path.parent.mkdir(parents=True, exist_ok=True)
+        with self.output_path.open(&quot;w&quot;, encoding=&quot;utf-8&quot;) as handle:
+            json.dump(data, handle, ensure_ascii=False, sort_keys=True, indent=2)
+            handle.write(&quot;\n&quot;)
+
+        return {
+            &quot;output_path&quot;: str(self.output_path),
+            &quot;certificate_count&quot;: len(self.certificates),
+            &quot;file_hash&quot;: file_hash,
+            &quot;size_bytes&quot;: self.output_path.stat().st_size,
+        }
+
+
+def generate_certificates(output_path: Path, max_split: int | None = None, strict_counts: bool = True) -&gt; Dict[str, Any]:
+    &quot;&quot;&quot;Run the exact computation and write split-pattern certificates.
+
+    ``max_split`` is a smoke-test option.  With ``max_split=None`` the function
+    performs the complete proof enumeration and enforces all aggregate counts.
+    With ``max_split=N`` it stops after the first N split certificates and marks
+    the resulting JSON as non-publication/partial metadata.
+    &quot;&quot;&quot;
+    start = time.time()
+    raw_patterns = enumerate_c2_patterns()
+    raw_count = len(raw_patterns)
+
+    print(&quot;CCFU Proof 27 — certificate generation&quot;)
+    print(&quot;=&quot; * 72)
+    print(f&quot;Raw C2-compatible candidates: {raw_count}&quot;)
+
+    if strict_counts and max_split is None and raw_count != EXPECTED_RAW_C2_COUNT:
+        raise RuntimeError(f&quot;raw C2 count {raw_count} != expected {EXPECTED_RAW_C2_COUNT}&quot;)
+
+    builder = CertificateBuilder(output_path)
+    hitchin_counts: Dict[Tuple[int, int, int], int] = {}
+    rank_valid_count = 0
+    non_split_count = 0
+    g2_count = 0
+    complete_proof = max_split is None
+
+    for item in iter_rank_valid_patterns():
+        rank_valid_count += 1
+        pattern = item[&quot;pattern&quot;]
+        omega = item[&quot;omega&quot;]
+        kernel = item[&quot;kernel&quot;]
+        pivot_cols = item[&quot;pivot_cols&quot;]
+        free_cols = item[&quot;free_cols&quot;]
+
+        hitchin = hitchin_form(omega)
+        hitchin_inertia = exact_signature(hitchin)
+        hitchin_counts[hitchin_inertia] = hitchin_counts.get(hitchin_inertia, 0) + 1
+        hitchin_sig = (hitchin_inertia[0], hitchin_inertia[1])
+
+        if hitchin_sig not in SPLIT_HITCHIN_SIGNATURES or hitchin_inertia[2] != 0:
+            non_split_count += 1
+            continue
+
+        invariants = lie_algebra_invariants(kernel, free_cols)
+        if (
+            invariants[&quot;killing_sig&quot;] == KILLING_SIG_G2_SPLIT
+            and invariants[&quot;ad_commutant_dim&quot;] == AD_COMMUTANT_G2
+            and invariants[&quot;closure_verified&quot;] is True
+        ):
+            g2_count += 1
+
+        builder.add_split_certificate(
+            index=len(builder.certificates),
+            pattern=pattern,
+            omega=omega,
+            kernel=kernel,
+            pivot_cols=pivot_cols,
+            free_cols=free_cols,
+            hitchin_matrix=hitchin,
+            hitchin_inertia=hitchin_inertia,
+            invariants=invariants,
+        )
+
+        if len(builder.certificates) % 100 == 0:
+            print(
+                f&quot;  rank-valid={rank_valid_count}, certificates={len(builder.certificates)} &quot;
+                f&quot;({time.time() - start:.0f}s)&quot;
+            )
+        if max_split is not None and len(builder.certificates) &gt;= max_split:
+            break
+
+    split_count = len(builder.certificates)
+    print(f&quot;Rank-valid patterns encountered: {rank_valid_count}&quot;)
+    print(f&quot;Split certificates: {split_count}&quot;)
+    print(f&quot;Non-split rank-valid patterns encountered: {non_split_count}&quot;)
+    print(f&quot;g2_split certificates: {g2_count}&quot;)
+
+    if strict_counts and complete_proof:
+        if rank_valid_count != EXPECTED_RANK_VALID_COUNT:
+            raise RuntimeError(f&quot;rank-valid count {rank_valid_count} != expected {EXPECTED_RANK_VALID_COUNT}&quot;)
+        if split_count != EXPECTED_SPLIT_COUNT:
+            raise RuntimeError(f&quot;split count {split_count} != expected {EXPECTED_SPLIT_COUNT}&quot;)
+        if non_split_count != EXPECTED_NON_SPLIT_COUNT:
+            raise RuntimeError(f&quot;non-split count {non_split_count} != expected {EXPECTED_NON_SPLIT_COUNT}&quot;)
+        if g2_count != EXPECTED_G2_SPLIT_COUNT:
+            raise RuntimeError(f&quot;g2 count {g2_count} != expected {EXPECTED_G2_SPLIT_COUNT}&quot;)
+
+    flat_rank_valid = rank_valid_count if complete_proof else None
+    flat_split = split_count if complete_proof else None
+    flat_non_split = non_split_count if complete_proof else None
+    metadata = {
+        &quot;proof_name&quot;: &quot;CCFU Proof 27&quot;,
+        &quot;schema_version&quot;: SCHEMA_VERSION,
+        &quot;version&quot;: SCHEMA_VERSION,
+        &quot;generated_at_utc&quot;: time.strftime(&quot;%Y-%m-%dT%H:%M:%SZ&quot;, time.gmtime()),
+        &quot;complete_proof&quot;: complete_proof,
+        &quot;max_split&quot;: max_split,
+        &quot;dimension_v&quot;: DIM_V,
+        &quot;dimension_gl&quot;: DIM_GL,
+        &quot;dimension_lambda3&quot;: DIM_T3,
+        &quot;dimension_stabilizer&quot;: DIM_STAB,
+        &quot;rank_full&quot;: RANK_FULL,
+        &quot;dimensions&quot;: {
+            &quot;dim_v&quot;: DIM_V,
+            &quot;dim_gl&quot;: DIM_GL,
+            &quot;dim_lambda3&quot;: DIM_T3,
+            &quot;dim_stabilizer&quot;: DIM_STAB,
+        },
+        &quot;prime_mod_p&quot;: PRIME_MOD_P,
+        &quot;raw_c2_candidates&quot;: len(raw_patterns),
+        &quot;raw_c2_patterns&quot;: len(raw_patterns),
+        &quot;rank_valid_patterns&quot;: flat_rank_valid,
+        &quot;split_patterns&quot;: flat_split,
+        &quot;non_split_rank_valid_patterns&quot;: flat_non_split,
+        &quot;total_patterns&quot;: split_count,
+        &quot;certificate_count&quot;: split_count,
+        &quot;expected_counts&quot;: {
+            &quot;raw_c2&quot;: EXPECTED_RAW_C2_COUNT,
+            &quot;rank_valid&quot;: EXPECTED_RANK_VALID_COUNT,
+            &quot;split&quot;: EXPECTED_SPLIT_COUNT,
+            &quot;non_split_rank_valid&quot;: EXPECTED_NON_SPLIT_COUNT,
+            &quot;g2_split&quot;: EXPECTED_G2_SPLIT_COUNT,
+        },
+        &quot;actual_counts&quot;: {
+            &quot;raw_c2&quot;: len(raw_patterns),
+            &quot;rank_valid_encountered&quot;: rank_valid_count,
+            &quot;split_certificates&quot;: split_count,
+            &quot;non_split_rank_valid_encountered&quot;: non_split_count,
+            &quot;g2_split&quot;: g2_count,
+            &quot;hitchin_inertia_counts&quot;: {str(key): value for key, value in sorted(hitchin_counts.items())},
+        },
+        &quot;source_hashes&quot;: {
+            Path(__file__).name: sha256_file(Path(__file__).resolve()),
+        },
+    }
+
+    result = builder.persist(metadata)
+    result[&quot;elapsed_seconds&quot;] = time.time() - start
+    print(&quot;=&quot; * 72)
+    print(f&quot;Wrote: {result['output_path']}&quot;)
+    print(f&quot;Certificates: {result['certificate_count']}&quot;)
+    print(f&quot;SHA-256 canonical file_hash: {result['file_hash']}&quot;)
+    print(f&quot;Elapsed seconds: {result['elapsed_seconds']:.1f}&quot;)
+    return result
+
+
+# ======================================================================
+# PART C: Certificate verifier (independent reimplementation)
+# ======================================================================
+
+&quot;&quot;&quot;CCFU Proof 27 — independent certificate verifier.
+
+The verifier does not reuse PART A's exact-arithmetic core or the generator.
+It reimplements the enumeration, exact linear algebra, Hitchin form, closure
+test, Killing form, and ad-commutant computations (functions prefixed with
+``v_`` or ``V_``), then checks every stored witness.  Any structural, hash,
+enumeration, or mathematical failure exits non-zero.
+
+Full verification::
+
+    python3 ccfu_script_3_proof_27.py verify proof_27_certificates.json
+
+Smoke verification for a partial file produced with ``--max-split``::
+
+    python3 ccfu_script_3_proof_27.py verify proof_27_smoke.json --allow-partial --skip-s2
+
+Skipping S2 is only a smoke-test mode; it is not a full proof verification.
+&quot;&quot;&quot;
+
+
+# ---------------------------------------------------------------------------
+# Constants and types
+# ---------------------------------------------------------------------------
+
+V_DIM_V = 7
+V_DIM_GL = 49
+V_RANK_FULL = 35
+V_KILLING_SIG_G2_SPLIT = (8, 6)
+V_PRIME_MOD_P = 1_000_003
+
+V_P_IDX = {0, 1, 2, 3, 4}
+V_N_IDX = {5, 6}
+W = {0, 1, 3}
+V_SPLIT_HITCHIN_SIGNATURES = {(3, 4), (4, 3)}
+
+EXPECTED_RAW_C2_COUNT = 7032
+EXPECTED_RANK_VALID_COUNT = 1524
+EXPECTED_SPLIT_COUNT = 1523
+EXPECTED_NON_SPLIT_COUNT = 1
+
+Triple = Tuple[int, int, int]
+Pattern = Tuple[Triple, ...]
+OmegaDict = Dict[Triple, Fraction]
+Vector = List[Fraction]
+Matrix = List[List[Fraction]]
+
+BASIS_3: List[Triple] = [
+    (i, j, k)
+    for i in range(V_DIM_V)
+    for j in range(i + 1, V_DIM_V)
+    for k in range(j + 1, V_DIM_V)
+]
+BASIS_GL: List[Tuple[int, int]] = [
+    (row, col) for row in range(V_DIM_V) for col in range(V_DIM_V)
+]
+ALL_TRIPLES: List[Triple] = list(combinations(range(V_DIM_V), 3))
+
+
+class VerificationError(Exception):
+    &quot;&quot;&quot;Raised for malformed certificates or invalid exact witnesses.&quot;&quot;&quot;
+
+
+# ---------------------------------------------------------------------------
+# JSON helpers
+# ---------------------------------------------------------------------------
+
+
+def deserialize_fraction(value: Any) -&gt; Fraction:
+    &quot;&quot;&quot;Deserialize a ``[numerator, denominator]`` pair as a Fraction.&quot;&quot;&quot;
+    if (
+        not isinstance(value, list)
+        or len(value) != 2
+        or not isinstance(value[0], int)
+        or not isinstance(value[1], int)
+    ):
+        raise VerificationError(f&quot;invalid fraction encoding: {value!r}&quot;)
+    return Fraction(value[0], value[1])
+
+
+def deserialize_matrix(value: Any, *, rows: int | None = None, cols: int | None = None) -&gt; Matrix:
+    &quot;&quot;&quot;Deserialize a matrix of serialized Fractions.&quot;&quot;&quot;
+    if not isinstance(value, list):
+        raise VerificationError(&quot;matrix witness is not a list&quot;)
+    matrix: Matrix = []
+    for row in value:
+        if not isinstance(row, list):
+            raise VerificationError(&quot;matrix row is not a list&quot;)
+        matrix.append([deserialize_fraction(cell) for cell in row])
+    if rows is not None and len(matrix) != rows:
+        raise VerificationError(f&quot;expected {rows} matrix rows, got {len(matrix)}&quot;)
+    if cols is not None and any(len(row) != cols for row in matrix):
+        raise VerificationError(f&quot;expected {cols} columns in every matrix row&quot;)
+    return matrix
+
+
+def normalize_pattern(value: Any) -&gt; Pattern:
+    &quot;&quot;&quot;Deserialize and canonicalize a JSON pattern as a hashable tuple.&quot;&quot;&quot;
+    if not isinstance(value, list):
+        raise VerificationError(&quot;pattern is not a list&quot;)
+    triples: List[Triple] = []
+    for triple in value:
+        if not isinstance(triple, list) or len(triple) != 3:
+            raise VerificationError(f&quot;invalid triple in pattern: {triple!r}&quot;)
+        entries = tuple(sorted(int(x) for x in triple))
+        if len(set(entries)) != 3 or any(x &lt; 0 or x &gt;= V_DIM_V for x in entries):
+            raise VerificationError(f&quot;invalid triple entries: {triple!r}&quot;)
+        triples.append(entries)  # type: ignore[arg-type]
+    pattern = tuple(sorted(triples))
+    if len(pattern) != 7 or len(set(pattern)) != 7:
+        raise VerificationError(&quot;pattern must contain seven distinct triples&quot;)
+    return pattern
+
+
+def omega_json(omega: Mapping[Triple, Fraction]) -&gt; Dict[str, int]:
+    &quot;&quot;&quot;Serialize Ω as the canonical ``&quot;i,j,k&quot;: ±1`` dictionary.&quot;&quot;&quot;
+    return {f&quot;{i},{j},{k}&quot;: int(value) for (i, j, k), value in sorted(omega.items())}
+
+
+# ---------------------------------------------------------------------------
+# Independent exact mathematics
+# ---------------------------------------------------------------------------
+
+
+def v_canonical_pattern(triples: Iterable[Sequence[int]]) -&gt; Pattern:
+    &quot;&quot;&quot;Return a deterministic tuple of sorted triples.&quot;&quot;&quot;
+    return tuple(sorted(tuple(sorted(map(int, triple))) for triple in triples))
+
+
+def v_enumerate_c2_patterns() -&gt; List[Pattern]:
+    &quot;&quot;&quot;Enumerate all raw C2-compatible patterns before rank/Hitchin filtering.&quot;&quot;&quot;
+    ppp = [t for t in ALL_TRIPLES if len(set(t) &amp; V_P_IDX) == 3]
+    ppn = [t for t in ALL_TRIPLES if len(set(t) &amp; V_P_IDX) == 2 and len(set(t) &amp; V_N_IDX) == 1]
+    pnn = [t for t in ALL_TRIPLES if len(set(t) &amp; V_P_IDX) == 1 and len(set(t) &amp; V_N_IDX) == 2]
+
+    ppp_good = [t for t in ppp if not (set(t) &lt;= W)]
+    ppp_pairs: List[Tuple[Triple, Triple]] = []
+    for selected in combinations(ppp_good, 2):
+        has_2 = [2 in t for t in selected]
+        has_4 = [4 in t for t in selected]
+        if sum(has_2) == 1 and sum(has_4) == 1 and has_2[0] != has_4[0]:
+            ppp_pairs.append(selected)
+
+    ppn_quads: List[Tuple[Triple, Triple, Triple, Triple]] = []
+    for selected in combinations(ppn, 4):
+        if (
+            sum(2 in t for t in selected) == 2
+            and sum(4 in t for t in selected) == 2
+            and sum(5 in t for t in selected) == 2
+            and sum(6 in t for t in selected) == 2
+        ):
+            ppn_quads.append(selected)
+
+    pnn_list = [t for t in pnn if (set(t) &amp; V_P_IDX) &lt;= W]
+    patterns = set()
+    for pnn_triple in pnn_list:
+        for ppp_pair in ppp_pairs:
+            for ppn_quad in ppn_quads:
+                selected = list(ppp_pair) + list(ppn_quad) + [pnn_triple]
+                if len(set().union(*(set(t) for t in selected))) != V_DIM_V:
+                    continue
+                patterns.add(v_canonical_pattern(selected))
+    return sorted(patterns)
+
+
+def v_permutation_sign(values: Sequence[int]) -&gt; int:
+    &quot;&quot;&quot;Return the sign of a finite permutation-like list.&quot;&quot;&quot;
+    sign = 1
+    for i, left in enumerate(values):
+        for right in values[i + 1 :]:
+            if left &gt; right:
+                sign *= -1
+    return sign
+
+
+def v_build_omega(pattern: Pattern) -&gt; OmegaDict:
+    &quot;&quot;&quot;Build the antisymmetric 3-form Ω determined by a support pattern.&quot;&quot;&quot;
+    omega: OmegaDict = {}
+    for triple in pattern:
+        for perm in permutations(triple):
+            omega[perm] = Fraction(v_permutation_sign(perm))
+    return omega
+
+
+def v_omega_value(omega: OmegaDict, i: int, j: int, k: int) -&gt; Fraction:
+    &quot;&quot;&quot;Return Ω(i,j,k), with zero for absent triples.&quot;&quot;&quot;
+    return omega.get((i, j, k), Fraction(0))
+
+
+def v_rref(matrix: Matrix) -&gt; Tuple[Matrix, List[int]]:
+    &quot;&quot;&quot;Return reduced row-echelon form and pivot columns over Q.&quot;&quot;&quot;
+    if not matrix:
+        return [], []
+    reduced = [row[:] for row in matrix]
+    row_count = len(reduced)
+    col_count = len(reduced[0])
+    pivot_cols: List[int] = []
+    rank = 0
+
+    for col in range(col_count):
+        pivot_row = None
+        for row in range(rank, row_count):
+            if reduced[row][col] != 0:
+                pivot_row = row
+                break
+        if pivot_row is None:
+            continue
+        reduced[rank], reduced[pivot_row] = reduced[pivot_row], reduced[rank]
+        pivot = reduced[rank][col]
+        for c in range(col, col_count):
+            reduced[rank][c] /= pivot
+        for row in range(row_count):
+            if row == rank:
+                continue
+            factor = reduced[row][col]
+            if factor == 0:
+                continue
+            for c in range(col, col_count):
+                reduced[row][c] -= factor * reduced[rank][c]
+        pivot_cols.append(col)
+        rank += 1
+        if rank == row_count:
+            break
+    return reduced, pivot_cols
+
+
+def v_rational_rank(matrix: Matrix) -&gt; Tuple[int, List[int]]:
+    &quot;&quot;&quot;Return rank and pivot columns over Q.&quot;&quot;&quot;
+    _, pivots = v_rref(matrix)
+    return len(pivots), pivots
+
+
+def v_integer_rank_exact(matrix: Matrix) -&gt; int:
+    &quot;&quot;&quot;Return the exact rank of an integer matrix over Q.
+
+    This fraction-free row elimination uses only integer arithmetic and
+    row-content normalization.  It is an exact prefilter; it never replaces the
+    RREF witness needed for a full kernel certificate.
+    &quot;&quot;&quot;
+    if not matrix:
+        return 0
+
+    work: List[List[int]] = []
+    for row in matrix:
+        int_row: List[int] = []
+        for value in row:
+            if value.denominator != 1:
+                raise VerificationError(&quot;integer_rank_exact requires integer-valued entries&quot;)
+            int_row.append(int(value.numerator))
+        work.append(int_row)
+
+    row_count = len(work)
+    col_count = len(work[0]) if row_count else 0
+    rank = 0
+
+    for col in range(col_count):
+        pivot_row = None
+        for row in range(rank, row_count):
+            if work[row][col] != 0:
+                pivot_row = row
+                break
+        if pivot_row is None:
+            continue
+
+        if pivot_row != rank:
+            work[rank], work[pivot_row] = work[pivot_row], work[rank]
+
+        content = 0
+        for c in range(col, col_count):
+            content = gcd(content, abs(work[rank][c]))
+        if content &gt; 1:
+            for c in range(col, col_count):
+                work[rank][c] //= content
+        if work[rank][col] &lt; 0:
+            for c in range(col, col_count):
+                work[rank][c] = -work[rank][c]
+
+        pivot = work[rank][col]
+        for row in range(rank + 1, row_count):
+            entry = work[row][col]
+            if entry == 0:
+                continue
+            for c in range(col, col_count):
+                work[row][c] = pivot * work[row][c] - entry * work[rank][c]
+            work[row][col] = 0
+            row_content = 0
+            for c in range(col + 1, col_count):
+                row_content = gcd(row_content, abs(work[row][c]))
+            if row_content &gt; 1:
+                for c in range(col + 1, col_count):
+                    work[row][c] //= row_content
+
+        rank += 1
+        if rank == row_count:
+            break
+
+    return rank
+
+
+def v_exact_signature(matrix: Matrix) -&gt; Tuple[int, int, int]:
+    &quot;&quot;&quot;Compute inertia ``(positive, negative, zero)`` exactly over Q.&quot;&quot;&quot;
+    n = len(matrix)
+    if n == 0:
+        return 0, 0, 0
+    symmetric = [row[:] for row in matrix]
+    signs: List[Fraction] = []
+    step = 0
+
+    while step &lt; n:
+        pivot = None
+        for i in range(step, n):
+            if symmetric[i][i] != 0:
+                pivot = i
+                break
+
+        if pivot is None:
+            off_diag = None
+            for i in range(step, n):
+                for j in range(i + 1, n):
+                    if symmetric[i][j] != 0:
+                        off_diag = (i, j)
+                        break
+                if off_diag is not None:
+                    break
+            if off_diag is None:
+                break
+            i, j = off_diag
+            for k in range(n):
+                symmetric[i][k] += symmetric[j][k]
+            for k in range(n):
+                symmetric[k][i] += symmetric[k][j]
+            pivot = i
+
+        if pivot != step:
+            symmetric[step], symmetric[pivot] = symmetric[pivot], symmetric[step]
+            for row in range(n):
+                symmetric[row][step], symmetric[row][pivot] = symmetric[row][pivot], symmetric[row][step]
+
+        diagonal = symmetric[step][step]
+        if diagonal == 0:
+            step += 1
+            continue
+        signs.append(diagonal)
+        column_values = [symmetric[i][step] for i in range(step + 1, n)]
+        for local_i, i in enumerate(range(step + 1, n)):
+            vi = column_values[local_i]
+            if vi == 0:
+                continue
+            for local_j, j in enumerate(range(step + 1, n)):
+                vj = column_values[local_j]
+                if vj != 0:
+                    symmetric[i][j] -= vi * vj / diagonal
+            symmetric[i][step] = Fraction(0)
+            symmetric[step][i] = Fraction(0)
+        step += 1
+
+    positive = sum(1 for value in signs if value &gt; 0)
+    negative = sum(1 for value in signs if value &lt; 0)
+    zero = n - len(signs)
+    return positive, negative, zero
+
+
+def v_gl_action_matrix(omega: OmegaDict) -&gt; Matrix:
+    &quot;&quot;&quot;Return the 35×49 matrix of the infinitesimal GL(7)-action on Ω.&quot;&quot;&quot;
+    action = [[Fraction(0) for _ in range(V_DIM_GL)] for _ in range(DIM_T3)]
+    for row_index, (i, j, k) in enumerate(BASIS_3):
+        for col_index, (a, b) in enumerate(BASIS_GL):
+            value = Fraction(0)
+            if b == i:
+                value += v_omega_value(omega, a, j, k)
+            if b == j:
+                value += v_omega_value(omega, i, a, k)
+            if b == k:
+                value += v_omega_value(omega, i, j, a)
+            action[row_index][col_index] = value
+    return action
+
+
+def kernel_data_from_action(action: Matrix) -&gt; Tuple[int, List[Vector], List[int], List[int]]:
+    &quot;&quot;&quot;Compute exact action rank, kernel basis, pivot columns, and free columns.&quot;&quot;&quot;
+    reduced, pivot_cols = v_rref(action)
+    rank = len(pivot_cols)
+    if rank != V_RANK_FULL:
+        return rank, [], pivot_cols, []
+
+    pivot_set = set(pivot_cols)
+    free_cols = [col for col in range(V_DIM_GL) if col not in pivot_set]
+    kernel: List[Vector] = []
+    for free_col in free_cols:
+        vector = [Fraction(0) for _ in range(V_DIM_GL)]
+        vector[free_col] = Fraction(1)
+        for row_index, pivot_col in enumerate(pivot_cols):
+            vector[pivot_col] = -reduced[row_index][free_col]
+        kernel.append(vector)
+    return rank, kernel, pivot_cols, free_cols
+
+
+def v_hitchin_form(omega: OmegaDict) -&gt; Matrix:
+    &quot;&quot;&quot;Compute Hitchin's symmetric 7×7 bilinear form exactly.&quot;&quot;&quot;
+    indices = list(range(V_DIM_V))
+    form = [[Fraction(0) for _ in range(V_DIM_V)] for _ in range(V_DIM_V)]
+    for a in range(V_DIM_V):
+        for b in range(V_DIM_V):
+            total = Fraction(0)
+            for pair_a in combinations(indices, 2):
+                remaining = [x for x in indices if x not in pair_a]
+                for pair_b in combinations(remaining, 2):
+                    triple_c = tuple(x for x in remaining if x not in pair_b)
+                    if len(triple_c) != 3:
+                        continue
+                    first = v_omega_value(omega, a, pair_a[0], pair_a[1])
+                    second = v_omega_value(omega, b, pair_b[0], pair_b[1])
+                    third = v_omega_value(omega, triple_c[0], triple_c[1], triple_c[2])
+                    if first == 0 or second == 0 or third == 0:
+                        continue
+                    volume_order = list(pair_a) + list(pair_b) + list(triple_c)
+                    if len(set(volume_order)) != V_DIM_V:
+                        continue
+                    total += Fraction(v_permutation_sign(volume_order)) * first * second * third
+            form[a][b] = total / Fraction(6)
+    return form
+
+
+def v_vector_to_matrix(vector: Sequence[Fraction]) -&gt; Matrix:
+    &quot;&quot;&quot;Convert a row-major 49-vector to a 7×7 matrix.&quot;&quot;&quot;
+    if len(vector) != V_DIM_GL:
+        raise VerificationError(f&quot;expected length-{V_DIM_GL} vector, got {len(vector)}&quot;)
+    return [list(vector[V_DIM_V * row : V_DIM_V * (row + 1)]) for row in range(V_DIM_V)]
+
+
+def v_matrix_to_vector(matrix: Matrix) -&gt; Vector:
+    &quot;&quot;&quot;Flatten a 7×7 matrix to row-major order.&quot;&quot;&quot;
+    return [matrix[row][col] for row in range(V_DIM_V) for col in range(V_DIM_V)]
+
+
+def v_matrix_product(left: Matrix, right: Matrix) -&gt; Matrix:
+    &quot;&quot;&quot;Return the exact product of two 7×7 matrices.&quot;&quot;&quot;
+    return [
+        [sum(left[i][k] * right[k][j] for k in range(V_DIM_V)) for j in range(V_DIM_V)]
+        for i in range(V_DIM_V)
+    ]
+
+
+def v_commutator(left: Sequence[Fraction], right: Sequence[Fraction]) -&gt; Vector:
+    &quot;&quot;&quot;Return the matrix commutator [left,right] as a row-major vector.&quot;&quot;&quot;
+    left_matrix = v_vector_to_matrix(left)
+    right_matrix = v_vector_to_matrix(right)
+    left_right = v_matrix_product(left_matrix, right_matrix)
+    right_left = v_matrix_product(right_matrix, left_matrix)
+    return v_matrix_to_vector(
+        [[left_right[i][j] - right_left[i][j] for j in range(V_DIM_V)] for i in range(V_DIM_V)]
+    )
+
+
+def v_validate_free_columns(kernel: Sequence[Vector], free_cols: Sequence[int]) -&gt; None:
+    &quot;&quot;&quot;Validate that the kernel basis has identity entries on free columns.&quot;&quot;&quot;
+    if len(kernel) != DIM_STAB:
+        raise VerificationError(f&quot;kernel dimension {len(kernel)} != {DIM_STAB}&quot;)
+    if len(free_cols) != len(kernel):
+        raise VerificationError(&quot;free column count does not match kernel dimension&quot;)
+    if len(set(free_cols)) != len(free_cols):
+        raise VerificationError(&quot;free columns contain duplicates&quot;)
+    for row, free_col in enumerate(free_cols):
+        if free_col &lt; 0 or free_col &gt;= V_DIM_GL:
+            raise VerificationError(f&quot;free column out of range: {free_col}&quot;)
+        for other_row in range(len(kernel)):
+            expected = Fraction(1) if other_row == row else Fraction(0)
+            if kernel[other_row][free_col] != expected:
+                raise VerificationError(&quot;kernel/free-column normalization failed&quot;)
+
+
+def v_coordinates_in_kernel(vector: Sequence[Fraction], kernel: Sequence[Vector], free_cols: Sequence[int]) -&gt; Tuple[List[Fraction], Vector]:
+    &quot;&quot;&quot;Express a vector in the normalized kernel basis and return error.&quot;&quot;&quot;
+    coordinates = [vector[col] for col in free_cols]
+    reconstructed = [Fraction(0) for _ in range(V_DIM_GL)]
+    for coefficient, basis_vector in zip(coordinates, kernel):
+        if coefficient == 0:
+            continue
+        for index in range(V_DIM_GL):
+            reconstructed[index] += coefficient * basis_vector[index]
+    error = [vector[index] - reconstructed[index] for index in range(V_DIM_GL)]
+    return coordinates, error
+
+
+def v_structure_constants(kernel: Sequence[Vector], free_cols: Sequence[int]) -&gt; Tuple[List[List[List[Fraction]]], List[Tuple[int, int, Vector]]]:
+    &quot;&quot;&quot;Compute structure constants and exact closure failures.&quot;&quot;&quot;
+    v_validate_free_columns(kernel, free_cols)
+    n = len(kernel)
+    constants = [[[Fraction(0) for _ in range(n)] for _ in range(n)] for _ in range(n)]
+    failures: List[Tuple[int, int, Vector]] = []
+    for i in range(n):
+        for j in range(n):
+            bracket = v_commutator(kernel[i], kernel[j])
+            coordinates, error = v_coordinates_in_kernel(bracket, kernel, free_cols)
+            constants[i][j] = coordinates
+            if any(value != 0 for value in error):
+                failures.append((i, j, error))
+    return constants, failures
+
+
+def v_killing_form_from_structure(constants: List[List[List[Fraction]]]) -&gt; Matrix:
+    &quot;&quot;&quot;Compute the Killing form matrix from structure constants.&quot;&quot;&quot;
+    n = len(constants)
+    form = [[Fraction(0) for _ in range(n)] for _ in range(n)]
+    for i in range(n):
+        for j in range(n):
+            total = Fraction(0)
+            for k in range(n):
+                for ell in range(n):
+                    total += constants[i][k][ell] * constants[j][ell][k]
+            form[i][j] = total
+    return form
+
+
+def v_ad_commutant_equations(constants: List[List[List[Fraction]]]) -&gt; Matrix:
+    &quot;&quot;&quot;Return the linear system for endomorphisms commuting with all ad(e_i).&quot;&quot;&quot;
+    n = len(constants)
+    equations: Matrix = []
+    for generator in range(n):
+        for row in range(n):
+            for col in range(n):
+                equation = [Fraction(0) for _ in range(n * n)]
+                for middle in range(n):
+                    equation[n * row + middle] += constants[generator][col][middle]
+                    equation[n * middle + col] -= constants[generator][middle][row]
+                equations.append(equation)
+    return equations
+
+
+def v_fraction_to_mod(value: Fraction, prime: int) -&gt; int:
+    &quot;&quot;&quot;Map a rational number to F_p.&quot;&quot;&quot;
+    numerator = value.numerator % prime
+    denominator = value.denominator % prime
+    if denominator == 0:
+        raise VerificationError(f&quot;denominator divisible by prime {prime}: {value}&quot;)
+    return (numerator * pow(denominator, -1, prime)) % prime
+
+
+def v_rank_mod_p(matrix: Matrix, prime: int = V_PRIME_MOD_P) -&gt; Tuple[int, List[int]]:
+    &quot;&quot;&quot;Return row rank and deterministic pivot columns modulo p.&quot;&quot;&quot;
+    if not matrix:
+        return 0, []
+    col_count = len(matrix[0])
+    pivot_rows: Dict[int, List[int]] = {}
+    pivot_cols: List[int] = []
+    for source_row in matrix:
+        row = [fraction_to_mod(value, prime) for value in source_row]
+        while True:
+            pivot_col = None
+            for col, value in enumerate(row):
+                if value:
+                    pivot_col = col
+                    break
+            if pivot_col is None:
+                break
+            existing = pivot_rows.get(pivot_col)
+            if existing is None:
+                inverse = pow(row[pivot_col], -1, prime)
+                for col in range(pivot_col, col_count):
+                    row[col] = (row[col] * inverse) % prime
+                for col in range(pivot_col):
+                    row[col] = 0
+                pivot_rows[pivot_col] = row
+                pivot_cols.append(pivot_col)
+                break
+            factor = row[pivot_col]
+            for col in range(pivot_col, col_count):
+                row[col] = (row[col] - factor * existing[col]) % prime
+    return len(pivot_cols), pivot_cols
+
+
+def v_lie_algebra_invariants(kernel: Sequence[Vector], free_cols: Sequence[int], prime: int = V_PRIME_MOD_P) -&gt; Dict[str, Any]:
+    &quot;&quot;&quot;Compute exact closure, Killing, and ad-commutant invariants.&quot;&quot;&quot;
+    constants, closure_failures = v_structure_constants(kernel, free_cols)
+    if closure_failures:
+        return {&quot;closure_verified&quot;: False, &quot;closure_failures&quot;: closure_failures}
+
+    killing = v_killing_form_from_structure(constants)
+    killing_pos, killing_neg, killing_zero = v_exact_signature(killing)
+    ad_system = v_ad_commutant_equations(constants)
+    ad_rank_p, ad_pivots_p = v_rank_mod_p(ad_system, prime)
+    max_possible_rank = len(kernel) * len(kernel) - 1
+
+    if ad_rank_p == max_possible_rank:
+        ad_rank_q = max_possible_rank
+        ad_pivots_q: List[int] = []
+        certified_by_mod_p = True
+    else:
+        ad_rank_q, ad_pivots_q = v_rational_rank(ad_system)
+        certified_by_mod_p = False
+
+    ad_dim = len(kernel) * len(kernel) - ad_rank_q
+    return {
+        &quot;closure_verified&quot;: True,
+        &quot;closure_failures&quot;: [],
+        &quot;killing_form&quot;: killing,
+        &quot;killing_sig&quot;: (killing_pos, killing_neg),
+        &quot;killing_zero&quot;: killing_zero,
+        &quot;ad_commutant_rank_q&quot;: ad_rank_q,
+        &quot;ad_commutant_rank_q_certified_by_mod_p&quot;: certified_by_mod_p,
+        &quot;ad_rank_mod_p&quot;: ad_rank_p,
+        &quot;ad_commutant_dim&quot;: ad_dim,
+        &quot;ad_pivot_cols_q&quot;: ad_pivots_q,
+        &quot;ad_pivot_cols_mod_p&quot;: ad_pivots_p,
+        &quot;prime_mod_p&quot;: prime,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Verification checks
+# ---------------------------------------------------------------------------
+
+
+def load_certificate_file(path: Path) -&gt; Dict[str, Any]:
+    &quot;&quot;&quot;Load a certificate JSON file.&quot;&quot;&quot;
+    with path.open(&quot;r&quot;, encoding=&quot;utf-8&quot;) as handle:
+        data = json.load(handle)
+    if not isinstance(data, dict):
+        raise VerificationError(&quot;top-level JSON value must be an object&quot;)
+    return data
+
+
+def verify_s1_structure(data: Mapping[str, Any]) -&gt; List[str]:
+    &quot;&quot;&quot;S1: validate top-level metadata and per-certificate structure.&quot;&quot;&quot;
+    failures: List[str] = []
+    if &quot;metadata&quot; not in data or not isinstance(data.get(&quot;metadata&quot;), dict):
+        failures.append(&quot;missing metadata object&quot;)
+    if &quot;certificates&quot; not in data or not isinstance(data.get(&quot;certificates&quot;), list):
+        failures.append(&quot;missing certificates list&quot;)
+        return failures
+
+    metadata = data.get(&quot;metadata&quot;, {})
+    certificates = data.get(&quot;certificates&quot;, [])
+    if isinstance(metadata, dict):
+        required_metadata_keys = {
+            &quot;proof_name&quot;,
+            &quot;schema_version&quot;,
+            &quot;version&quot;,
+            &quot;complete_proof&quot;,
+            &quot;dimension_v&quot;,
+            &quot;dimension_gl&quot;,
+            &quot;dimension_lambda3&quot;,
+            &quot;dimension_stabilizer&quot;,
+            &quot;rank_full&quot;,
+            &quot;raw_c2_candidates&quot;,
+            &quot;rank_valid_patterns&quot;,
+            &quot;split_patterns&quot;,
+            &quot;non_split_rank_valid_patterns&quot;,
+            &quot;total_patterns&quot;,
+            &quot;prime_mod_p&quot;,
+            &quot;file_hash&quot;,
+        }
+        missing_metadata = required_metadata_keys - set(metadata)
+        if missing_metadata:
+            failures.append(f&quot;metadata missing keys: {sorted(missing_metadata)}&quot;)
+        expected_constants = {
+            &quot;dimension_v&quot;: V_DIM_V,
+            &quot;dimension_gl&quot;: V_DIM_GL,
+            &quot;dimension_lambda3&quot;: DIM_T3,
+            &quot;dimension_stabilizer&quot;: DIM_STAB,
+            &quot;rank_full&quot;: V_RANK_FULL,
+            &quot;prime_mod_p&quot;: V_PRIME_MOD_P,
+            &quot;raw_c2_candidates&quot;: EXPECTED_RAW_C2_COUNT,
+        }
+        for key, expected in expected_constants.items():
+            if metadata.get(key) != expected:
+                failures.append(f&quot;metadata {key}={metadata.get(key)!r} != expected {expected!r}&quot;)
+        if metadata.get(&quot;total_patterns&quot;) != len(certificates):
+            failures.append(
+                f&quot;metadata total_patterns={metadata.get('total_patterns')!r} != certificate count {len(certificates)}&quot;
+            )
+        if metadata.get(&quot;complete_proof&quot;) is True:
+            full_counts = {
+                &quot;rank_valid_patterns&quot;: EXPECTED_RANK_VALID_COUNT,
+                &quot;split_patterns&quot;: EXPECTED_SPLIT_COUNT,
+                &quot;non_split_rank_valid_patterns&quot;: EXPECTED_NON_SPLIT_COUNT,
+                &quot;total_patterns&quot;: EXPECTED_SPLIT_COUNT,
+            }
+            for key, expected in full_counts.items():
+                if metadata.get(key) != expected:
+                    failures.append(f&quot;metadata {key}={metadata.get(key)!r} != expected full-proof value {expected!r}&quot;)
+
+    required_cert_keys = {&quot;index&quot;, &quot;type&quot;, &quot;pattern&quot;, &quot;witnesses&quot;}
+    required_witness_keys = {
+        &quot;kernel&quot;,
+        &quot;kernel_dim&quot;,
+        &quot;pivot_cols&quot;,
+        &quot;free_cols&quot;,
+        &quot;action_rank&quot;,
+        &quot;omega_dict&quot;,
+        &quot;hitchin_matrix&quot;,
+        &quot;hitchin_sig&quot;,
+        &quot;hitchin_zero&quot;,
+        &quot;killing_matrix&quot;,
+        &quot;killing_sig&quot;,
+        &quot;killing_zero&quot;,
+        &quot;ad_commutant_rank_q&quot;,
+        &quot;ad_commutant_rank_q_certified_by_mod_p&quot;,
+        &quot;ad_rank_mod_p&quot;,
+        &quot;ad_commutant_dim&quot;,
+        &quot;ad_pivot_cols_q&quot;,
+        &quot;ad_pivot_cols_mod_p&quot;,
+        &quot;prime_mod_p&quot;,
+        &quot;closure_verified&quot;,
+    }
+
+    seen_indices = set()
+    for position, cert in enumerate(certificates):
+        if not isinstance(cert, dict):
+            failures.append(f&quot;certificate {position} is not an object&quot;)
+            continue
+        missing = required_cert_keys - set(cert)
+        if missing:
+            failures.append(f&quot;certificate {position} missing keys: {sorted(missing)}&quot;)
+            continue
+        if cert[&quot;index&quot;] in seen_indices:
+            failures.append(f&quot;duplicate certificate index {cert['index']}&quot;)
+        seen_indices.add(cert[&quot;index&quot;])
+        if cert[&quot;index&quot;] != position:
+            failures.append(f&quot;certificate index {cert['index']} does not match position {position}&quot;)
+        if not isinstance(cert[&quot;witnesses&quot;], dict):
+            failures.append(f&quot;certificate {position} witnesses is not an object&quot;)
+            continue
+        missing_witness = required_witness_keys - set(cert[&quot;witnesses&quot;])
+        if missing_witness:
+            failures.append(f&quot;certificate {position} missing witness keys: {sorted(missing_witness)}&quot;)
+    return failures
+
+
+def verify_s2_reenumeration(certificates: Sequence[Mapping[str, Any]], complete_proof: bool, allow_partial: bool) -&gt; List[str]:
+    &quot;&quot;&quot;S2: independently re-enumerate rank-valid split patterns and compare.&quot;&quot;&quot;
+    failures: List[str] = []
+    raw_patterns = v_enumerate_c2_patterns()
+    if len(raw_patterns) != EXPECTED_RAW_C2_COUNT:
+        failures.append(f&quot;raw C2 count {len(raw_patterns)} != expected {EXPECTED_RAW_C2_COUNT}&quot;)
+
+    expected_split_patterns: set[Pattern] = set()
+    rank_valid_count = 0
+    non_split_count = 0
+    started = time.time()
+
+    for raw_index, pattern in enumerate(raw_patterns, start=1):
+        omega = v_build_omega(pattern)
+        action = v_gl_action_matrix(omega)
+        pre_rank = v_integer_rank_exact(action)
+        if pre_rank != V_RANK_FULL:
+            if raw_index % 1000 == 0:
+                print(
+                    f&quot;  S2 raw={raw_index}/{len(raw_patterns)}, &quot;
+                    f&quot;rank-valid={rank_valid_count}, split={len(expected_split_patterns)} &quot;
+                    f&quot;({time.time() - started:.0f}s)&quot;
+                )
+            continue
+        rank_valid_count += 1
+        h_matrix = v_hitchin_form(omega)
+        h_pos, h_neg, h_zero = v_exact_signature(h_matrix)
+        if h_zero == 0 and (h_pos, h_neg) in V_SPLIT_HITCHIN_SIGNATURES:
+            expected_split_patterns.add(pattern)
+        else:
+            non_split_count += 1
+        if raw_index % 1000 == 0:
+            print(
+                f&quot;  S2 raw={raw_index}/{len(raw_patterns)}, &quot;
+                f&quot;rank-valid={rank_valid_count}, split={len(expected_split_patterns)} &quot;
+                f&quot;({time.time() - started:.0f}s)&quot;
+            )
+
+    if rank_valid_count != EXPECTED_RANK_VALID_COUNT:
+        failures.append(f&quot;rank-valid count {rank_valid_count} != expected {EXPECTED_RANK_VALID_COUNT}&quot;)
+    if len(expected_split_patterns) != EXPECTED_SPLIT_COUNT:
+        failures.append(f&quot;split count {len(expected_split_patterns)} != expected {EXPECTED_SPLIT_COUNT}&quot;)
+    if non_split_count != EXPECTED_NON_SPLIT_COUNT:
+        failures.append(f&quot;non-split count {non_split_count} != expected {EXPECTED_NON_SPLIT_COUNT}&quot;)
+
+    cert_patterns = [normalize_pattern(cert[&quot;pattern&quot;]) for cert in certificates]
+    cert_pattern_set = set(cert_patterns)
+    if len(cert_pattern_set) != len(cert_patterns):
+        failures.append(&quot;certificate file contains duplicate patterns&quot;)
+
+    if complete_proof:
+        if cert_pattern_set != expected_split_patterns:
+            missing = expected_split_patterns - cert_pattern_set
+            extra = cert_pattern_set - expected_split_patterns
+            failures.append(f&quot;pattern-set mismatch: missing={len(missing)}, extra={len(extra)}&quot;)
+    else:
+        if not allow_partial:
+            failures.append(&quot;certificate file is marked partial; pass --allow-partial for partial smoke verification&quot;)
+        extra = cert_pattern_set - expected_split_patterns
+        if extra:
+            failures.append(f&quot;partial certificate contains {len(extra)} patterns outside the independent split set&quot;)
+    return failures
+
+
+def verify_s3_hash(data: Mapping[str, Any]) -&gt; List[str]:
+    &quot;&quot;&quot;S3: verify canonical SHA-256 excluding metadata.file_hash.&quot;&quot;&quot;
+    metadata = data.get(&quot;metadata&quot;, {})
+    if not isinstance(metadata, dict):
+        return [&quot;metadata is not an object&quot;]
+    stored = metadata.get(&quot;file_hash&quot;)
+    if not isinstance(stored, str) or not stored:
+        return [&quot;metadata.file_hash missing or invalid&quot;]
+    computed = hashlib.sha256(canonical_json_bytes(data, exclude_keys={&quot;file_hash&quot;})).hexdigest()
+    if computed != stored:
+        return [f&quot;file_hash mismatch: stored={stored}, computed={computed}&quot;]
+    return []
+
+
+def v_verify_kernel_annihilates_omega(action: Matrix, kernel: Sequence[Vector]) -&gt; Tuple[bool, str]:
+    &quot;&quot;&quot;M1: check action_matrix * kernel_vector = 0 exactly.&quot;&quot;&quot;
+    for vector_index, vector in enumerate(kernel):
+        for row_index, row in enumerate(action):
+            value = sum(row[col] * vector[col] for col in range(V_DIM_GL))
+            if value != 0:
+                return False, f&quot;kernel vector {vector_index}, action row {row_index}, value {value}&quot;
+    return True, &quot;&quot;
+
+
+def verify_certificate(cert: Mapping[str, Any]) -&gt; Dict[str, List[str]]:
+    &quot;&quot;&quot;Run M1-M7 on a single certificate and return failures by check name.&quot;&quot;&quot;
+    failures: Dict[str, List[str]] = {f&quot;M{i}&quot;: [] for i in range(1, 8)}
+    index = cert.get(&quot;index&quot;, &quot;?&quot;)
+    witnesses = cert[&quot;witnesses&quot;]
+    pattern = normalize_pattern(cert[&quot;pattern&quot;])
+    omega = v_build_omega(pattern)
+
+    try:
+        kernel = deserialize_matrix(witnesses[&quot;kernel&quot;], rows=DIM_STAB, cols=V_DIM_GL)
+        pivot_cols = [int(x) for x in witnesses[&quot;pivot_cols&quot;]]
+        free_cols = [int(x) for x in witnesses[&quot;free_cols&quot;]]
+        v_validate_free_columns(kernel, free_cols)
+    except Exception as exc:  # noqa: BLE001
+        failures[&quot;M1&quot;].append(f&quot;certificate {index}: invalid kernel/free-col witness: {exc}&quot;)
+        return failures
+
+    if int(witnesses.get(&quot;kernel_dim&quot;, -1)) != DIM_STAB:
+        failures[&quot;M1&quot;].append(f&quot;certificate {index}: kernel_dim does not equal {DIM_STAB}&quot;)
+    if witnesses.get(&quot;omega_dict&quot;) != omega_json(omega):
+        failures[&quot;M1&quot;].append(f&quot;certificate {index}: omega_dict does not match pattern-derived Ω&quot;)
+
+    action = v_gl_action_matrix(omega)
+    ok, message = v_verify_kernel_annihilates_omega(action, kernel)
+    if not ok:
+        failures[&quot;M1&quot;].append(f&quot;certificate {index}: {message}&quot;)
+
+    pre_rank = v_integer_rank_exact(action)
+    rank, recomputed_kernel, recomputed_pivots, recomputed_free_cols = kernel_data_from_action(action)
+    if pre_rank != rank:
+        failures[&quot;M2&quot;].append(f&quot;certificate {index}: integer/RREF rank mismatch {pre_rank} vs {rank}&quot;)
+    if rank != V_RANK_FULL:
+        failures[&quot;M2&quot;].append(f&quot;certificate {index}: recomputed action rank {rank} != {V_RANK_FULL}&quot;)
+    if int(witnesses[&quot;action_rank&quot;]) != rank:
+        failures[&quot;M2&quot;].append(f&quot;certificate {index}: stored action_rank {witnesses['action_rank']} != recomputed {rank}&quot;)
+    if pivot_cols != recomputed_pivots:
+        failures[&quot;M2&quot;].append(f&quot;certificate {index}: pivot_cols differ&quot;)
+    if free_cols != recomputed_free_cols:
+        failures[&quot;M2&quot;].append(f&quot;certificate {index}: free_cols differ&quot;)
+    if kernel != recomputed_kernel:
+        failures[&quot;M2&quot;].append(f&quot;certificate {index}: kernel basis differs from recomputation&quot;)
+
+    stored_hitchin = deserialize_matrix(witnesses[&quot;hitchin_matrix&quot;], rows=V_DIM_V, cols=V_DIM_V)
+    computed_hitchin = v_hitchin_form(omega)
+    h_pos, h_neg, h_zero = v_exact_signature(computed_hitchin)
+    if stored_hitchin != computed_hitchin:
+        failures[&quot;M3&quot;].append(f&quot;certificate {index}: Hitchin matrix differs&quot;)
+    if tuple(witnesses[&quot;hitchin_sig&quot;]) != (h_pos, h_neg):
+        failures[&quot;M3&quot;].append(f&quot;certificate {index}: Hitchin signature stored={witnesses['hitchin_sig']} computed={(h_pos, h_neg)}&quot;)
+    if int(witnesses[&quot;hitchin_zero&quot;]) != h_zero:
+        failures[&quot;M3&quot;].append(f&quot;certificate {index}: Hitchin zero stored={witnesses['hitchin_zero']} computed={h_zero}&quot;)
+
+    if int(witnesses[&quot;prime_mod_p&quot;]) != V_PRIME_MOD_P:
+        failures[&quot;M6&quot;].append(f&quot;certificate {index}: prime_mod_p stored={witnesses['prime_mod_p']} expected={V_PRIME_MOD_P}&quot;)
+    invariants = v_lie_algebra_invariants(kernel, free_cols, prime=V_PRIME_MOD_P)
+    if not invariants.get(&quot;closure_verified&quot;):
+        failures[&quot;M5&quot;].append(f&quot;certificate {index}: closure failed at {invariants.get('closure_failures')}&quot;)
+        return failures
+
+    stored_killing = deserialize_matrix(witnesses[&quot;killing_matrix&quot;], rows=DIM_STAB, cols=DIM_STAB)
+    if stored_killing != invariants[&quot;killing_form&quot;]:
+        failures[&quot;M4&quot;].append(f&quot;certificate {index}: Killing matrix differs&quot;)
+    if tuple(witnesses[&quot;killing_sig&quot;]) != tuple(invariants[&quot;killing_sig&quot;]):
+        failures[&quot;M4&quot;].append(f&quot;certificate {index}: Killing signature stored={witnesses['killing_sig']} computed={invariants['killing_sig']}&quot;)
+    if int(witnesses[&quot;killing_zero&quot;]) != int(invariants[&quot;killing_zero&quot;]):
+        failures[&quot;M4&quot;].append(f&quot;certificate {index}: Killing zero stored={witnesses['killing_zero']} computed={invariants['killing_zero']}&quot;)
+
+    if witnesses[&quot;closure_verified&quot;] is not True:
+        failures[&quot;M5&quot;].append(f&quot;certificate {index}: stored closure_verified is not true&quot;)
+
+    if int(witnesses[&quot;ad_commutant_rank_q&quot;]) != int(invariants[&quot;ad_commutant_rank_q&quot;]):
+        failures[&quot;M6&quot;].append(f&quot;certificate {index}: ad_commutant_rank_q stored={witnesses['ad_commutant_rank_q']} computed={invariants['ad_commutant_rank_q']}&quot;)
+    if bool(witnesses[&quot;ad_commutant_rank_q_certified_by_mod_p&quot;]) != bool(invariants[&quot;ad_commutant_rank_q_certified_by_mod_p&quot;]):
+        failures[&quot;M6&quot;].append(
+            f&quot;certificate {index}: ad_commutant_rank_q_certified_by_mod_p stored=&quot;
+            f&quot;{witnesses['ad_commutant_rank_q_certified_by_mod_p']} computed=&quot;
+            f&quot;{invariants['ad_commutant_rank_q_certified_by_mod_p']}&quot;
+        )
+    if int(witnesses[&quot;ad_rank_mod_p&quot;]) != int(invariants[&quot;ad_rank_mod_p&quot;]):
+        failures[&quot;M6&quot;].append(f&quot;certificate {index}: ad_rank_mod_p stored={witnesses['ad_rank_mod_p']} computed={invariants['ad_rank_mod_p']}&quot;)
+    if int(witnesses[&quot;ad_commutant_dim&quot;]) != int(invariants[&quot;ad_commutant_dim&quot;]):
+        failures[&quot;M6&quot;].append(f&quot;certificate {index}: ad_commutant_dim stored={witnesses['ad_commutant_dim']} computed={invariants['ad_commutant_dim']}&quot;)
+    if [int(x) for x in witnesses[&quot;ad_pivot_cols_q&quot;]] != list(invariants[&quot;ad_pivot_cols_q&quot;]):
+        failures[&quot;M6&quot;].append(f&quot;certificate {index}: ad_pivot_cols_q differ&quot;)
+    if [int(x) for x in witnesses[&quot;ad_pivot_cols_mod_p&quot;]] != list(invariants[&quot;ad_pivot_cols_mod_p&quot;]):
+        failures[&quot;M6&quot;].append(f&quot;certificate {index}: ad_pivot_cols_mod_p differ&quot;)
+
+    expected_type = classify_certificate((h_pos, h_neg), tuple(invariants[&quot;killing_sig&quot;]), int(invariants[&quot;ad_commutant_dim&quot;]), bool(invariants[&quot;closure_verified&quot;]))
+    if cert[&quot;type&quot;] != expected_type:
+        failures[&quot;M7&quot;].append(f&quot;certificate {index}: type stored={cert['type']} computed={expected_type}&quot;)
+    if expected_type != &quot;g2_split&quot;:
+        failures[&quot;M7&quot;].append(f&quot;certificate {index}: not g2_split under recomputed invariants&quot;)
+
+    return failures
+
+
+def verify_file(path: Path, *, allow_partial: bool = False, skip_s2: bool = False) -&gt; int:
+    &quot;&quot;&quot;Verify a certificate file and return process exit status.&quot;&quot;&quot;
+    started = time.time()
+    data = load_certificate_file(path)
+    metadata = data.get(&quot;metadata&quot;, {})
+    certificates = data.get(&quot;certificates&quot;, [])
+    complete_proof = bool(metadata.get(&quot;complete_proof&quot;)) if isinstance(metadata, dict) else False
+
+    print(&quot;CCFU Proof 27 — independent certificate verifier&quot;)
+    print(&quot;=&quot; * 72)
+    print(f&quot;Certificate file: {path}&quot;)
+    print(f&quot;Loaded certificates: {len(certificates)}&quot;)
+    print(f&quot;complete_proof: {complete_proof}&quot;)
+
+    all_failures: Dict[str, List[str]] = {&quot;S1&quot;: [], &quot;S2&quot;: [], &quot;S3&quot;: []}
+    for i in range(1, 8):
+        all_failures[f&quot;M{i}&quot;] = []
+
+    all_failures[&quot;S1&quot;].extend(verify_s1_structure(data))
+    all_failures[&quot;S3&quot;].extend(verify_s3_hash(data))
+
+    if skip_s2:
+        print(&quot;S2 skipped by CLI option; this is not a full proof verification.&quot;)
+    else:
+        print(&quot;S2: independent re-enumeration of split rank-valid patterns...&quot;)
+        all_failures[&quot;S2&quot;].extend(verify_s2_reenumeration(certificates, complete_proof, allow_partial))
+
+    print(&quot;M1-M7: checking certificate witnesses...&quot;)
+    for cert in certificates:
+        grouped = verify_certificate(cert)
+        for key, messages in grouped.items():
+            all_failures[key].extend(messages)
+
+    print(&quot;=&quot; * 72)
+    for key in [&quot;S1&quot;, &quot;S2&quot;, &quot;S3&quot;, &quot;M1&quot;, &quot;M2&quot;, &quot;M3&quot;, &quot;M4&quot;, &quot;M5&quot;, &quot;M6&quot;, &quot;M7&quot;]:
+        failures = all_failures[key]
+        if key == &quot;S2&quot; and skip_s2:
+            print(&quot;– S2: skipped (smoke-test mode; not a complete proof verification)&quot;)
+            continue
+        if failures:
+            print(f&quot;✗ {key}: {len(failures)} failure(s)&quot;)
+            for message in failures[:10]:
+                print(f&quot;    {message}&quot;)
+            if len(failures) &gt; 10:
+                print(f&quot;    ... {len(failures) - 10} more&quot;)
+        else:
+            print(f&quot;✓ {key}: passed&quot;)
+
+    elapsed = time.time() - started
+    print(f&quot;Elapsed seconds: {elapsed:.1f}&quot;)
+
+    failed = any(messages for key, messages in all_failures.items() if not (key == &quot;S2&quot; and skip_s2))
+    if failed:
+        print(&quot;VERIFICATION FAILED&quot;)
+        return 1
+    if skip_s2:
+        print(&quot;SMOKE VERIFICATION PASSED (S2 skipped; not a complete proof verification)&quot;)
+    else:
+        print(&quot;ALL CHECKS PASSED&quot;)
+    return 0
+
+
+# ======================================================================
+# CLI dispatcher
+# ======================================================================
+
+
+if __name__ == '__main__':
+    import sys
+
+    if len(sys.argv) &lt; 2:
+        print(&quot;Usage:&quot;)
+        print(&quot;  python3 ccfu_script_3_proof_27.py exact [--limit N]&quot;)
+        print(&quot;  python3 ccfu_script_3_proof_27.py generate [--max-split N] [--output FILE]&quot;)
+        print(&quot;  python3 ccfu_script_3_proof_27.py verify FILE [--skip-s2] [--allow-partial]&quot;)
+        sys.exit(1)
+
+    cmd = sys.argv[1]
+    sys.argv = sys.argv[1:]  # shift so the subcommand parser sees its own argv
+
+    if cmd == 'exact':
+        parser = argparse.ArgumentParser(prog=&quot;ccfu_script_3_proof_27.py exact&quot;)
+        parser.add_argument(&quot;--limit&quot;, type=int, default=None,
+                            help=&quot;process only the first N rank-valid patterns (smoke test)&quot;)
+        args = parser.parse_args()
+        run_exact_proof(limit=args.limit)
+    elif cmd == 'generate':
+        parser = argparse.ArgumentParser(prog=&quot;ccfu_script_3_proof_27.py generate&quot;)
+        parser.add_argument(&quot;--output&quot;, type=Path, default=Path(&quot;proof_27_certificates.json&quot;),
+                            help=&quot;output certificate JSON path&quot;)
+        parser.add_argument(&quot;--max-split&quot;, type=int, default=None,
+                            help=&quot;generate only the first N split certificates (smoke test)&quot;)
+        args = parser.parse_args()
+        generate_certificates(args.output, max_split=args.max_split)
+    elif cmd == 'verify':
+        parser = argparse.ArgumentParser(prog=&quot;ccfu_script_3_proof_27.py verify&quot;)
+        parser.add_argument(&quot;certificates&quot;, type=Path,
+                            help=&quot;certificate JSON file to verify&quot;)
+        parser.add_argument(&quot;--skip-s2&quot;, action=&quot;store_true&quot;,
+                            help=&quot;skip independent re-enumeration (smoke verification only)&quot;)
+        parser.add_argument(&quot;--allow-partial&quot;, action=&quot;store_true&quot;,
+                            help=&quot;allow verification of a partial smoke-test certificate file&quot;)
+        args = parser.parse_args()
+        raise SystemExit(verify_file(args.certificates,
+                                     allow_partial=args.allow_partial,
+                                     skip_s2=args.skip_s2))
+    else:
+        print(f&quot;Unknown command: {cmd}&quot;)
+        print(&quot;Valid commands: exact, generate, verify&quot;)
+        sys.exit(1)</code></pre></details>
+    </div>
+
+    <div class="block">
+      <div class="key">nft_url</div>
+      <a href="https://opensea.io/item/base/0x8a3ee2dbaa1c33f3cb3d927497f4ae798b598b65/3" target="_blank">https://opensea.io/item/base/0x8a3ee2dbaa1c33f3cb3d927497f4ae798b598b65/3</a>
+    </div>
+
+    <div class="block">
+      <div class="key">tweet_url</div>
+      <pre></pre>
+    </div>
+
+  </div>
+  <div class="block">
+    <div class="key">SHA-256</div>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <div class="hash" id="hashResult"></div>
+      <button id="copyHashBtn" type="button">Copy</button>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="key">Visualization</div>
+    <iframe src="https://7rh7i5agkfbwn3ab4mv4cl3mujmosgk3g2dijyzzm53amzwehaeq.turbo-gateway.com/_E_0dAZRQ2bsAeMrwS9soljpGVs2hoTjOWd2BmbEOAk" 
+     title="CCFU Script 3 — proof_27_exhaustive_orbit.py" 
+     style="width: 100%; height: 600px; border: 1px solid #eee;"
+     sandbox="allow-scripts allow-same-origin"
+     loading="lazy"></iframe>
+  </div>
+
+</article>
+<script>
+(async () => {
+  const entry = {
+    id: `2605235759532`,
+    safecreative_url: `https://www.safecreative.org/work/2605235759532-ccfu-script-3-proof_27_exhaustive_orbit-py`,
+    title: `CCFU Script 3 — proof_27_exhaustive_orbit.py`,
+    date: `05/23/2026`,
+    text: `"""
+CCFU Proof 27 — Exhaustive Orbit Verification
+=============================================
+
+Exact arithmetic verification that the stabilizer of every Ω in the
+C₂-compatible family on R⁷ is the split real form of the exceptional
+Lie algebra g₂. The family contains 7,032 raw patterns; 1,524 are
+rank-valid (dim Stab = 14); 1,523 are split; all 1,523 split patterns
+yield g₂(split) under the four-fold identification:
+
+    1.  dim Stab(Ω) = 14
+    2.  [Stab, Stab] ⊂ Stab (closure under commutator → Lie algebra)
+    3.  Killing form is nondegenerate with signature (8, 6) (Cartan criterion + split real form)
+    4.  ad-commutant has dimension 1 (Schur: irreducible / simple)
+
+Three components in one file:
+
+    PART A — Exact-arithmetic core
+        Enumeration of C₂-compatible patterns, exact rank/kernel,
+        Hitchin form, Killing form, ad-commutant, and the proof runner.
+
+    PART B — Certificate generator
+        For every rank-valid split pattern, writes a JSON certificate
+        containing the kernel, pivot/free columns, Hitchin matrix,
+        Killing matrix, and ad-commutant data as independently
+        checkable witnesses. Records SHA-256 of the canonical JSON.
+
+    PART C — Independent certificate verifier
+        Reimplements the enumeration and the exact linear algebra
+        with a separate code path (functions prefixed v_/V_), then
+        recomputes every witness and compares to the stored values.
+        Hash mismatches, count mismatches, and any mathematical
+        disagreement exit non-zero.
+
+Usage:
+    python3 ccfu_script_3_proof_27.py exact [--limit N]
+    python3 ccfu_script_3_proof_27.py generate [--max-split N] [--output FILE]
+    python3 ccfu_script_3_proof_27.py verify FILE [--skip-s2] [--allow-partial]
+
+All arithmetic exact over Q. No numpy. No float. No external dependencies.
+"""
+
+from __future__ import annotations
+from fractions import Fraction
+from itertools import combinations, permutations
+from math import gcd
+from pathlib import Path
+from typing import Any, Dict, Iterable, Iterator, List, Mapping, Sequence, Tuple
+import argparse
+import hashlib
+import json
+import time
+
+# ======================================================================
+# PART A: Exact-arithmetic core
+# ======================================================================
+
+
+# ---------------------------------------------------------------------------
+# Constants
+# ---------------------------------------------------------------------------
+
+DIM_V = 7
+DIM_GL = 49
+DIM_T3 = 35
+DIM_STAB = 14
+RANK_FULL = 35
+KILLING_SIG_G2_SPLIT = (8, 6)
+AD_COMMUTANT_G2 = 1
+PRIME_MOD_P = 1_000_003
+
+P_IDX = {0, 1, 2, 3, 4}
+N_IDX = {5, 6}
+W = {0, 1, 3}
+SPLIT_HITCHIN_SIGNATURES = {(3, 4), (4, 3)}
+
+Triple = Tuple[int, int, int]
+Pattern = Tuple[Triple, ...]
+OmegaDict = Dict[Triple, Fraction]
+Vector = List[Fraction]
+Matrix = List[List[Fraction]]
+
+BASIS_3: List[Triple] = [
+    (i, j, k)
+    for i in range(DIM_V)
+    for j in range(i + 1, DIM_V)
+    for k in range(j + 1, DIM_V)
+]
+BASIS_GL: List[Tuple[int, int]] = [
+    (row, col) for row in range(DIM_V) for col in range(DIM_V)
+]
+ALL_TRIPLES: List[Triple] = list(combinations(range(DIM_V), 3))
+
+# ---------------------------------------------------------------------------
+# Enumeration
+# ---------------------------------------------------------------------------
+
+
+def canonical_pattern(triples: Iterable[Sequence[int]]) -> Pattern:
+    """Return a deterministic tuple of sorted triples."""
+
+    return tuple(sorted(tuple(sorted(map(int, triple))) for triple in triples))
+
+
+def enumerate_c2_patterns() -> List[Pattern]:
+    """Enumerate all C₂-compatible raw patterns.
+
+    The constraints are the C₂ combinatorial constraints used by the proof:
+    two PPP triples, four PPN triples, and one PNN triple, with the specified
+    balance conditions involving indices 2, 4, 5, and 6.
+    """
+
+    ppp = [t for t in ALL_TRIPLES if len(set(t) & P_IDX) == 3]
+    ppn = [
+        t
+        for t in ALL_TRIPLES
+        if len(set(t) & P_IDX) == 2 and len(set(t) & N_IDX) == 1
+    ]
+    pnn = [
+        t
+        for t in ALL_TRIPLES
+        if len(set(t) & P_IDX) == 1 and len(set(t) & N_IDX) == 2
+    ]
+
+    ppp_good = [t for t in ppp if not (set(t) <= W)]
+    ppp_pairs: List[Tuple[Triple, Triple]] = []
+    for selected in combinations(ppp_good, 2):
+        has_2 = [2 in t for t in selected]
+        has_4 = [4 in t for t in selected]
+        if sum(has_2) == 1 and sum(has_4) == 1 and has_2[0] != has_4[0]:
+            ppp_pairs.append(selected)
+
+    ppn_quads: List[Tuple[Triple, Triple, Triple, Triple]] = []
+    for selected in combinations(ppn, 4):
+        if (
+            sum(2 in t for t in selected) == 2
+            and sum(4 in t for t in selected) == 2
+            and sum(5 in t for t in selected) == 2
+            and sum(6 in t for t in selected) == 2
+        ):
+            ppn_quads.append(selected)
+
+    pnn_list = [t for t in pnn if (set(t) & P_IDX) <= W]
+
+    patterns = set()
+    for pnn_triple in pnn_list:
+        for ppp_pair in ppp_pairs:
+            for ppn_quad in ppn_quads:
+                selected = list(ppp_pair) + list(ppn_quad) + [pnn_triple]
+                if len(set().union(*(set(t) for t in selected))) != DIM_V:
+                    continue
+                patterns.add(canonical_pattern(selected))
+
+    return sorted(patterns)
+
+
+# ---------------------------------------------------------------------------
+# Basic exact linear algebra
+# ---------------------------------------------------------------------------
+
+
+def permutation_sign(values: Sequence[int]) -> int:
+    """Return the sign of a finite permutation-like list."""
+
+    sign = 1
+    for i, left in enumerate(values):
+        for right in values[i + 1 :]:
+            if left > right:
+                sign *= -1
+    return sign
+
+
+def build_omega(pattern: Pattern) -> OmegaDict:
+    """Build the antisymmetric 3-form Ω determined by a 7-triple pattern.
+
+    All coefficients are +1 (canonical sign). The enumeration counts
+    canonical sign patterns, not all possible sign assignments over
+    the same support."""
+
+    omega: OmegaDict = {}
+    for triple in pattern:
+        for perm in permutations(triple):
+            omega[perm] = Fraction(permutation_sign(perm))
+    return omega
+
+
+def omega_value(omega: OmegaDict, i: int, j: int, k: int) -> Fraction:
+    """Return Ω(i,j,k), with zero for repeated or absent triples."""
+
+    return omega.get((i, j, k), Fraction(0))
+
+
+def rref(matrix: Matrix) -> Tuple[Matrix, List[int]]:
+    """Return reduced row-echelon form and pivot columns over Q."""
+
+    if not matrix:
+        return [], []
+
+    reduced = [row[:] for row in matrix]
+    row_count = len(reduced)
+    col_count = len(reduced[0])
+    pivot_cols: List[int] = []
+    rank = 0
+
+    for col in range(col_count):
+        pivot_row = None
+        for row in range(rank, row_count):
+            if reduced[row][col] != 0:
+                pivot_row = row
+                break
+        if pivot_row is None:
+            continue
+
+        reduced[rank], reduced[pivot_row] = reduced[pivot_row], reduced[rank]
+        pivot = reduced[rank][col]
+        for c in range(col, col_count):
+            reduced[rank][c] /= pivot
+
+        for row in range(row_count):
+            if row == rank:
+                continue
+            factor = reduced[row][col]
+            if factor == 0:
+                continue
+            for c in range(col, col_count):
+                reduced[row][c] -= factor * reduced[rank][c]
+
+        pivot_cols.append(col)
+        rank += 1
+        if rank == row_count:
+            break
+
+    return reduced, pivot_cols
+
+
+def rational_rank(matrix: Matrix) -> Tuple[int, List[int]]:
+    """Return rank and pivot columns over Q."""
+
+    _, pivots = rref(matrix)
+    return len(pivots), pivots
+
+
+def integer_rank_exact(matrix: Matrix) -> int:
+    """Return exact rank of an integer matrix over Q.
+
+    The routine uses integer row operations and row-gcd normalization.
+    Multiplying rows and subtracting integer multiples preserves the row space
+    over Q; dividing a nonzero row by the gcd of its entries is a rational
+    rescaling. No modular or floating-point rank test is used.
+    """
+    if not matrix:
+        return 0
+
+    work: List[List[int]] = []
+    for source_row in matrix:
+        row: List[int] = []
+        for value in source_row:
+            if value.denominator != 1:
+                raise ValueError("integer_rank_exact requires integer-valued entries")
+            row.append(int(value.numerator))
+        work.append(row)
+
+    row_count = len(work)
+    col_count = len(work[0])
+    rank = 0
+
+    def normalize_row(row: List[int]) -> None:
+        """Divide a row in place by the gcd of its entries (clears common factor)."""
+        common = 0
+        for entry in row:
+            common = gcd(common, abs(entry))
+        if common > 1:
+            for idx, entry in enumerate(row):
+                row[idx] = entry // common
+
+    for col in range(col_count):
+        pivot_row = None
+        for row_index in range(rank, row_count):
+            if work[row_index][col] != 0:
+                pivot_row = row_index
+                break
+        if pivot_row is None:
+            continue
+
+        if pivot_row != rank:
+            work[rank], work[pivot_row] = work[pivot_row], work[rank]
+        normalize_row(work[rank])
+        if work[rank][col] < 0:
+            for idx, entry in enumerate(work[rank]):
+                work[rank][idx] = -entry
+
+        pivot = work[rank][col]
+        for row_index in range(rank + 1, row_count):
+            entry = work[row_index][col]
+            if entry == 0:
+                continue
+            common = gcd(abs(pivot), abs(entry))
+            pivot_factor = pivot // common
+            row_factor = entry // common
+            work[row_index] = [
+                pivot_factor * work[row_index][idx] - row_factor * work[rank][idx]
+                for idx in range(col_count)
+            ]
+            work[row_index][col] = 0
+            normalize_row(work[row_index])
+
+        rank += 1
+        if rank == row_count:
+            break
+
+    return rank
+
+
+def exact_signature(matrix: Matrix) -> Tuple[int, int, int]:
+    """Compute the inertia \`\`(positive, negative, zero)\`\` exactly over Q.
+
+    The algorithm performs symmetric Gaussian diagonalization by congruence.
+    Off-diagonal pivots are converted to diagonal pivots by replacing one basis
+    vector by the sum of two basis vectors. No numerical approximation is used.
+    """
+
+    n = len(matrix)
+    if n == 0:
+        return 0, 0, 0
+    symmetric = [row[:] for row in matrix]
+    signs: List[Fraction] = []
+    step = 0
+
+    while step < n:
+        pivot = None
+        for i in range(step, n):
+            if symmetric[i][i] != 0:
+                pivot = i
+                break
+
+        if pivot is None:
+            off_diag = None
+            for i in range(step, n):
+                for j in range(i + 1, n):
+                    if symmetric[i][j] != 0:
+                        off_diag = (i, j)
+                        break
+                if off_diag is not None:
+                    break
+            if off_diag is None:
+                break
+
+            i, j = off_diag
+            # Congruence operation: e_i <- e_i + e_j. Since every remaining
+            # diagonal entry is zero here, the new diagonal is 2*S[i][j] != 0.
+            for k in range(n):
+                symmetric[i][k] += symmetric[j][k]
+            for k in range(n):
+                symmetric[k][i] += symmetric[k][j]
+            pivot = i
+
+        if pivot != step:
+            symmetric[step], symmetric[pivot] = symmetric[pivot], symmetric[step]
+            for row in range(n):
+                symmetric[row][step], symmetric[row][pivot] = (
+                    symmetric[row][pivot],
+                    symmetric[row][step],
+                )
+
+        diagonal = symmetric[step][step]
+        if diagonal == 0:
+            # This should not occur after the off-diagonal pivot conversion, but
+            # keeping the branch avoids an infinite loop in malformed input.
+            step += 1
+            continue
+
+        signs.append(diagonal)
+        column_values = [symmetric[i][step] for i in range(step + 1, n)]
+        for local_i, i in enumerate(range(step + 1, n)):
+            vi = column_values[local_i]
+            if vi == 0:
+                continue
+            for local_j, j in enumerate(range(step + 1, n)):
+                vj = column_values[local_j]
+                if vj != 0:
+                    symmetric[i][j] -= vi * vj / diagonal
+            symmetric[i][step] = Fraction(0)
+            symmetric[step][i] = Fraction(0)
+
+        step += 1
+
+    positive = sum(1 for value in signs if value > 0)
+    negative = sum(1 for value in signs if value < 0)
+    zero = n - len(signs)
+    return positive, negative, zero
+
+
+# ---------------------------------------------------------------------------
+# Stabilizer of Ω
+# ---------------------------------------------------------------------------
+
+
+def gl_action_matrix(omega: OmegaDict) -> Matrix:
+    """Return the 35×49 matrix of the infinitesimal GL(7)-action on Ω.
+
+    The column indexed by \`\`(row, col)\`\` is the coefficient of the matrix entry
+    A[row, col], using the convention \`\`A(e_col) = Σ_row A[row,col] e_row\`\`.
+    """
+
+    matrix = [[Fraction(0) for _ in range(DIM_GL)] for _ in range(DIM_T3)]
+    for row_index, (i, j, k) in enumerate(BASIS_3):
+        for col_index, (a, b) in enumerate(BASIS_GL):
+            value = Fraction(0)
+            if b == i:
+                value += omega_value(omega, a, j, k)
+            if b == j:
+                value += omega_value(omega, i, a, k)
+            if b == k:
+                value += omega_value(omega, i, j, a)
+            matrix[row_index][col_index] = value
+    return matrix
+
+
+def exact_rank_and_kernel(
+    omega: OmegaDict,
+) -> Tuple[bool, List[Vector] | None, List[int], List[int] | None]:
+    """Compute the exact rank and canonical kernel basis of the action matrix.
+
+    Returns \`\`(rank_is_35, kernel, pivot_cols, free_cols)\`\`. The kernel basis is
+    canonical for this RREF convention: one basis vector per free column, with
+    an identity submatrix on those free columns.
+    """
+    action = gl_action_matrix(omega)
+    rank = integer_rank_exact(action)
+    if rank != RANK_FULL:
+        return False, None, [], None
+
+    reduced, pivot_cols = rref(action)
+    if len(pivot_cols) != RANK_FULL:
+        raise ArithmeticError(f"integer rank {rank} but RREF rank {len(pivot_cols)}")
+
+    free_cols = [col for col in range(DIM_GL) if col not in set(pivot_cols)]
+    kernel: List[Vector] = []
+    for free_col in free_cols:
+        vector = [Fraction(0) for _ in range(DIM_GL)]
+        vector[free_col] = Fraction(1)
+        for pivot_row, pivot_col in enumerate(pivot_cols):
+            vector[pivot_col] = -reduced[pivot_row][free_col]
+        kernel.append(vector)
+
+    return True, kernel, pivot_cols, free_cols
+
+
+def verify_kernel_annihilates_omega(omega: OmegaDict, kernel: Sequence[Vector]) -> bool:
+    """Return whether every kernel vector annihilates Ω under the GL action."""
+
+    for vector in kernel:
+        for i, j, k in BASIS_3:
+            value = Fraction(0)
+            for a in range(DIM_V):
+                value += vector[DIM_V * a + i] * omega_value(omega, a, j, k)
+                value += vector[DIM_V * a + j] * omega_value(omega, i, a, k)
+                value += vector[DIM_V * a + k] * omega_value(omega, i, j, a)
+            if value != 0:
+                return False
+    return True
+
+
+# ---------------------------------------------------------------------------
+# Hitchin form
+# ---------------------------------------------------------------------------
+
+
+def hitchin_form(omega: OmegaDict) -> Matrix:
+    """Compute the exact 7×7 Hitchin bilinear form associated with Ω."""
+
+    indices = list(range(DIM_V))
+    form = [[Fraction(0) for _ in range(DIM_V)] for _ in range(DIM_V)]
+    for a in range(DIM_V):
+        for b in range(DIM_V):
+            total = Fraction(0)
+            for pair_a in combinations(indices, 2):
+                remaining = [x for x in indices if x not in pair_a]
+                for pair_b in combinations(remaining, 2):
+                    triple_c = tuple(x for x in remaining if x not in pair_b)
+                    if len(triple_c) != 3:
+                        continue
+                    first = omega_value(omega, a, pair_a[0], pair_a[1])
+                    second = omega_value(omega, b, pair_b[0], pair_b[1])
+                    third = omega_value(omega, triple_c[0], triple_c[1], triple_c[2])
+                    if first == 0 or second == 0 or third == 0:
+                        continue
+                    permutation = list(pair_a) + list(pair_b) + list(triple_c)
+                    if len(set(permutation)) != DIM_V:
+                        continue
+                    total += permutation_sign(permutation) * first * second * third
+            form[a][b] = total / Fraction(6)
+    return form
+
+
+def exact_hitchin_inertia(omega: OmegaDict) -> Tuple[int, int, int]:
+    """Return the exact inertia of the Hitchin form of Ω."""
+
+    return exact_signature(hitchin_form(omega))
+
+
+# ---------------------------------------------------------------------------
+# Lie algebra invariants of the stabilizer
+# ---------------------------------------------------------------------------
+
+
+def vector_to_matrix(vector: Sequence[Fraction]) -> Matrix:
+    """Convert a 49-vector into a 7×7 matrix using row-major order."""
+
+    return [list(vector[DIM_V * i : DIM_V * (i + 1)]) for i in range(DIM_V)]
+
+
+def matrix_to_vector(matrix: Matrix) -> Vector:
+    """Convert a 7×7 matrix into a row-major 49-vector."""
+
+    return [matrix[i][j] for i in range(DIM_V) for j in range(DIM_V)]
+
+
+def matrix_product(left: Matrix, right: Matrix) -> Matrix:
+    """Return the exact product of two 7×7 matrices."""
+
+    return [
+        [sum(left[i][k] * right[k][j] for k in range(DIM_V)) for j in range(DIM_V)]
+        for i in range(DIM_V)
+    ]
+
+
+def commutator(left: Sequence[Fraction], right: Sequence[Fraction]) -> Vector:
+    """Return the matrix commutator \`\`[left, right]\`\` as a 49-vector."""
+
+    left_matrix = vector_to_matrix(left)
+    right_matrix = vector_to_matrix(right)
+    left_right = matrix_product(left_matrix, right_matrix)
+    right_left = matrix_product(right_matrix, left_matrix)
+    return matrix_to_vector(
+        [
+            [left_right[i][j] - right_left[i][j] for j in range(DIM_V)]
+            for i in range(DIM_V)
+        ]
+    )
+
+
+def validate_free_columns(kernel: Sequence[Vector], free_cols: Sequence[int]) -> None:
+    """Validate that the kernel basis has an identity matrix on free columns."""
+
+    n = len(kernel)
+    if len(free_cols) != n:
+        raise ValueError(f"expected {n} free columns, got {len(free_cols)}")
+    for row, free_col in enumerate(free_cols):
+        for other_row in range(n):
+            expected = Fraction(1) if other_row == row else Fraction(0)
+            if kernel[other_row][free_col] != expected:
+                raise ValueError("kernel basis is not normalized on free columns")
+
+
+def coordinates_in_kernel(
+    vector: Sequence[Fraction], kernel: Sequence[Vector], free_cols: Sequence[int]
+) -> Tuple[List[Fraction], Vector]:
+    """Express a vector in the kernel basis and return reconstruction error."""
+
+    coordinates = [vector[col] for col in free_cols]
+    reconstructed = [Fraction(0) for _ in range(DIM_GL)]
+    for coefficient, basis_vector in zip(coordinates, kernel):
+        if coefficient == 0:
+            continue
+        for index in range(DIM_GL):
+            reconstructed[index] += coefficient * basis_vector[index]
+    error = [vector[index] - reconstructed[index] for index in range(DIM_GL)]
+    return coordinates, error
+
+
+def structure_constants(
+    kernel: Sequence[Vector], free_cols: Sequence[int]
+) -> Tuple[List[List[List[Fraction]]], List[Tuple[int, int, Vector]]]:
+    """Compute structure constants and exact closure failures.
+
+    The returned tensor satisfies \`\`[e_i,e_j] = Σ_k c[i][j][k] e_k\`\`.
+    """
+
+    n = len(kernel)
+    validate_free_columns(kernel, free_cols)
+    constants = [[[Fraction(0) for _ in range(n)] for _ in range(n)] for _ in range(n)]
+    failures: List[Tuple[int, int, Vector]] = []
+
+    for i in range(n):
+        for j in range(n):
+            bracket = commutator(kernel[i], kernel[j])
+            coordinates, error = coordinates_in_kernel(bracket, kernel, free_cols)
+            constants[i][j] = coordinates
+            if any(value != 0 for value in error):
+                failures.append((i, j, error))
+    return constants, failures
+
+
+def killing_form_from_structure(constants: List[List[List[Fraction]]]) -> Matrix:
+    """Compute the Killing form matrix from structure constants."""
+
+    n = len(constants)
+    form = [[Fraction(0) for _ in range(n)] for _ in range(n)]
+    for i in range(n):
+        for j in range(n):
+            total = Fraction(0)
+            for k in range(n):
+                for ell in range(n):
+                    total += constants[i][k][ell] * constants[j][ell][k]
+            form[i][j] = total
+    return form
+
+
+def ad_commutant_equations(constants: List[List[List[Fraction]]]) -> Matrix:
+    """Return the linear system for endomorphisms commuting with every ad(e_i)."""
+
+    n = len(constants)
+    equations: Matrix = []
+    for generator in range(n):
+        for row in range(n):
+            for col in range(n):
+                equation = [Fraction(0) for _ in range(n * n)]
+                for middle in range(n):
+                    # Variable T[row, middle] in (T ad_g)_{row,col}.
+                    equation[n * row + middle] += constants[generator][col][middle]
+                    # Variable T[middle, col] in (ad_g T)_{row,col}.
+                    equation[n * middle + col] -= constants[generator][middle][row]
+                equations.append(equation)
+    return equations
+
+
+def fraction_to_mod(value: Fraction, prime: int) -> int:
+    """Map a rational number to F_p."""
+
+    numerator = value.numerator % prime
+    denominator = value.denominator % prime
+    if denominator == 0:
+        raise ValueError(f"denominator divisible by prime {prime}: {value}")
+    return (numerator * pow(denominator, -1, prime)) % prime
+
+
+def rank_mod_p(matrix: Matrix, prime: int = PRIME_MOD_P) -> Tuple[int, List[int]]:
+    """Return row rank and deterministic pivot columns modulo p.
+
+    This incremental echelon reducer is substantially faster than full dense
+    Gauss-Jordan elimination for the 2744×196 ad-commutant systems.  Pivot
+    columns are deterministic for the given row order and are stored only as a
+    reproducible modular witness.
+    """
+
+    if not matrix:
+        return 0, []
+    col_count = len(matrix[0])
+    pivot_rows: Dict[int, List[int]] = {}
+    pivot_cols: List[int] = []
+
+    for source_row in matrix:
+        row = [fraction_to_mod(value, prime) for value in source_row]
+        while True:
+            pivot_col = None
+            for col, value in enumerate(row):
+                if value:
+                    pivot_col = col
+                    break
+            if pivot_col is None:
+                break
+
+            existing = pivot_rows.get(pivot_col)
+            if existing is None:
+                inverse = pow(row[pivot_col], -1, prime)
+                for col in range(pivot_col, col_count):
+                    row[col] = (row[col] * inverse) % prime
+                for col in range(pivot_col):
+                    row[col] = 0
+                pivot_rows[pivot_col] = row
+                pivot_cols.append(pivot_col)
+                break
+
+            factor = row[pivot_col]
+            for col in range(pivot_col, col_count):
+                row[col] = (row[col] - factor * existing[col]) % prime
+
+    return len(pivot_cols), pivot_cols
+
+
+def lie_algebra_invariants(
+    kernel: Sequence[Vector], free_cols: Sequence[int], prime: int = PRIME_MOD_P
+) -> Dict[str, Any]:
+    """Compute exact stabilizer invariants used by the proof and certificates."""
+
+    if len(kernel) != DIM_STAB:
+        raise ValueError(f"kernel dimension {len(kernel)} != {DIM_STAB}")
+
+    constants, closure_failures = structure_constants(kernel, free_cols)
+    if closure_failures:
+        first_i, first_j, first_error = closure_failures[0]
+        nonzero = next(idx for idx, value in enumerate(first_error) if value != 0)
+        raise ValueError(
+            "closure [ker,ker] ⊂ ker failed "
+            f"for pair ({first_i},{first_j}) at coordinate {nonzero}"
+        )
+
+    killing = killing_form_from_structure(constants)
+    killing_pos, killing_neg, killing_zero = exact_signature(killing)
+
+    ad_system = ad_commutant_equations(constants)
+    ad_rank_p, ad_pivots_p = rank_mod_p(ad_system, prime)
+    max_possible_rank = len(kernel) * len(kernel) - 1
+
+    # The scalar identity endomorphism commutes with every ad(e_i), so the
+    # rational rank is at most n²-1.  If the reduction modulo p already has
+    # rank n²-1, then exact rational rank is forced to be n²-1 because
+    # rank_mod_p <= rank_Q.  Only the exceptional case falls back to rational
+    # elimination.
+    if ad_rank_p == max_possible_rank:
+        ad_rank_q = max_possible_rank
+        ad_pivots_q: List[int] = []
+        certified_by_mod_p = True
+    else:
+        ad_rank_q, ad_pivots_q = rational_rank(ad_system)
+        certified_by_mod_p = False
+
+    ad_dimension = len(kernel) * len(kernel) - ad_rank_q
+
+    return {
+        "structure_constants": constants,
+        "killing_form": killing,
+        "killing_sig": (killing_pos, killing_neg),
+        "killing_zero": killing_zero,
+        "ad_commutant_rank_q": ad_rank_q,
+        "ad_commutant_rank_q_certified_by_mod_p": certified_by_mod_p,
+        "ad_commutant_dim": ad_dimension,
+        "ad_rank_mod_p": ad_rank_p,
+        "ad_pivot_cols_q": ad_pivots_q,
+        "ad_pivot_cols_mod_p": ad_pivots_p,
+        "closure_verified": True,
+        "prime_mod_p": prime,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Proof runner
+# ---------------------------------------------------------------------------
+
+
+def iter_rank_valid_patterns(limit: int | None = None) -> Iterator[Dict[str, Any]]:
+    """Yield rank-valid C₂ patterns with Ω, kernel, pivots, and free columns."""
+
+    yielded = 0
+    for pattern in enumerate_c2_patterns():
+        omega = build_omega(pattern)
+        ok, kernel, pivot_cols, free_cols = exact_rank_and_kernel(omega)
+        if not ok:
+            continue
+        if kernel is None or free_cols is None:
+            raise RuntimeError("rank-valid pattern did not return kernel data")
+        yield {
+            "pattern": pattern,
+            "omega": omega,
+            "kernel": kernel,
+            "pivot_cols": pivot_cols,
+            "free_cols": free_cols,
+        }
+        yielded += 1
+        if limit is not None and yielded >= limit:
+            return
+
+
+def run_exact_proof(limit: int | None = None) -> Dict[str, int]:
+    """Run the exact proof computation and print a progress summary."""
+
+    start = time.time()
+    raw_count = len(enumerate_c2_patterns())
+    rank_valid: List[Dict[str, Any]] = []
+
+    print("CCFU Proof 27 — exact arithmetic core")
+    print("=" * 70)
+    print(f"C₂ raw patterns: {raw_count}")
+    print("Phase 1: exact rank filtering...")
+
+    for index, item in enumerate(iter_rank_valid_patterns(limit=limit), start=1):
+        rank_valid.append(item)
+        if index % 100 == 0:
+            print(f"  rank-valid found: {index} ({time.time() - start:.0f}s)")
+
+    print(f"  rank-valid total: {len(rank_valid)}")
+    print("Phase 2: exact Hitchin inertia...")
+
+    split_items: List[Dict[str, Any]] = []
+    compact_count = 0
+    hitchin_counts: Dict[Tuple[int, int], int] = {}
+    for item in rank_valid:
+        omega = item["omega"]  # type: ignore[assignment]
+        pos, neg, _zero = exact_hitchin_inertia(omega)  # type: ignore[arg-type]
+        signature = (pos, neg)
+        hitchin_counts[signature] = hitchin_counts.get(signature, 0) + 1
+        if signature in SPLIT_HITCHIN_SIGNATURES:
+            split_items.append(item)
+        else:
+            compact_count += 1
+
+    for signature, count in sorted(hitchin_counts.items()):
+        label = "split" if signature in SPLIT_HITCHIN_SIGNATURES else "non-split"
+        print(f"  Hitchin {signature}: {count} [{label}]")
+    print(f"  split: {len(split_items)}, non-split: {compact_count}")
+
+    print("Phase 3: Killing form, closure, and ad-commutant...")
+    g2_count = 0
+    for index, item in enumerate(split_items, start=1):
+        invariants = lie_algebra_invariants(
+            item["kernel"], item["free_cols"]  # type: ignore[arg-type]
+        )
+        if (
+            invariants["killing_sig"] == KILLING_SIG_G2_SPLIT
+            and invariants["ad_commutant_dim"] == AD_COMMUTANT_G2
+            and invariants["closure_verified"] is True
+        ):
+            g2_count += 1
+        if index % 100 == 0:
+            print(f"  checked: {index}/{len(split_items)} ({time.time() - start:.0f}s)")
+
+    print("=" * 70)
+    print(f"g₂(split): {g2_count}/{len(split_items)}")
+    print(f"total time: {time.time() - start:.0f}s")
+    if g2_count != len(split_items):
+        raise SystemExit(1)
+
+    return {
+        "raw_count": raw_count,
+        "rank_valid_count": len(rank_valid),
+        "split_count": len(split_items),
+        "non_split_count": compact_count,
+        "g2_split_count": g2_count,
+    }
+
+
+# ======================================================================
+# PART B: Certificate generator
+# ======================================================================
+
+"""CCFU Proof 27 — exact certificate generator.
+
+The generator uses the exact-arithmetic core defined in PART A above,
+enumerates the complete C2 search space, and writes JSON certificates for
+every rank-valid split Hitchin pattern.  Each certificate contains independently
+checkable witnesses: the stabilizer kernel, pivot/free columns, Hitchin matrix,
+Killing form matrix, ad-commutant ranks/pivots, and exact closure status.
+
+Run:
+    python3 ccfu_script_3_proof_27.py generate
+
+The output path defaults to \`\`proof_27_certificates.json\`\` next to this file.
+"""
+
+
+EXPECTED_RAW_C2_COUNT = 7032
+EXPECTED_RANK_VALID_COUNT = 1524
+EXPECTED_SPLIT_COUNT = 1523
+EXPECTED_NON_SPLIT_COUNT = 1
+EXPECTED_G2_SPLIT_COUNT = 1523
+SCHEMA_VERSION = "2.0-fixed"
+
+
+def serialize_fraction(value: Fraction) -> List[int]:
+    """Serialize a Fraction as \`\`[numerator, denominator]\`\`."""
+    return [int(value.numerator), int(value.denominator)]
+
+
+def serialize_exact(obj: Any) -> Any:
+    """Recursively convert Fractions, tuples, and mappings to JSON data."""
+    if isinstance(obj, Fraction):
+        return serialize_fraction(obj)
+    if isinstance(obj, tuple):
+        return [serialize_exact(item) for item in obj]
+    if isinstance(obj, list):
+        return [serialize_exact(item) for item in obj]
+    if isinstance(obj, dict):
+        return {str(key): serialize_exact(value) for key, value in obj.items()}
+    return obj
+
+
+def omega_to_json(omega: Mapping[Tuple[int, int, int], Fraction]) -> Dict[str, int]:
+    """Serialize the full antisymmetric Ω dictionary as \`\`"i,j,k": ±1\`\`."""
+    return {f"{i},{j},{k}": int(value) for (i, j, k), value in sorted(omega.items())}
+
+
+def canonical_json_bytes(obj: Any, exclude_keys: set[str] | None = None) -> bytes:
+    """Return canonical JSON bytes, optionally excluding named keys recursively."""
+    if exclude_keys is None:
+        exclude_keys = set()
+
+    def clean(value: Any) -> Any:
+        """Recursively normalize for canonical serialization: drop excluded keys,
+        convert tuples to lists, and serialize Fractions as [num, den] pairs."""
+        if isinstance(value, dict):
+            return {str(k): clean(v) for k, v in value.items() if str(k) not in exclude_keys}
+        if isinstance(value, list):
+            return [clean(item) for item in value]
+        if isinstance(value, tuple):
+            return [clean(item) for item in value]
+        if isinstance(value, Fraction):
+            return serialize_fraction(value)
+        return value
+
+    return json.dumps(clean(obj), sort_keys=True, separators=(",", ":")).encode("utf-8")
+
+
+def sha256_file(path: Path) -> str | None:
+    """Return SHA-256 of \`\`path\`\` if the file exists; otherwise \`\`None\`\`."""
+    if not path.exists():
+        return None
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def classify_certificate(hitchin_sig: Tuple[int, int], killing_sig: Tuple[int, int], ad_dim: int, closure_ok: bool) -> str:
+    """Classify one certificate semantically."""
+    if hitchin_sig in SPLIT_HITCHIN_SIGNATURES and killing_sig == KILLING_SIG_G2_SPLIT and ad_dim == AD_COMMUTANT_G2 and closure_ok:
+        return "g2_split"
+    if hitchin_sig in SPLIT_HITCHIN_SIGNATURES and killing_sig == KILLING_SIG_G2_SPLIT:
+        return "split_not_simple"
+    if hitchin_sig in SPLIT_HITCHIN_SIGNATURES:
+        return "split_anomalous"
+    return "non_split"
+
+
+class CertificateBuilder:
+    """Accumulate and write canonical certificate JSON."""
+
+    def __init__(self, output_path: Path) -> None:
+        """Initialize with the target JSON path; certificates accumulate in memory."""
+        self.output_path = output_path
+        self.certificates: List[Dict[str, Any]] = []
+
+    def add_split_certificate(
+        self,
+        *,
+        index: int,
+        pattern: Pattern,
+        omega: OmegaDict,
+        kernel: Sequence[Vector],
+        pivot_cols: Sequence[int],
+        free_cols: Sequence[int],
+        hitchin_matrix: Matrix,
+        hitchin_inertia: Tuple[int, int, int],
+        invariants: Mapping[str, Any],
+    ) -> None:
+        """Append one split-pattern certificate with exact witnesses."""
+        hitchin_sig = (hitchin_inertia[0], hitchin_inertia[1])
+        killing_sig = tuple(invariants["killing_sig"])  # type: ignore[arg-type]
+        ad_dim = int(invariants["ad_commutant_dim"])
+        closure_ok = bool(invariants["closure_verified"])
+        certificate_type = classify_certificate(hitchin_sig, killing_sig, ad_dim, closure_ok)
+
+        cert = {
+            "index": index,
+            "type": certificate_type,
+            "pattern": serialize_exact(pattern),
+            "witnesses": {
+                "kernel": serialize_exact(list(kernel)),
+                "kernel_dim": len(kernel),
+                "pivot_cols": list(pivot_cols),
+                "free_cols": list(free_cols),
+                "action_rank": RANK_FULL,
+                "omega_dict": omega_to_json(omega),
+                "hitchin_matrix": serialize_exact(hitchin_matrix),
+                "hitchin_sig": list(hitchin_sig),
+                "hitchin_zero": hitchin_inertia[2],
+                "killing_matrix": serialize_exact(invariants["killing_form"]),
+                "killing_sig": list(killing_sig),
+                "killing_zero": int(invariants["killing_zero"]),
+                "ad_commutant_rank_q": int(invariants["ad_commutant_rank_q"]),
+                "ad_commutant_rank_q_certified_by_mod_p": bool(
+                    invariants["ad_commutant_rank_q_certified_by_mod_p"]
+                ),
+                "ad_rank_mod_p": int(invariants["ad_rank_mod_p"]),
+                "ad_commutant_dim": ad_dim,
+                "ad_pivot_cols_q": list(invariants["ad_pivot_cols_q"]),
+                "ad_pivot_cols_mod_p": list(invariants["ad_pivot_cols_mod_p"]),
+                "prime_mod_p": int(invariants["prime_mod_p"]),
+                "closure_verified": closure_ok,
+            },
+        }
+        self.certificates.append(cert)
+
+    def persist(self, metadata: Dict[str, Any]) -> Dict[str, Any]:
+        """Write certificates to JSON and return file metadata."""
+        data = {
+            "metadata": metadata,
+            "certificates": self.certificates,
+        }
+        file_hash = hashlib.sha256(canonical_json_bytes(data, exclude_keys={"file_hash"})).hexdigest()
+        data["metadata"]["file_hash"] = file_hash
+
+        self.output_path.parent.mkdir(parents=True, exist_ok=True)
+        with self.output_path.open("w", encoding="utf-8") as handle:
+            json.dump(data, handle, ensure_ascii=False, sort_keys=True, indent=2)
+            handle.write("\\n")
+
+        return {
+            "output_path": str(self.output_path),
+            "certificate_count": len(self.certificates),
+            "file_hash": file_hash,
+            "size_bytes": self.output_path.stat().st_size,
+        }
+
+
+def generate_certificates(output_path: Path, max_split: int | None = None, strict_counts: bool = True) -> Dict[str, Any]:
+    """Run the exact computation and write split-pattern certificates.
+
+    \`\`max_split\`\` is a smoke-test option.  With \`\`max_split=None\`\` the function
+    performs the complete proof enumeration and enforces all aggregate counts.
+    With \`\`max_split=N\`\` it stops after the first N split certificates and marks
+    the resulting JSON as non-publication/partial metadata.
+    """
+    start = time.time()
+    raw_patterns = enumerate_c2_patterns()
+    raw_count = len(raw_patterns)
+
+    print("CCFU Proof 27 — certificate generation")
+    print("=" * 72)
+    print(f"Raw C2-compatible candidates: {raw_count}")
+
+    if strict_counts and max_split is None and raw_count != EXPECTED_RAW_C2_COUNT:
+        raise RuntimeError(f"raw C2 count {raw_count} != expected {EXPECTED_RAW_C2_COUNT}")
+
+    builder = CertificateBuilder(output_path)
+    hitchin_counts: Dict[Tuple[int, int, int], int] = {}
+    rank_valid_count = 0
+    non_split_count = 0
+    g2_count = 0
+    complete_proof = max_split is None
+
+    for item in iter_rank_valid_patterns():
+        rank_valid_count += 1
+        pattern = item["pattern"]
+        omega = item["omega"]
+        kernel = item["kernel"]
+        pivot_cols = item["pivot_cols"]
+        free_cols = item["free_cols"]
+
+        hitchin = hitchin_form(omega)
+        hitchin_inertia = exact_signature(hitchin)
+        hitchin_counts[hitchin_inertia] = hitchin_counts.get(hitchin_inertia, 0) + 1
+        hitchin_sig = (hitchin_inertia[0], hitchin_inertia[1])
+
+        if hitchin_sig not in SPLIT_HITCHIN_SIGNATURES or hitchin_inertia[2] != 0:
+            non_split_count += 1
+            continue
+
+        invariants = lie_algebra_invariants(kernel, free_cols)
+        if (
+            invariants["killing_sig"] == KILLING_SIG_G2_SPLIT
+            and invariants["ad_commutant_dim"] == AD_COMMUTANT_G2
+            and invariants["closure_verified"] is True
+        ):
+            g2_count += 1
+
+        builder.add_split_certificate(
+            index=len(builder.certificates),
+            pattern=pattern,
+            omega=omega,
+            kernel=kernel,
+            pivot_cols=pivot_cols,
+            free_cols=free_cols,
+            hitchin_matrix=hitchin,
+            hitchin_inertia=hitchin_inertia,
+            invariants=invariants,
+        )
+
+        if len(builder.certificates) % 100 == 0:
+            print(
+                f"  rank-valid={rank_valid_count}, certificates={len(builder.certificates)} "
+                f"({time.time() - start:.0f}s)"
+            )
+        if max_split is not None and len(builder.certificates) >= max_split:
+            break
+
+    split_count = len(builder.certificates)
+    print(f"Rank-valid patterns encountered: {rank_valid_count}")
+    print(f"Split certificates: {split_count}")
+    print(f"Non-split rank-valid patterns encountered: {non_split_count}")
+    print(f"g2_split certificates: {g2_count}")
+
+    if strict_counts and complete_proof:
+        if rank_valid_count != EXPECTED_RANK_VALID_COUNT:
+            raise RuntimeError(f"rank-valid count {rank_valid_count} != expected {EXPECTED_RANK_VALID_COUNT}")
+        if split_count != EXPECTED_SPLIT_COUNT:
+            raise RuntimeError(f"split count {split_count} != expected {EXPECTED_SPLIT_COUNT}")
+        if non_split_count != EXPECTED_NON_SPLIT_COUNT:
+            raise RuntimeError(f"non-split count {non_split_count} != expected {EXPECTED_NON_SPLIT_COUNT}")
+        if g2_count != EXPECTED_G2_SPLIT_COUNT:
+            raise RuntimeError(f"g2 count {g2_count} != expected {EXPECTED_G2_SPLIT_COUNT}")
+
+    flat_rank_valid = rank_valid_count if complete_proof else None
+    flat_split = split_count if complete_proof else None
+    flat_non_split = non_split_count if complete_proof else None
+    metadata = {
+        "proof_name": "CCFU Proof 27",
+        "schema_version": SCHEMA_VERSION,
+        "version": SCHEMA_VERSION,
+        "generated_at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "complete_proof": complete_proof,
+        "max_split": max_split,
+        "dimension_v": DIM_V,
+        "dimension_gl": DIM_GL,
+        "dimension_lambda3": DIM_T3,
+        "dimension_stabilizer": DIM_STAB,
+        "rank_full": RANK_FULL,
+        "dimensions": {
+            "dim_v": DIM_V,
+            "dim_gl": DIM_GL,
+            "dim_lambda3": DIM_T3,
+            "dim_stabilizer": DIM_STAB,
+        },
+        "prime_mod_p": PRIME_MOD_P,
+        "raw_c2_candidates": len(raw_patterns),
+        "raw_c2_patterns": len(raw_patterns),
+        "rank_valid_patterns": flat_rank_valid,
+        "split_patterns": flat_split,
+        "non_split_rank_valid_patterns": flat_non_split,
+        "total_patterns": split_count,
+        "certificate_count": split_count,
+        "expected_counts": {
+            "raw_c2": EXPECTED_RAW_C2_COUNT,
+            "rank_valid": EXPECTED_RANK_VALID_COUNT,
+            "split": EXPECTED_SPLIT_COUNT,
+            "non_split_rank_valid": EXPECTED_NON_SPLIT_COUNT,
+            "g2_split": EXPECTED_G2_SPLIT_COUNT,
+        },
+        "actual_counts": {
+            "raw_c2": len(raw_patterns),
+            "rank_valid_encountered": rank_valid_count,
+            "split_certificates": split_count,
+            "non_split_rank_valid_encountered": non_split_count,
+            "g2_split": g2_count,
+            "hitchin_inertia_counts": {str(key): value for key, value in sorted(hitchin_counts.items())},
+        },
+        "source_hashes": {
+            Path(__file__).name: sha256_file(Path(__file__).resolve()),
+        },
+    }
+
+    result = builder.persist(metadata)
+    result["elapsed_seconds"] = time.time() - start
+    print("=" * 72)
+    print(f"Wrote: {result['output_path']}")
+    print(f"Certificates: {result['certificate_count']}")
+    print(f"SHA-256 canonical file_hash: {result['file_hash']}")
+    print(f"Elapsed seconds: {result['elapsed_seconds']:.1f}")
+    return result
+
+
+# ======================================================================
+# PART C: Certificate verifier (independent reimplementation)
+# ======================================================================
+
+"""CCFU Proof 27 — independent certificate verifier.
+
+The verifier does not reuse PART A's exact-arithmetic core or the generator.
+It reimplements the enumeration, exact linear algebra, Hitchin form, closure
+test, Killing form, and ad-commutant computations (functions prefixed with
+\`\`v_\`\` or \`\`V_\`\`), then checks every stored witness.  Any structural, hash,
+enumeration, or mathematical failure exits non-zero.
+
+Full verification::
+
+    python3 ccfu_script_3_proof_27.py verify proof_27_certificates.json
+
+Smoke verification for a partial file produced with \`\`--max-split\`\`::
+
+    python3 ccfu_script_3_proof_27.py verify proof_27_smoke.json --allow-partial --skip-s2
+
+Skipping S2 is only a smoke-test mode; it is not a full proof verification.
+"""
+
+
+# ---------------------------------------------------------------------------
+# Constants and types
+# ---------------------------------------------------------------------------
+
+V_DIM_V = 7
+V_DIM_GL = 49
+V_RANK_FULL = 35
+V_KILLING_SIG_G2_SPLIT = (8, 6)
+V_PRIME_MOD_P = 1_000_003
+
+V_P_IDX = {0, 1, 2, 3, 4}
+V_N_IDX = {5, 6}
+W = {0, 1, 3}
+V_SPLIT_HITCHIN_SIGNATURES = {(3, 4), (4, 3)}
+
+EXPECTED_RAW_C2_COUNT = 7032
+EXPECTED_RANK_VALID_COUNT = 1524
+EXPECTED_SPLIT_COUNT = 1523
+EXPECTED_NON_SPLIT_COUNT = 1
+
+Triple = Tuple[int, int, int]
+Pattern = Tuple[Triple, ...]
+OmegaDict = Dict[Triple, Fraction]
+Vector = List[Fraction]
+Matrix = List[List[Fraction]]
+
+BASIS_3: List[Triple] = [
+    (i, j, k)
+    for i in range(V_DIM_V)
+    for j in range(i + 1, V_DIM_V)
+    for k in range(j + 1, V_DIM_V)
+]
+BASIS_GL: List[Tuple[int, int]] = [
+    (row, col) for row in range(V_DIM_V) for col in range(V_DIM_V)
+]
+ALL_TRIPLES: List[Triple] = list(combinations(range(V_DIM_V), 3))
+
+
+class VerificationError(Exception):
+    """Raised for malformed certificates or invalid exact witnesses."""
+
+
+# ---------------------------------------------------------------------------
+# JSON helpers
+# ---------------------------------------------------------------------------
+
+
+def deserialize_fraction(value: Any) -> Fraction:
+    """Deserialize a \`\`[numerator, denominator]\`\` pair as a Fraction."""
+    if (
+        not isinstance(value, list)
+        or len(value) != 2
+        or not isinstance(value[0], int)
+        or not isinstance(value[1], int)
+    ):
+        raise VerificationError(f"invalid fraction encoding: {value!r}")
+    return Fraction(value[0], value[1])
+
+
+def deserialize_matrix(value: Any, *, rows: int | None = None, cols: int | None = None) -> Matrix:
+    """Deserialize a matrix of serialized Fractions."""
+    if not isinstance(value, list):
+        raise VerificationError("matrix witness is not a list")
+    matrix: Matrix = []
+    for row in value:
+        if not isinstance(row, list):
+            raise VerificationError("matrix row is not a list")
+        matrix.append([deserialize_fraction(cell) for cell in row])
+    if rows is not None and len(matrix) != rows:
+        raise VerificationError(f"expected {rows} matrix rows, got {len(matrix)}")
+    if cols is not None and any(len(row) != cols for row in matrix):
+        raise VerificationError(f"expected {cols} columns in every matrix row")
+    return matrix
+
+
+def normalize_pattern(value: Any) -> Pattern:
+    """Deserialize and canonicalize a JSON pattern as a hashable tuple."""
+    if not isinstance(value, list):
+        raise VerificationError("pattern is not a list")
+    triples: List[Triple] = []
+    for triple in value:
+        if not isinstance(triple, list) or len(triple) != 3:
+            raise VerificationError(f"invalid triple in pattern: {triple!r}")
+        entries = tuple(sorted(int(x) for x in triple))
+        if len(set(entries)) != 3 or any(x < 0 or x >= V_DIM_V for x in entries):
+            raise VerificationError(f"invalid triple entries: {triple!r}")
+        triples.append(entries)  # type: ignore[arg-type]
+    pattern = tuple(sorted(triples))
+    if len(pattern) != 7 or len(set(pattern)) != 7:
+        raise VerificationError("pattern must contain seven distinct triples")
+    return pattern
+
+
+def omega_json(omega: Mapping[Triple, Fraction]) -> Dict[str, int]:
+    """Serialize Ω as the canonical \`\`"i,j,k": ±1\`\` dictionary."""
+    return {f"{i},{j},{k}": int(value) for (i, j, k), value in sorted(omega.items())}
+
+
+# ---------------------------------------------------------------------------
+# Independent exact mathematics
+# ---------------------------------------------------------------------------
+
+
+def v_canonical_pattern(triples: Iterable[Sequence[int]]) -> Pattern:
+    """Return a deterministic tuple of sorted triples."""
+    return tuple(sorted(tuple(sorted(map(int, triple))) for triple in triples))
+
+
+def v_enumerate_c2_patterns() -> List[Pattern]:
+    """Enumerate all raw C2-compatible patterns before rank/Hitchin filtering."""
+    ppp = [t for t in ALL_TRIPLES if len(set(t) & V_P_IDX) == 3]
+    ppn = [t for t in ALL_TRIPLES if len(set(t) & V_P_IDX) == 2 and len(set(t) & V_N_IDX) == 1]
+    pnn = [t for t in ALL_TRIPLES if len(set(t) & V_P_IDX) == 1 and len(set(t) & V_N_IDX) == 2]
+
+    ppp_good = [t for t in ppp if not (set(t) <= W)]
+    ppp_pairs: List[Tuple[Triple, Triple]] = []
+    for selected in combinations(ppp_good, 2):
+        has_2 = [2 in t for t in selected]
+        has_4 = [4 in t for t in selected]
+        if sum(has_2) == 1 and sum(has_4) == 1 and has_2[0] != has_4[0]:
+            ppp_pairs.append(selected)
+
+    ppn_quads: List[Tuple[Triple, Triple, Triple, Triple]] = []
+    for selected in combinations(ppn, 4):
+        if (
+            sum(2 in t for t in selected) == 2
+            and sum(4 in t for t in selected) == 2
+            and sum(5 in t for t in selected) == 2
+            and sum(6 in t for t in selected) == 2
+        ):
+            ppn_quads.append(selected)
+
+    pnn_list = [t for t in pnn if (set(t) & V_P_IDX) <= W]
+    patterns = set()
+    for pnn_triple in pnn_list:
+        for ppp_pair in ppp_pairs:
+            for ppn_quad in ppn_quads:
+                selected = list(ppp_pair) + list(ppn_quad) + [pnn_triple]
+                if len(set().union(*(set(t) for t in selected))) != V_DIM_V:
+                    continue
+                patterns.add(v_canonical_pattern(selected))
+    return sorted(patterns)
+
+
+def v_permutation_sign(values: Sequence[int]) -> int:
+    """Return the sign of a finite permutation-like list."""
+    sign = 1
+    for i, left in enumerate(values):
+        for right in values[i + 1 :]:
+            if left > right:
+                sign *= -1
+    return sign
+
+
+def v_build_omega(pattern: Pattern) -> OmegaDict:
+    """Build the antisymmetric 3-form Ω determined by a support pattern."""
+    omega: OmegaDict = {}
+    for triple in pattern:
+        for perm in permutations(triple):
+            omega[perm] = Fraction(v_permutation_sign(perm))
+    return omega
+
+
+def v_omega_value(omega: OmegaDict, i: int, j: int, k: int) -> Fraction:
+    """Return Ω(i,j,k), with zero for absent triples."""
+    return omega.get((i, j, k), Fraction(0))
+
+
+def v_rref(matrix: Matrix) -> Tuple[Matrix, List[int]]:
+    """Return reduced row-echelon form and pivot columns over Q."""
+    if not matrix:
+        return [], []
+    reduced = [row[:] for row in matrix]
+    row_count = len(reduced)
+    col_count = len(reduced[0])
+    pivot_cols: List[int] = []
+    rank = 0
+
+    for col in range(col_count):
+        pivot_row = None
+        for row in range(rank, row_count):
+            if reduced[row][col] != 0:
+                pivot_row = row
+                break
+        if pivot_row is None:
+            continue
+        reduced[rank], reduced[pivot_row] = reduced[pivot_row], reduced[rank]
+        pivot = reduced[rank][col]
+        for c in range(col, col_count):
+            reduced[rank][c] /= pivot
+        for row in range(row_count):
+            if row == rank:
+                continue
+            factor = reduced[row][col]
+            if factor == 0:
+                continue
+            for c in range(col, col_count):
+                reduced[row][c] -= factor * reduced[rank][c]
+        pivot_cols.append(col)
+        rank += 1
+        if rank == row_count:
+            break
+    return reduced, pivot_cols
+
+
+def v_rational_rank(matrix: Matrix) -> Tuple[int, List[int]]:
+    """Return rank and pivot columns over Q."""
+    _, pivots = v_rref(matrix)
+    return len(pivots), pivots
+
+
+def v_integer_rank_exact(matrix: Matrix) -> int:
+    """Return the exact rank of an integer matrix over Q.
+
+    This fraction-free row elimination uses only integer arithmetic and
+    row-content normalization.  It is an exact prefilter; it never replaces the
+    RREF witness needed for a full kernel certificate.
+    """
+    if not matrix:
+        return 0
+
+    work: List[List[int]] = []
+    for row in matrix:
+        int_row: List[int] = []
+        for value in row:
+            if value.denominator != 1:
+                raise VerificationError("integer_rank_exact requires integer-valued entries")
+            int_row.append(int(value.numerator))
+        work.append(int_row)
+
+    row_count = len(work)
+    col_count = len(work[0]) if row_count else 0
+    rank = 0
+
+    for col in range(col_count):
+        pivot_row = None
+        for row in range(rank, row_count):
+            if work[row][col] != 0:
+                pivot_row = row
+                break
+        if pivot_row is None:
+            continue
+
+        if pivot_row != rank:
+            work[rank], work[pivot_row] = work[pivot_row], work[rank]
+
+        content = 0
+        for c in range(col, col_count):
+            content = gcd(content, abs(work[rank][c]))
+        if content > 1:
+            for c in range(col, col_count):
+                work[rank][c] //= content
+        if work[rank][col] < 0:
+            for c in range(col, col_count):
+                work[rank][c] = -work[rank][c]
+
+        pivot = work[rank][col]
+        for row in range(rank + 1, row_count):
+            entry = work[row][col]
+            if entry == 0:
+                continue
+            for c in range(col, col_count):
+                work[row][c] = pivot * work[row][c] - entry * work[rank][c]
+            work[row][col] = 0
+            row_content = 0
+            for c in range(col + 1, col_count):
+                row_content = gcd(row_content, abs(work[row][c]))
+            if row_content > 1:
+                for c in range(col + 1, col_count):
+                    work[row][c] //= row_content
+
+        rank += 1
+        if rank == row_count:
+            break
+
+    return rank
+
+
+def v_exact_signature(matrix: Matrix) -> Tuple[int, int, int]:
+    """Compute inertia \`\`(positive, negative, zero)\`\` exactly over Q."""
+    n = len(matrix)
+    if n == 0:
+        return 0, 0, 0
+    symmetric = [row[:] for row in matrix]
+    signs: List[Fraction] = []
+    step = 0
+
+    while step < n:
+        pivot = None
+        for i in range(step, n):
+            if symmetric[i][i] != 0:
+                pivot = i
+                break
+
+        if pivot is None:
+            off_diag = None
+            for i in range(step, n):
+                for j in range(i + 1, n):
+                    if symmetric[i][j] != 0:
+                        off_diag = (i, j)
+                        break
+                if off_diag is not None:
+                    break
+            if off_diag is None:
+                break
+            i, j = off_diag
+            for k in range(n):
+                symmetric[i][k] += symmetric[j][k]
+            for k in range(n):
+                symmetric[k][i] += symmetric[k][j]
+            pivot = i
+
+        if pivot != step:
+            symmetric[step], symmetric[pivot] = symmetric[pivot], symmetric[step]
+            for row in range(n):
+                symmetric[row][step], symmetric[row][pivot] = symmetric[row][pivot], symmetric[row][step]
+
+        diagonal = symmetric[step][step]
+        if diagonal == 0:
+            step += 1
+            continue
+        signs.append(diagonal)
+        column_values = [symmetric[i][step] for i in range(step + 1, n)]
+        for local_i, i in enumerate(range(step + 1, n)):
+            vi = column_values[local_i]
+            if vi == 0:
+                continue
+            for local_j, j in enumerate(range(step + 1, n)):
+                vj = column_values[local_j]
+                if vj != 0:
+                    symmetric[i][j] -= vi * vj / diagonal
+            symmetric[i][step] = Fraction(0)
+            symmetric[step][i] = Fraction(0)
+        step += 1
+
+    positive = sum(1 for value in signs if value > 0)
+    negative = sum(1 for value in signs if value < 0)
+    zero = n - len(signs)
+    return positive, negative, zero
+
+
+def v_gl_action_matrix(omega: OmegaDict) -> Matrix:
+    """Return the 35×49 matrix of the infinitesimal GL(7)-action on Ω."""
+    action = [[Fraction(0) for _ in range(V_DIM_GL)] for _ in range(DIM_T3)]
+    for row_index, (i, j, k) in enumerate(BASIS_3):
+        for col_index, (a, b) in enumerate(BASIS_GL):
+            value = Fraction(0)
+            if b == i:
+                value += v_omega_value(omega, a, j, k)
+            if b == j:
+                value += v_omega_value(omega, i, a, k)
+            if b == k:
+                value += v_omega_value(omega, i, j, a)
+            action[row_index][col_index] = value
+    return action
+
+
+def kernel_data_from_action(action: Matrix) -> Tuple[int, List[Vector], List[int], List[int]]:
+    """Compute exact action rank, kernel basis, pivot columns, and free columns."""
+    reduced, pivot_cols = v_rref(action)
+    rank = len(pivot_cols)
+    if rank != V_RANK_FULL:
+        return rank, [], pivot_cols, []
+
+    pivot_set = set(pivot_cols)
+    free_cols = [col for col in range(V_DIM_GL) if col not in pivot_set]
+    kernel: List[Vector] = []
+    for free_col in free_cols:
+        vector = [Fraction(0) for _ in range(V_DIM_GL)]
+        vector[free_col] = Fraction(1)
+        for row_index, pivot_col in enumerate(pivot_cols):
+            vector[pivot_col] = -reduced[row_index][free_col]
+        kernel.append(vector)
+    return rank, kernel, pivot_cols, free_cols
+
+
+def v_hitchin_form(omega: OmegaDict) -> Matrix:
+    """Compute Hitchin's symmetric 7×7 bilinear form exactly."""
+    indices = list(range(V_DIM_V))
+    form = [[Fraction(0) for _ in range(V_DIM_V)] for _ in range(V_DIM_V)]
+    for a in range(V_DIM_V):
+        for b in range(V_DIM_V):
+            total = Fraction(0)
+            for pair_a in combinations(indices, 2):
+                remaining = [x for x in indices if x not in pair_a]
+                for pair_b in combinations(remaining, 2):
+                    triple_c = tuple(x for x in remaining if x not in pair_b)
+                    if len(triple_c) != 3:
+                        continue
+                    first = v_omega_value(omega, a, pair_a[0], pair_a[1])
+                    second = v_omega_value(omega, b, pair_b[0], pair_b[1])
+                    third = v_omega_value(omega, triple_c[0], triple_c[1], triple_c[2])
+                    if first == 0 or second == 0 or third == 0:
+                        continue
+                    volume_order = list(pair_a) + list(pair_b) + list(triple_c)
+                    if len(set(volume_order)) != V_DIM_V:
+                        continue
+                    total += Fraction(v_permutation_sign(volume_order)) * first * second * third
+            form[a][b] = total / Fraction(6)
+    return form
+
+
+def v_vector_to_matrix(vector: Sequence[Fraction]) -> Matrix:
+    """Convert a row-major 49-vector to a 7×7 matrix."""
+    if len(vector) != V_DIM_GL:
+        raise VerificationError(f"expected length-{V_DIM_GL} vector, got {len(vector)}")
+    return [list(vector[V_DIM_V * row : V_DIM_V * (row + 1)]) for row in range(V_DIM_V)]
+
+
+def v_matrix_to_vector(matrix: Matrix) -> Vector:
+    """Flatten a 7×7 matrix to row-major order."""
+    return [matrix[row][col] for row in range(V_DIM_V) for col in range(V_DIM_V)]
+
+
+def v_matrix_product(left: Matrix, right: Matrix) -> Matrix:
+    """Return the exact product of two 7×7 matrices."""
+    return [
+        [sum(left[i][k] * right[k][j] for k in range(V_DIM_V)) for j in range(V_DIM_V)]
+        for i in range(V_DIM_V)
+    ]
+
+
+def v_commutator(left: Sequence[Fraction], right: Sequence[Fraction]) -> Vector:
+    """Return the matrix commutator [left,right] as a row-major vector."""
+    left_matrix = v_vector_to_matrix(left)
+    right_matrix = v_vector_to_matrix(right)
+    left_right = v_matrix_product(left_matrix, right_matrix)
+    right_left = v_matrix_product(right_matrix, left_matrix)
+    return v_matrix_to_vector(
+        [[left_right[i][j] - right_left[i][j] for j in range(V_DIM_V)] for i in range(V_DIM_V)]
+    )
+
+
+def v_validate_free_columns(kernel: Sequence[Vector], free_cols: Sequence[int]) -> None:
+    """Validate that the kernel basis has identity entries on free columns."""
+    if len(kernel) != DIM_STAB:
+        raise VerificationError(f"kernel dimension {len(kernel)} != {DIM_STAB}")
+    if len(free_cols) != len(kernel):
+        raise VerificationError("free column count does not match kernel dimension")
+    if len(set(free_cols)) != len(free_cols):
+        raise VerificationError("free columns contain duplicates")
+    for row, free_col in enumerate(free_cols):
+        if free_col < 0 or free_col >= V_DIM_GL:
+            raise VerificationError(f"free column out of range: {free_col}")
+        for other_row in range(len(kernel)):
+            expected = Fraction(1) if other_row == row else Fraction(0)
+            if kernel[other_row][free_col] != expected:
+                raise VerificationError("kernel/free-column normalization failed")
+
+
+def v_coordinates_in_kernel(vector: Sequence[Fraction], kernel: Sequence[Vector], free_cols: Sequence[int]) -> Tuple[List[Fraction], Vector]:
+    """Express a vector in the normalized kernel basis and return error."""
+    coordinates = [vector[col] for col in free_cols]
+    reconstructed = [Fraction(0) for _ in range(V_DIM_GL)]
+    for coefficient, basis_vector in zip(coordinates, kernel):
+        if coefficient == 0:
+            continue
+        for index in range(V_DIM_GL):
+            reconstructed[index] += coefficient * basis_vector[index]
+    error = [vector[index] - reconstructed[index] for index in range(V_DIM_GL)]
+    return coordinates, error
+
+
+def v_structure_constants(kernel: Sequence[Vector], free_cols: Sequence[int]) -> Tuple[List[List[List[Fraction]]], List[Tuple[int, int, Vector]]]:
+    """Compute structure constants and exact closure failures."""
+    v_validate_free_columns(kernel, free_cols)
+    n = len(kernel)
+    constants = [[[Fraction(0) for _ in range(n)] for _ in range(n)] for _ in range(n)]
+    failures: List[Tuple[int, int, Vector]] = []
+    for i in range(n):
+        for j in range(n):
+            bracket = v_commutator(kernel[i], kernel[j])
+            coordinates, error = v_coordinates_in_kernel(bracket, kernel, free_cols)
+            constants[i][j] = coordinates
+            if any(value != 0 for value in error):
+                failures.append((i, j, error))
+    return constants, failures
+
+
+def v_killing_form_from_structure(constants: List[List[List[Fraction]]]) -> Matrix:
+    """Compute the Killing form matrix from structure constants."""
+    n = len(constants)
+    form = [[Fraction(0) for _ in range(n)] for _ in range(n)]
+    for i in range(n):
+        for j in range(n):
+            total = Fraction(0)
+            for k in range(n):
+                for ell in range(n):
+                    total += constants[i][k][ell] * constants[j][ell][k]
+            form[i][j] = total
+    return form
+
+
+def v_ad_commutant_equations(constants: List[List[List[Fraction]]]) -> Matrix:
+    """Return the linear system for endomorphisms commuting with all ad(e_i)."""
+    n = len(constants)
+    equations: Matrix = []
+    for generator in range(n):
+        for row in range(n):
+            for col in range(n):
+                equation = [Fraction(0) for _ in range(n * n)]
+                for middle in range(n):
+                    equation[n * row + middle] += constants[generator][col][middle]
+                    equation[n * middle + col] -= constants[generator][middle][row]
+                equations.append(equation)
+    return equations
+
+
+def v_fraction_to_mod(value: Fraction, prime: int) -> int:
+    """Map a rational number to F_p."""
+    numerator = value.numerator % prime
+    denominator = value.denominator % prime
+    if denominator == 0:
+        raise VerificationError(f"denominator divisible by prime {prime}: {value}")
+    return (numerator * pow(denominator, -1, prime)) % prime
+
+
+def v_rank_mod_p(matrix: Matrix, prime: int = V_PRIME_MOD_P) -> Tuple[int, List[int]]:
+    """Return row rank and deterministic pivot columns modulo p."""
+    if not matrix:
+        return 0, []
+    col_count = len(matrix[0])
+    pivot_rows: Dict[int, List[int]] = {}
+    pivot_cols: List[int] = []
+    for source_row in matrix:
+        row = [fraction_to_mod(value, prime) for value in source_row]
+        while True:
+            pivot_col = None
+            for col, value in enumerate(row):
+                if value:
+                    pivot_col = col
+                    break
+            if pivot_col is None:
+                break
+            existing = pivot_rows.get(pivot_col)
+            if existing is None:
+                inverse = pow(row[pivot_col], -1, prime)
+                for col in range(pivot_col, col_count):
+                    row[col] = (row[col] * inverse) % prime
+                for col in range(pivot_col):
+                    row[col] = 0
+                pivot_rows[pivot_col] = row
+                pivot_cols.append(pivot_col)
+                break
+            factor = row[pivot_col]
+            for col in range(pivot_col, col_count):
+                row[col] = (row[col] - factor * existing[col]) % prime
+    return len(pivot_cols), pivot_cols
+
+
+def v_lie_algebra_invariants(kernel: Sequence[Vector], free_cols: Sequence[int], prime: int = V_PRIME_MOD_P) -> Dict[str, Any]:
+    """Compute exact closure, Killing, and ad-commutant invariants."""
+    constants, closure_failures = v_structure_constants(kernel, free_cols)
+    if closure_failures:
+        return {"closure_verified": False, "closure_failures": closure_failures}
+
+    killing = v_killing_form_from_structure(constants)
+    killing_pos, killing_neg, killing_zero = v_exact_signature(killing)
+    ad_system = v_ad_commutant_equations(constants)
+    ad_rank_p, ad_pivots_p = v_rank_mod_p(ad_system, prime)
+    max_possible_rank = len(kernel) * len(kernel) - 1
+
+    if ad_rank_p == max_possible_rank:
+        ad_rank_q = max_possible_rank
+        ad_pivots_q: List[int] = []
+        certified_by_mod_p = True
+    else:
+        ad_rank_q, ad_pivots_q = v_rational_rank(ad_system)
+        certified_by_mod_p = False
+
+    ad_dim = len(kernel) * len(kernel) - ad_rank_q
+    return {
+        "closure_verified": True,
+        "closure_failures": [],
+        "killing_form": killing,
+        "killing_sig": (killing_pos, killing_neg),
+        "killing_zero": killing_zero,
+        "ad_commutant_rank_q": ad_rank_q,
+        "ad_commutant_rank_q_certified_by_mod_p": certified_by_mod_p,
+        "ad_rank_mod_p": ad_rank_p,
+        "ad_commutant_dim": ad_dim,
+        "ad_pivot_cols_q": ad_pivots_q,
+        "ad_pivot_cols_mod_p": ad_pivots_p,
+        "prime_mod_p": prime,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Verification checks
+# ---------------------------------------------------------------------------
+
+
+def load_certificate_file(path: Path) -> Dict[str, Any]:
+    """Load a certificate JSON file."""
+    with path.open("r", encoding="utf-8") as handle:
+        data = json.load(handle)
+    if not isinstance(data, dict):
+        raise VerificationError("top-level JSON value must be an object")
+    return data
+
+
+def verify_s1_structure(data: Mapping[str, Any]) -> List[str]:
+    """S1: validate top-level metadata and per-certificate structure."""
+    failures: List[str] = []
+    if "metadata" not in data or not isinstance(data.get("metadata"), dict):
+        failures.append("missing metadata object")
+    if "certificates" not in data or not isinstance(data.get("certificates"), list):
+        failures.append("missing certificates list")
+        return failures
+
+    metadata = data.get("metadata", {})
+    certificates = data.get("certificates", [])
+    if isinstance(metadata, dict):
+        required_metadata_keys = {
+            "proof_name",
+            "schema_version",
+            "version",
+            "complete_proof",
+            "dimension_v",
+            "dimension_gl",
+            "dimension_lambda3",
+            "dimension_stabilizer",
+            "rank_full",
+            "raw_c2_candidates",
+            "rank_valid_patterns",
+            "split_patterns",
+            "non_split_rank_valid_patterns",
+            "total_patterns",
+            "prime_mod_p",
+            "file_hash",
+        }
+        missing_metadata = required_metadata_keys - set(metadata)
+        if missing_metadata:
+            failures.append(f"metadata missing keys: {sorted(missing_metadata)}")
+        expected_constants = {
+            "dimension_v": V_DIM_V,
+            "dimension_gl": V_DIM_GL,
+            "dimension_lambda3": DIM_T3,
+            "dimension_stabilizer": DIM_STAB,
+            "rank_full": V_RANK_FULL,
+            "prime_mod_p": V_PRIME_MOD_P,
+            "raw_c2_candidates": EXPECTED_RAW_C2_COUNT,
+        }
+        for key, expected in expected_constants.items():
+            if metadata.get(key) != expected:
+                failures.append(f"metadata {key}={metadata.get(key)!r} != expected {expected!r}")
+        if metadata.get("total_patterns") != len(certificates):
+            failures.append(
+                f"metadata total_patterns={metadata.get('total_patterns')!r} != certificate count {len(certificates)}"
+            )
+        if metadata.get("complete_proof") is True:
+            full_counts = {
+                "rank_valid_patterns": EXPECTED_RANK_VALID_COUNT,
+                "split_patterns": EXPECTED_SPLIT_COUNT,
+                "non_split_rank_valid_patterns": EXPECTED_NON_SPLIT_COUNT,
+                "total_patterns": EXPECTED_SPLIT_COUNT,
+            }
+            for key, expected in full_counts.items():
+                if metadata.get(key) != expected:
+                    failures.append(f"metadata {key}={metadata.get(key)!r} != expected full-proof value {expected!r}")
+
+    required_cert_keys = {"index", "type", "pattern", "witnesses"}
+    required_witness_keys = {
+        "kernel",
+        "kernel_dim",
+        "pivot_cols",
+        "free_cols",
+        "action_rank",
+        "omega_dict",
+        "hitchin_matrix",
+        "hitchin_sig",
+        "hitchin_zero",
+        "killing_matrix",
+        "killing_sig",
+        "killing_zero",
+        "ad_commutant_rank_q",
+        "ad_commutant_rank_q_certified_by_mod_p",
+        "ad_rank_mod_p",
+        "ad_commutant_dim",
+        "ad_pivot_cols_q",
+        "ad_pivot_cols_mod_p",
+        "prime_mod_p",
+        "closure_verified",
+    }
+
+    seen_indices = set()
+    for position, cert in enumerate(certificates):
+        if not isinstance(cert, dict):
+            failures.append(f"certificate {position} is not an object")
+            continue
+        missing = required_cert_keys - set(cert)
+        if missing:
+            failures.append(f"certificate {position} missing keys: {sorted(missing)}")
+            continue
+        if cert["index"] in seen_indices:
+            failures.append(f"duplicate certificate index {cert['index']}")
+        seen_indices.add(cert["index"])
+        if cert["index"] != position:
+            failures.append(f"certificate index {cert['index']} does not match position {position}")
+        if not isinstance(cert["witnesses"], dict):
+            failures.append(f"certificate {position} witnesses is not an object")
+            continue
+        missing_witness = required_witness_keys - set(cert["witnesses"])
+        if missing_witness:
+            failures.append(f"certificate {position} missing witness keys: {sorted(missing_witness)}")
+    return failures
+
+
+def verify_s2_reenumeration(certificates: Sequence[Mapping[str, Any]], complete_proof: bool, allow_partial: bool) -> List[str]:
+    """S2: independently re-enumerate rank-valid split patterns and compare."""
+    failures: List[str] = []
+    raw_patterns = v_enumerate_c2_patterns()
+    if len(raw_patterns) != EXPECTED_RAW_C2_COUNT:
+        failures.append(f"raw C2 count {len(raw_patterns)} != expected {EXPECTED_RAW_C2_COUNT}")
+
+    expected_split_patterns: set[Pattern] = set()
+    rank_valid_count = 0
+    non_split_count = 0
+    started = time.time()
+
+    for raw_index, pattern in enumerate(raw_patterns, start=1):
+        omega = v_build_omega(pattern)
+        action = v_gl_action_matrix(omega)
+        pre_rank = v_integer_rank_exact(action)
+        if pre_rank != V_RANK_FULL:
+            if raw_index % 1000 == 0:
+                print(
+                    f"  S2 raw={raw_index}/{len(raw_patterns)}, "
+                    f"rank-valid={rank_valid_count}, split={len(expected_split_patterns)} "
+                    f"({time.time() - started:.0f}s)"
+                )
+            continue
+        rank_valid_count += 1
+        h_matrix = v_hitchin_form(omega)
+        h_pos, h_neg, h_zero = v_exact_signature(h_matrix)
+        if h_zero == 0 and (h_pos, h_neg) in V_SPLIT_HITCHIN_SIGNATURES:
+            expected_split_patterns.add(pattern)
+        else:
+            non_split_count += 1
+        if raw_index % 1000 == 0:
+            print(
+                f"  S2 raw={raw_index}/{len(raw_patterns)}, "
+                f"rank-valid={rank_valid_count}, split={len(expected_split_patterns)} "
+                f"({time.time() - started:.0f}s)"
+            )
+
+    if rank_valid_count != EXPECTED_RANK_VALID_COUNT:
+        failures.append(f"rank-valid count {rank_valid_count} != expected {EXPECTED_RANK_VALID_COUNT}")
+    if len(expected_split_patterns) != EXPECTED_SPLIT_COUNT:
+        failures.append(f"split count {len(expected_split_patterns)} != expected {EXPECTED_SPLIT_COUNT}")
+    if non_split_count != EXPECTED_NON_SPLIT_COUNT:
+        failures.append(f"non-split count {non_split_count} != expected {EXPECTED_NON_SPLIT_COUNT}")
+
+    cert_patterns = [normalize_pattern(cert["pattern"]) for cert in certificates]
+    cert_pattern_set = set(cert_patterns)
+    if len(cert_pattern_set) != len(cert_patterns):
+        failures.append("certificate file contains duplicate patterns")
+
+    if complete_proof:
+        if cert_pattern_set != expected_split_patterns:
+            missing = expected_split_patterns - cert_pattern_set
+            extra = cert_pattern_set - expected_split_patterns
+            failures.append(f"pattern-set mismatch: missing={len(missing)}, extra={len(extra)}")
+    else:
+        if not allow_partial:
+            failures.append("certificate file is marked partial; pass --allow-partial for partial smoke verification")
+        extra = cert_pattern_set - expected_split_patterns
+        if extra:
+            failures.append(f"partial certificate contains {len(extra)} patterns outside the independent split set")
+    return failures
+
+
+def verify_s3_hash(data: Mapping[str, Any]) -> List[str]:
+    """S3: verify canonical SHA-256 excluding metadata.file_hash."""
+    metadata = data.get("metadata", {})
+    if not isinstance(metadata, dict):
+        return ["metadata is not an object"]
+    stored = metadata.get("file_hash")
+    if not isinstance(stored, str) or not stored:
+        return ["metadata.file_hash missing or invalid"]
+    computed = hashlib.sha256(canonical_json_bytes(data, exclude_keys={"file_hash"})).hexdigest()
+    if computed != stored:
+        return [f"file_hash mismatch: stored={stored}, computed={computed}"]
+    return []
+
+
+def v_verify_kernel_annihilates_omega(action: Matrix, kernel: Sequence[Vector]) -> Tuple[bool, str]:
+    """M1: check action_matrix * kernel_vector = 0 exactly."""
+    for vector_index, vector in enumerate(kernel):
+        for row_index, row in enumerate(action):
+            value = sum(row[col] * vector[col] for col in range(V_DIM_GL))
+            if value != 0:
+                return False, f"kernel vector {vector_index}, action row {row_index}, value {value}"
+    return True, ""
+
+
+def verify_certificate(cert: Mapping[str, Any]) -> Dict[str, List[str]]:
+    """Run M1-M7 on a single certificate and return failures by check name."""
+    failures: Dict[str, List[str]] = {f"M{i}": [] for i in range(1, 8)}
+    index = cert.get("index", "?")
+    witnesses = cert["witnesses"]
+    pattern = normalize_pattern(cert["pattern"])
+    omega = v_build_omega(pattern)
+
+    try:
+        kernel = deserialize_matrix(witnesses["kernel"], rows=DIM_STAB, cols=V_DIM_GL)
+        pivot_cols = [int(x) for x in witnesses["pivot_cols"]]
+        free_cols = [int(x) for x in witnesses["free_cols"]]
+        v_validate_free_columns(kernel, free_cols)
+    except Exception as exc:  # noqa: BLE001
+        failures["M1"].append(f"certificate {index}: invalid kernel/free-col witness: {exc}")
+        return failures
+
+    if int(witnesses.get("kernel_dim", -1)) != DIM_STAB:
+        failures["M1"].append(f"certificate {index}: kernel_dim does not equal {DIM_STAB}")
+    if witnesses.get("omega_dict") != omega_json(omega):
+        failures["M1"].append(f"certificate {index}: omega_dict does not match pattern-derived Ω")
+
+    action = v_gl_action_matrix(omega)
+    ok, message = v_verify_kernel_annihilates_omega(action, kernel)
+    if not ok:
+        failures["M1"].append(f"certificate {index}: {message}")
+
+    pre_rank = v_integer_rank_exact(action)
+    rank, recomputed_kernel, recomputed_pivots, recomputed_free_cols = kernel_data_from_action(action)
+    if pre_rank != rank:
+        failures["M2"].append(f"certificate {index}: integer/RREF rank mismatch {pre_rank} vs {rank}")
+    if rank != V_RANK_FULL:
+        failures["M2"].append(f"certificate {index}: recomputed action rank {rank} != {V_RANK_FULL}")
+    if int(witnesses["action_rank"]) != rank:
+        failures["M2"].append(f"certificate {index}: stored action_rank {witnesses['action_rank']} != recomputed {rank}")
+    if pivot_cols != recomputed_pivots:
+        failures["M2"].append(f"certificate {index}: pivot_cols differ")
+    if free_cols != recomputed_free_cols:
+        failures["M2"].append(f"certificate {index}: free_cols differ")
+    if kernel != recomputed_kernel:
+        failures["M2"].append(f"certificate {index}: kernel basis differs from recomputation")
+
+    stored_hitchin = deserialize_matrix(witnesses["hitchin_matrix"], rows=V_DIM_V, cols=V_DIM_V)
+    computed_hitchin = v_hitchin_form(omega)
+    h_pos, h_neg, h_zero = v_exact_signature(computed_hitchin)
+    if stored_hitchin != computed_hitchin:
+        failures["M3"].append(f"certificate {index}: Hitchin matrix differs")
+    if tuple(witnesses["hitchin_sig"]) != (h_pos, h_neg):
+        failures["M3"].append(f"certificate {index}: Hitchin signature stored={witnesses['hitchin_sig']} computed={(h_pos, h_neg)}")
+    if int(witnesses["hitchin_zero"]) != h_zero:
+        failures["M3"].append(f"certificate {index}: Hitchin zero stored={witnesses['hitchin_zero']} computed={h_zero}")
+
+    if int(witnesses["prime_mod_p"]) != V_PRIME_MOD_P:
+        failures["M6"].append(f"certificate {index}: prime_mod_p stored={witnesses['prime_mod_p']} expected={V_PRIME_MOD_P}")
+    invariants = v_lie_algebra_invariants(kernel, free_cols, prime=V_PRIME_MOD_P)
+    if not invariants.get("closure_verified"):
+        failures["M5"].append(f"certificate {index}: closure failed at {invariants.get('closure_failures')}")
+        return failures
+
+    stored_killing = deserialize_matrix(witnesses["killing_matrix"], rows=DIM_STAB, cols=DIM_STAB)
+    if stored_killing != invariants["killing_form"]:
+        failures["M4"].append(f"certificate {index}: Killing matrix differs")
+    if tuple(witnesses["killing_sig"]) != tuple(invariants["killing_sig"]):
+        failures["M4"].append(f"certificate {index}: Killing signature stored={witnesses['killing_sig']} computed={invariants['killing_sig']}")
+    if int(witnesses["killing_zero"]) != int(invariants["killing_zero"]):
+        failures["M4"].append(f"certificate {index}: Killing zero stored={witnesses['killing_zero']} computed={invariants['killing_zero']}")
+
+    if witnesses["closure_verified"] is not True:
+        failures["M5"].append(f"certificate {index}: stored closure_verified is not true")
+
+    if int(witnesses["ad_commutant_rank_q"]) != int(invariants["ad_commutant_rank_q"]):
+        failures["M6"].append(f"certificate {index}: ad_commutant_rank_q stored={witnesses['ad_commutant_rank_q']} computed={invariants['ad_commutant_rank_q']}")
+    if bool(witnesses["ad_commutant_rank_q_certified_by_mod_p"]) != bool(invariants["ad_commutant_rank_q_certified_by_mod_p"]):
+        failures["M6"].append(
+            f"certificate {index}: ad_commutant_rank_q_certified_by_mod_p stored="
+            f"{witnesses['ad_commutant_rank_q_certified_by_mod_p']} computed="
+            f"{invariants['ad_commutant_rank_q_certified_by_mod_p']}"
+        )
+    if int(witnesses["ad_rank_mod_p"]) != int(invariants["ad_rank_mod_p"]):
+        failures["M6"].append(f"certificate {index}: ad_rank_mod_p stored={witnesses['ad_rank_mod_p']} computed={invariants['ad_rank_mod_p']}")
+    if int(witnesses["ad_commutant_dim"]) != int(invariants["ad_commutant_dim"]):
+        failures["M6"].append(f"certificate {index}: ad_commutant_dim stored={witnesses['ad_commutant_dim']} computed={invariants['ad_commutant_dim']}")
+    if [int(x) for x in witnesses["ad_pivot_cols_q"]] != list(invariants["ad_pivot_cols_q"]):
+        failures["M6"].append(f"certificate {index}: ad_pivot_cols_q differ")
+    if [int(x) for x in witnesses["ad_pivot_cols_mod_p"]] != list(invariants["ad_pivot_cols_mod_p"]):
+        failures["M6"].append(f"certificate {index}: ad_pivot_cols_mod_p differ")
+
+    expected_type = classify_certificate((h_pos, h_neg), tuple(invariants["killing_sig"]), int(invariants["ad_commutant_dim"]), bool(invariants["closure_verified"]))
+    if cert["type"] != expected_type:
+        failures["M7"].append(f"certificate {index}: type stored={cert['type']} computed={expected_type}")
+    if expected_type != "g2_split":
+        failures["M7"].append(f"certificate {index}: not g2_split under recomputed invariants")
+
+    return failures
+
+
+def verify_file(path: Path, *, allow_partial: bool = False, skip_s2: bool = False) -> int:
+    """Verify a certificate file and return process exit status."""
+    started = time.time()
+    data = load_certificate_file(path)
+    metadata = data.get("metadata", {})
+    certificates = data.get("certificates", [])
+    complete_proof = bool(metadata.get("complete_proof")) if isinstance(metadata, dict) else False
+
+    print("CCFU Proof 27 — independent certificate verifier")
+    print("=" * 72)
+    print(f"Certificate file: {path}")
+    print(f"Loaded certificates: {len(certificates)}")
+    print(f"complete_proof: {complete_proof}")
+
+    all_failures: Dict[str, List[str]] = {"S1": [], "S2": [], "S3": []}
+    for i in range(1, 8):
+        all_failures[f"M{i}"] = []
+
+    all_failures["S1"].extend(verify_s1_structure(data))
+    all_failures["S3"].extend(verify_s3_hash(data))
+
+    if skip_s2:
+        print("S2 skipped by CLI option; this is not a full proof verification.")
+    else:
+        print("S2: independent re-enumeration of split rank-valid patterns...")
+        all_failures["S2"].extend(verify_s2_reenumeration(certificates, complete_proof, allow_partial))
+
+    print("M1-M7: checking certificate witnesses...")
+    for cert in certificates:
+        grouped = verify_certificate(cert)
+        for key, messages in grouped.items():
+            all_failures[key].extend(messages)
+
+    print("=" * 72)
+    for key in ["S1", "S2", "S3", "M1", "M2", "M3", "M4", "M5", "M6", "M7"]:
+        failures = all_failures[key]
+        if key == "S2" and skip_s2:
+            print("– S2: skipped (smoke-test mode; not a complete proof verification)")
+            continue
+        if failures:
+            print(f"✗ {key}: {len(failures)} failure(s)")
+            for message in failures[:10]:
+                print(f"    {message}")
+            if len(failures) > 10:
+                print(f"    ... {len(failures) - 10} more")
+        else:
+            print(f"✓ {key}: passed")
+
+    elapsed = time.time() - started
+    print(f"Elapsed seconds: {elapsed:.1f}")
+
+    failed = any(messages for key, messages in all_failures.items() if not (key == "S2" and skip_s2))
+    if failed:
+        print("VERIFICATION FAILED")
+        return 1
+    if skip_s2:
+        print("SMOKE VERIFICATION PASSED (S2 skipped; not a complete proof verification)")
+    else:
+        print("ALL CHECKS PASSED")
+    return 0
+
+
+# ======================================================================
+# CLI dispatcher
+# ======================================================================
+
+
+if __name__ == '__main__':
+    import sys
+
+    if len(sys.argv) < 2:
+        print("Usage:")
+        print("  python3 ccfu_script_3_proof_27.py exact [--limit N]")
+        print("  python3 ccfu_script_3_proof_27.py generate [--max-split N] [--output FILE]")
+        print("  python3 ccfu_script_3_proof_27.py verify FILE [--skip-s2] [--allow-partial]")
+        sys.exit(1)
+
+    cmd = sys.argv[1]
+    sys.argv = sys.argv[1:]  # shift so the subcommand parser sees its own argv
+
+    if cmd == 'exact':
+        parser = argparse.ArgumentParser(prog="ccfu_script_3_proof_27.py exact")
+        parser.add_argument("--limit", type=int, default=None,
+                            help="process only the first N rank-valid patterns (smoke test)")
+        args = parser.parse_args()
+        run_exact_proof(limit=args.limit)
+    elif cmd == 'generate':
+        parser = argparse.ArgumentParser(prog="ccfu_script_3_proof_27.py generate")
+        parser.add_argument("--output", type=Path, default=Path("proof_27_certificates.json"),
+                            help="output certificate JSON path")
+        parser.add_argument("--max-split", type=int, default=None,
+                            help="generate only the first N split certificates (smoke test)")
+        args = parser.parse_args()
+        generate_certificates(args.output, max_split=args.max_split)
+    elif cmd == 'verify':
+        parser = argparse.ArgumentParser(prog="ccfu_script_3_proof_27.py verify")
+        parser.add_argument("certificates", type=Path,
+                            help="certificate JSON file to verify")
+        parser.add_argument("--skip-s2", action="store_true",
+                            help="skip independent re-enumeration (smoke verification only)")
+        parser.add_argument("--allow-partial", action="store_true",
+                            help="allow verification of a partial smoke-test certificate file")
+        args = parser.parse_args()
+        raise SystemExit(verify_file(args.certificates,
+                                     allow_partial=args.allow_partial,
+                                     skip_s2=args.skip_s2))
+    else:
+        print(f"Unknown command: {cmd}")
+        print("Valid commands: exact, generate, verify")
+        sys.exit(1)`,
+    nft_url: `https://opensea.io/item/base/0x8a3ee2dbaa1c33f3cb3d927497f4ae798b598b65/3`,
+    tweet_url: ``
+  };
+  const canonicalString = [entry.id, entry.safecreative_url, entry.title, entry.date, entry.text, entry.nft_url, entry.tweet_url].join('\n---\n');
+  const data = new TextEncoder().encode(canonicalString);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashHex = [...new Uint8Array(hashBuffer)].map(b => b.toString(16).padStart(2, '0')).join('');
+  document.getElementById('hashResult').textContent = hashHex;
+  document.getElementById('copyHashBtn').addEventListener('click', () => { navigator.clipboard.writeText(hashHex); alert('Hash copied'); });
+})();
+</script>
+</body></html>

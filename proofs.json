@@ -211,5 +211,17 @@
     "image_url": "https://yeodiq6x4vwgwlnasfkzqqlkmbmkq5d6gr3n77czlkdovtvqzxsa.ardrive.net/wRw0Q9flbGstoJFVmEFqYFiodH40dt_8WVqG6s6wzeQ",
     "in_scope": false,
     "script_url": "https://www.captaincookieface.com/scripts/ccfu_script_1_verify_higher_closure_py.html"
+  },
+  {
+    "id": "2605245774761",
+    "safecreative_url": "https://www.safecreative.org/work/2605245774761-ccfu-proof-22-explicit-_w",
+    "title": "CCFU Proof 22 — Explicit Ω_W",
+    "date": "05/24/2026",
+    "text": "Given.\nV_W = R·τ ⊕ W ⊕ W* [Proof 21].\nBasis: e₀ = τ, (e₁,e₂,e₃) = W, (e₄,e₅,e₆) = W*.\n\nThe canonical 3-form:\n\n    Ω_W = e₀₁₄ + e₀₂₅ + e₀₃₆ + e₁₂₃ + e₄₅₆\n\nFive terms. Constructed from W after choosing a volume form.\nThe GL(7)-orbit is independent of the volume choice [Proof 21].  ∎\n\nNote: the Ω of the earlier construction:\n    Ω_old = e₀₁₂ − e₀₃₄ − e₀₅₆ − e₁₃₅ + e₂₄₅ + e₁₄₆ + e₂₃₆\nis GL(7)-equivalent to Ω_W. Both give the same stabilizer.\n\n[Dependency: Proof 21.]",
+    "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/22",
+    "tweet_url": "",
+    "image_url ": "https://prhi5cpbnhn44csqmfppsonlrtkfppiqzgtixrs6nfb24dqmfkxa.arweave.net/fE6OieFp284KUGFe-TmrjNRXvRDJpovGXmlDrg4MKq4",
+    "in_scope": false,
+    "script_url": "https://www.captaincookieface.com/scripts/ccfu_script_1_verify_higher_closure_py.html"
   }
 ]

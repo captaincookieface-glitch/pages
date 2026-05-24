@@ -7,6 +7,7 @@ on:
       - 'theories/index.html'
       - 'ccfu_simulators/index.html'
       - 'ccfu_proofs/index.html'
+      - 'scripts/index.html'
   workflow_dispatch:
 
 permissions:
@@ -30,6 +31,7 @@ jobs:
           THEORIES_INDEX="theories/index.html"
           SIMULATORS_INDEX="ccfu_simulators/index.html"
           PROOFS_INDEX="ccfu_proofs/index.html"
+          SCRIPTS_INDEX="scripts/index.html"
 
           # ── Extract hrefs preserving order, no duplicates ──
           extract_urls() {
@@ -68,6 +70,11 @@ jobs:
             echo "${BASE_URL}/ccfu_proofs/"
             echo "${BASE_URL}/ccfu_proofs/index.html"
             extract_urls "$PROOFS_INDEX" "ccfu_proofs"
+
+            # 6. Scripts section
+            echo "${BASE_URL}/scripts/"
+            echo "${BASE_URL}/scripts/index.html"
+            extract_urls "$SCRIPTS_INDEX" "scripts"
           } > /tmp/all_urls.txt
 
           # ── Build sitemap XML ──

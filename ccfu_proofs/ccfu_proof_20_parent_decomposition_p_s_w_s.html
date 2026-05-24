@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CCFU Proof 20 — Parent Decomposition: P = S₁ ⊕_W S₂</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #fff; }
+    .block { margin-bottom: 20px; padding: 15px; border: 1px solid #eee; word-wrap: break-word; }
+    .key { color: #000; font-size: 2em !important; text-transform: capitalize; font-weight: bold; }
+    .hash { word-break: break-all; color: #4287f5; }
+    a { color: #4287f5; text-decoration: underline; }
+    pre { white-space: pre-wrap; }
+    button { font-family: inherit; padding: 6px 10px; border: 1px solid #ccc; background: #f9f9f9; cursor: pointer; }
+    h1 { margin-bottom: 10px; font-size: 32px; }
+    nav { background-color: #e1e1e1; padding: 10px; }
+    nav > ul { display: flex; flex-wrap: wrap; list-style: none; padding: 0; margin: 0; }
+    nav > ul > li, nav > ul > li > a { display: flex; flex-direction: column; text-align: center; margin: 0; }
+    nav ul li img { max-width: 80px; width: 100%; height: auto; border-radius: 40px; }
+    .arrow { width: 50px; height: 80px; font-size: 38px; }
+  </style>
+</head>
+<body>
+<article itemscope itemtype="https://schema.org/CreativeWork">
+  <meta itemprop="identifier" content="2605245765172">
+  <meta itemprop="dateCreated" content="05/24/2026">
+<h1 itemprop="name">CCFU Proof 20 — Parent Decomposition: P = S₁ ⊕_W S₂</h1>
+<nav aria-label="Breadcrumb" class="breadcrumb">
+  <ul>
+    <li><a href="../"><img src="../assets/images/AFB9C382-3B34-4925-B318-E7083E758055.png" alt="Home"/><span>Home</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><a href="./"><img src="../assets/images/proofs-1024.svg" alt="CCFU"/><span>CCFU Proofs</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><img src="../assets/images/proofs-1024.svg" alt="CCFU"/><span>CCFU Proof 20 — Parent Decomposition: P = S₁ ⊕_W S₂</span></li>
+  </ul>
+</nav>
+  <div class="block" id="rendered">
+
+    <div class="block">
+      <div class="key">id</div>
+      <pre>2605245765172</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">safecreative_url</div>
+      <a href="https://www.safecreative.org/work/2605245765172-ccfu-proof-20-parent-decomposition-p-s1-_w-s2" target="_blank">https://www.safecreative.org/work/2605245765172-ccfu-proof-20-parent-decomposition-p-s1-_w-s2</a>
+    </div>
+
+    <div class="block">
+      <div class="key">title</div>
+      <pre>CCFU Proof 20 — Parent Decomposition: P = S₁ ⊕_W S₂</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">date</div>
+      <pre>05/24/2026</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">text</div>
+      <pre>Given.
+P = R⁵, sig(P) = (3,2) [Proof 5].
+
+S₁ ⊂ P, dim S₁ = 4, sig(S₁) = (3,1) [Proof 4].
+
+S₂ ⊂ P, dim S₂ = 4, sig(S₂) = (2,2) [Proofs 3, 16].
+
+Step 1 — dim(S₁ ∩ S₂) = 3.
+
+dim(S₁ ∩ S₂) ≥ dim S₁ + dim S₂ - dim P = 4+4-5 = 3.
+
+If dim(S₁ ∩ S₂) = 4 then S₁ = S₂, but sig(S₁) = (3,1) ≠ (2,2) = sig(S₂).
+Therefore dim(S₁ ∩ S₂) = 3.
+
+It follows that dim(S₁ + S₂) = 4 + 4 - 3 = 5 = dim P, so S₁ + S₂ = P.
+∎
+
+Step 2 — W is nondegenerate.
+
+S₁ is nondegenerate in P, so S₁⊥ is 1-dimensional.
+sig(P) = (3,2) and sig(S₁) = (3,1), so S₁⊥ has sig(0,1): it is a negative line.
+
+S₂ is nondegenerate in P, so S₂⊥ is 1-dimensional.
+sig(P) = (3,2) and sig(S₂) = (2,2), so S₂⊥ has sig(1,0): it is a positive line.
+
+Since a nonzero line cannot be both positive and negative, S₁⊥ and S₂⊥ are distinct.
+Let u span S₁⊥ and v span S₂⊥.
+Then u, v are linearly independent,
+⟨u,u⟩ &lt; 0 and ⟨v,v⟩ &gt; 0, so the Gram determinant is
+
+⟨u,u⟩ ⟨v,v⟩ - ⟨u,v⟩^2 &lt; 0.
+
+Therefore S₁⊥ + S₂⊥ is nondegenerate with sig(1,1).
+
+W = S₁ ∩ S₂ = (S₁⊥ + S₂⊥)⊥.
+The orthogonal complement of a nondegenerate subspace is nondegenerate.
+Therefore W is nondegenerate.
+∎
+
+Step 3 — sig(W) = (2,1).
+W is 3-dimensional and nondegenerate.
+
+In S₁ with sig(3,1): a 3d nondegenerate subspace has sig ∈ (3,0), (2,1).
+
+In S₂ with sig(2,2): a 3d nondegenerate subspace has sig ∈ (2,1), (1,2).
+
+Common: sig(W) = (2,1).
+∎
+
+Step 4 — Orthogonal complements.
+Since W is nondegenerate, define V₁ := S₁ ∩ W⊥ and V₂ := S₂ ∩ W⊥.
+Then S₁ = W ⊕⊥ V₁ and S₂ = W ⊕⊥ V₂, with dim V₁ = dim V₂ = 1.
+
+sig(W) + sig(V₁) = sig(S₁): (2,1) + sig(V₁) = (3,1) → sig(V₁) = (1,0).
+
+sig(W) + sig(V₂) = sig(S₂): (2,1) + sig(V₂) = (2,2) → sig(V₂) = (0,1).
+
+V₁ is positive.
+V₂ is negative.
+∎
+
+Step 5 — Basis.
+
+e₀, e₁: positive, in W = S₁ ∩ S₂ sig(2,0)
+
+e₂: positive, in V₁ (S₁-only) sig(1,0)
+
+e₃: negative, in W = S₁ ∩ S₂ sig(0,1)
+
+e₄: negative, in V₂ (S₂-only) sig(0,1)
+
+Choose unit vectors e₂ ∈ V₁ and e₄ ∈ V₂.
+Since e₀,e₁,e₃ are orthonormal in W and V₁, V₂ ⊂ W⊥, the basis (e₀,e₁,e₂,e₃,e₄) satisfies
+
+⟨eᵢ,eⱼ⟩ = 0 whenever one of i,j {0,1,3} and the other ∈ {2,4}.
+
+The only potentially nonzero off-diagonal entry is α := ⟨e₂,e₄⟩, which is determined by the fixed subspaces S₁, S₂.
+
+Verification: S₁ = span(e₀,e₁,e₂,e₃), sig = (3,1) ✓.
+S₂ = span(e₀,e₁,e₃,e₄), sig = (2,2) ✓.
+
+In an orthonormal basis of P (diagonalizing Q₅), the metric is diag(+1,+1,+1,-1,-1), but S₂ may not align with a coordinate subspace.
+The adapted basis above keeps S₁ and S₂ as coordinate subspaces at the cost of one off-diagonal entry α.
+∎
+
+Conclusion.
+S₁ and S₂ are not chosen—they are the linear closure
+(Proof 4) and nonlinear closure (Proofs 3, 16) of C₂.
+Hence
+
+W=S₁∩ S₂
+
+is fixed.
+The proof shows that W is 3-dimensional,
+nondegenerate, and has signature (2,1).
+The orthogonal complement lines
+
+V₁=S₁∩ W⊥, V₂=S₂∩ W⊥
+
+are also fixed by S₁,S₂, with sig(V₁)=(1,0) and
+sig(V₂)=(0,1).
+In an adapted basis their mutual inner product
+
+α=⟨e₂,e₄⟩
+
+may appear as one off-diagonal metric entry; it is determined by
+the fixed pair (S₁,S₂) and is not an extra choice.
+For the downstream chain, however, no data from α is used:
+Proof 21 depends only on W and constructs
+
+V_W=Rτ ⊕ W ⊕ W*.
+
+Thus no additional parameter enters the higher alternating closure.
+
+[Dependencies: Proofs 3, 4, 5, 16.]</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">nft_url</div>
+      <a href="https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/20" target="_blank">https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/20</a>
+    </div>
+
+    <div class="block">
+      <div class="key">tweet_url</div>
+      <pre></pre>
+    </div>
+
+  </div>
+  <div class="block">
+    <div class="key">SHA-256</div>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <div class="hash" id="hashResult"></div>
+      <button id="copyHashBtn" type="button">Copy</button>
+    </div>
+  </div>
+
+  <div class="block">
+    <img src="https://wnx2ab6xcishiezatioryq5fhdilvks7cfujkaaef32yd3kldf2q.turbo-gateway.com/s2-gB9cSJHQTIJodHEOlONC6ql8RaJUABC71ge1LGXU" 
+     alt="CCFU Proof 20 — Parent Decomposition: P = S₁ ⊕_W S₂" 
+     style="max-width: 100%; height: auto;" />
+  </div>
+
+</article>
+<script>
+(async () => {
+  const entry = {
+    id: `2605245765172`,
+    safecreative_url: `https://www.safecreative.org/work/2605245765172-ccfu-proof-20-parent-decomposition-p-s1-_w-s2`,
+    title: `CCFU Proof 20 — Parent Decomposition: P = S₁ ⊕_W S₂`,
+    date: `05/24/2026`,
+    text: `Given.
+P = R⁵, sig(P) = (3,2) [Proof 5].
+
+S₁ ⊂ P, dim S₁ = 4, sig(S₁) = (3,1) [Proof 4].
+
+S₂ ⊂ P, dim S₂ = 4, sig(S₂) = (2,2) [Proofs 3, 16].
+
+Step 1 — dim(S₁ ∩ S₂) = 3.
+
+dim(S₁ ∩ S₂) ≥ dim S₁ + dim S₂ - dim P = 4+4-5 = 3.
+
+If dim(S₁ ∩ S₂) = 4 then S₁ = S₂, but sig(S₁) = (3,1) ≠ (2,2) = sig(S₂).
+Therefore dim(S₁ ∩ S₂) = 3.
+
+It follows that dim(S₁ + S₂) = 4 + 4 - 3 = 5 = dim P, so S₁ + S₂ = P.
+∎
+
+Step 2 — W is nondegenerate.
+
+S₁ is nondegenerate in P, so S₁⊥ is 1-dimensional.
+sig(P) = (3,2) and sig(S₁) = (3,1), so S₁⊥ has sig(0,1): it is a negative line.
+
+S₂ is nondegenerate in P, so S₂⊥ is 1-dimensional.
+sig(P) = (3,2) and sig(S₂) = (2,2), so S₂⊥ has sig(1,0): it is a positive line.
+
+Since a nonzero line cannot be both positive and negative, S₁⊥ and S₂⊥ are distinct.
+Let u span S₁⊥ and v span S₂⊥.
+Then u, v are linearly independent,
+⟨u,u⟩ < 0 and ⟨v,v⟩ > 0, so the Gram determinant is
+
+⟨u,u⟩ ⟨v,v⟩ - ⟨u,v⟩^2 < 0.
+
+Therefore S₁⊥ + S₂⊥ is nondegenerate with sig(1,1).
+
+W = S₁ ∩ S₂ = (S₁⊥ + S₂⊥)⊥.
+The orthogonal complement of a nondegenerate subspace is nondegenerate.
+Therefore W is nondegenerate.
+∎
+
+Step 3 — sig(W) = (2,1).
+W is 3-dimensional and nondegenerate.
+
+In S₁ with sig(3,1): a 3d nondegenerate subspace has sig ∈ (3,0), (2,1).
+
+In S₂ with sig(2,2): a 3d nondegenerate subspace has sig ∈ (2,1), (1,2).
+
+Common: sig(W) = (2,1).
+∎
+
+Step 4 — Orthogonal complements.
+Since W is nondegenerate, define V₁ := S₁ ∩ W⊥ and V₂ := S₂ ∩ W⊥.
+Then S₁ = W ⊕⊥ V₁ and S₂ = W ⊕⊥ V₂, with dim V₁ = dim V₂ = 1.
+
+sig(W) + sig(V₁) = sig(S₁): (2,1) + sig(V₁) = (3,1) → sig(V₁) = (1,0).
+
+sig(W) + sig(V₂) = sig(S₂): (2,1) + sig(V₂) = (2,2) → sig(V₂) = (0,1).
+
+V₁ is positive.
+V₂ is negative.
+∎
+
+Step 5 — Basis.
+
+e₀, e₁: positive, in W = S₁ ∩ S₂ sig(2,0)
+
+e₂: positive, in V₁ (S₁-only) sig(1,0)
+
+e₃: negative, in W = S₁ ∩ S₂ sig(0,1)
+
+e₄: negative, in V₂ (S₂-only) sig(0,1)
+
+Choose unit vectors e₂ ∈ V₁ and e₄ ∈ V₂.
+Since e₀,e₁,e₃ are orthonormal in W and V₁, V₂ ⊂ W⊥, the basis (e₀,e₁,e₂,e₃,e₄) satisfies
+
+⟨eᵢ,eⱼ⟩ = 0 whenever one of i,j {0,1,3} and the other ∈ {2,4}.
+
+The only potentially nonzero off-diagonal entry is α := ⟨e₂,e₄⟩, which is determined by the fixed subspaces S₁, S₂.
+
+Verification: S₁ = span(e₀,e₁,e₂,e₃), sig = (3,1) ✓.
+S₂ = span(e₀,e₁,e₃,e₄), sig = (2,2) ✓.
+
+In an orthonormal basis of P (diagonalizing Q₅), the metric is diag(+1,+1,+1,-1,-1), but S₂ may not align with a coordinate subspace.
+The adapted basis above keeps S₁ and S₂ as coordinate subspaces at the cost of one off-diagonal entry α.
+∎
+
+Conclusion.
+S₁ and S₂ are not chosen—they are the linear closure
+(Proof 4) and nonlinear closure (Proofs 3, 16) of C₂.
+Hence
+
+W=S₁∩ S₂
+
+is fixed.
+The proof shows that W is 3-dimensional,
+nondegenerate, and has signature (2,1).
+The orthogonal complement lines
+
+V₁=S₁∩ W⊥, V₂=S₂∩ W⊥
+
+are also fixed by S₁,S₂, with sig(V₁)=(1,0) and
+sig(V₂)=(0,1).
+In an adapted basis their mutual inner product
+
+α=⟨e₂,e₄⟩
+
+may appear as one off-diagonal metric entry; it is determined by
+the fixed pair (S₁,S₂) and is not an extra choice.
+For the downstream chain, however, no data from α is used:
+Proof 21 depends only on W and constructs
+
+V_W=Rτ ⊕ W ⊕ W*.
+
+Thus no additional parameter enters the higher alternating closure.
+
+[Dependencies: Proofs 3, 4, 5, 16.]`,
+    nft_url: `https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/20`,
+    tweet_url: ``
+  };
+  const canonicalString = [entry.id, entry.safecreative_url, entry.title, entry.date, entry.text, entry.nft_url, entry.tweet_url].join('\n---\n');
+  const data = new TextEncoder().encode(canonicalString);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashHex = [...new Uint8Array(hashBuffer)].map(b => b.toString(16).padStart(2, '0')).join('');
+  document.getElementById('hashResult').textContent = hashHex;
+  document.getElementById('copyHashBtn').addEventListener('click', () => { navigator.clipboard.writeText(hashHex); alert('Hash copied'); });
+})();
+</script>
+</body></html>

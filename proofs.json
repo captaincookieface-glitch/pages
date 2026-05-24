@@ -223,5 +223,17 @@
     "image_url": "https://prhi5cpbnhn44csqmfppsonlrtkfppiqzgtixrs6nfb24dqmfkxa.turbo-gateway.com/fE6OieFp284KUGFe-TmrjNRXvRDJpovGXmlDrg4MKq4",
     "in_scope": false,
     "script_url": "https://www.captaincookieface.com/scripts/ccfu_script_1_verify_higher_closure_py.html"
+  },
+  {
+    "id": "2605245775751",
+    "safecreative_url": "https://www.safecreative.org/work/2605245775751-ccfu-proof-23-dim-stab-_w-14",
+    "title": "CCFU Proof 23 — dim Stab(Ω_W) = 14",
+    "date": "05/24/2026",
+    "text": "Given.\nΩ_W = e₀₁₄ + e₀₂₅ + e₀₃₆ + e₁₂₃ + e₄₅₆ [Proof 22].\n\nAction of X ∈ gl(7) on Ω_W:\n    (X·Ω_W)ᵢⱼₖ = Σₗ (XₗᵢΩₗⱼₖ + XₗⱼΩᵢₗₖ + XₗₖΩᵢⱼₗ)\n35 × 49 matrix A.\n\nExact computation (Fraction over Q, no floating point):\n    rank(A) = 35.\n    dim ker(A) = 49 − 35 = 14.  ∎\n\nNote: the matrix has only 5 nonzero triples (vs 7 in old Ω),\nmaking hand verification feasible.\n\n[Dependency: Proof 22.]",
+    "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/23",
+    "tweet_url": "",
+    "image_url ": "https://ejholwojvgbv7dfzdfp22mq2fftidz4444ncoxsy4evgckqwvwva.arweave.net/Ik7l2cmpg1-MuRlfrTIaKWaB55znGideWOEqYSoWrao",
+    "in_scope": false,
+    "script_url": "https://www.captaincookieface.com/scripts/ccfu_script_1_verify_higher_closure_py.html"
   }
 ]

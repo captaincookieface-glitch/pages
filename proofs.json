@@ -269,5 +269,17 @@
     "tweet_url": "",
     "image_url": "https://x7p6mubaa5yligauzpoky3h33zmzy4pufpqn7akju4gprvvkqexa.ardrive.net/v9_mUCAHcLQYFMvcrGz73lmccfQr4N-BSacM-NaqgS4",
     "in_scope": false
+  },
+  {
+    "id": "2605255780899",
+    "safecreative_url": "https://www.safecreative.org/work/2605255780899-ccfu-proof-27-unique-gl-7-orbit",
+    "title": "CCFU Proof 27 — Unique GL(7)-Orbit",
+    "date": "05/25/2026",
+    "text": "Given.\nΩ_W = τ∧ev + vol_W + vol_{W*} [Proof 21].\n\nStep 1 — Orbit uniqueness (algebraic).\n    Ω_W belongs to the 3-parameter family Ω_{a,b,c}.\n    All abc ≠ 0 are GL(7)-equivalent [Proof 21, Step 5].\n    Therefore the GL(7)-orbit of Ω_W is unique.  ∎\n\nStep 2 — No compact alternative.\n    sig(b_{Ω_W}) = (3,4) [Proof 24]. Split, not compact.\n    The unique orbit is split.  ∎\n\nStep 3 — Consistency with exhaustive enumeration.\n    Verification (CCFU Script 3):\n    1524 C₂-compatible patterns with dim Stab = 14.\n    1523 split, 1 compact.\n    All 1523 split: Killing (8,6), ad-commutant 1 → g₂(split).\n    All consistent with the unique split orbit of Ω_W.  ∎\n\nStep 4 — Direct GL(7) certificates.\n    Verification (CCFU Script 4):\n    4 different patterns tested against Ω_old (7 terms).\n    Ω_old and Ω_W are in the same GL(7)-orbit [Proof 22].\n    All 4: h ∈ GL(7) and c ≠ 0 found such that\n        h*Ω_old ≈ c·Ω,\n    with residual ~ 10⁻²⁴. Since multiplication by a nonzero\n    scalar is absorbed by a scalar element of GL(7), this still\n    gives a GL(7)-orbit certificate.  ∎\n\nThe orbit is unique. The proof is algebraic (Steps 1-2).\nThe computational verification (Steps 3-4) is additional\nconfirmation, not the proof.\n\n[Dependencies: Proofs 21, 22, 24.]",
+    "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/27",
+    "tweet_url": "",
+    "image_url": "https://rysxspt7vzajt7a5k7webfc7you5l33fs5zw5266pskbs6aiur4a.arweave.net/jiV5Pn-uQJn8HVfsQJRfw6nV72WXc27r3nyUGXgIpHg",
+    "in_scope": false,
+    "script_url": "https://www.captaincookieface.com/scripts/ccfu_script_3_proof_27_exhaustive_orbit_py.html\\nhttps://www.captaincookieface.com/scripts/ccfu_script_4_verify_gl7_orbit_py.html"
   }
 ]

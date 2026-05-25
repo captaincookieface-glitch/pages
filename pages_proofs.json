@@ -113,5 +113,20 @@
     "id": "2605245775751",
     "hash": "669b83da3c339a0c818cf1ec3770dca4cab4d9d5d89733ac333c04c942578477",
     "github_page_url": "https://www.captaincookieface.com/ccfu_proofs/ccfu_proof_23_dim_stab_w_14.html"
+  },
+  {
+    "id": "2605245776109",
+    "hash": "6c50c949df6c82f3be45b6440a81752a3b752130b0daa73fcfe64b8fbc03a661",
+    "github_page_url": "https://www.captaincookieface.com/ccfu_proofs/ccfu_proof_24_sig_b_w_3_4.html"
+  },
+  {
+    "id": "2605255776212",
+    "hash": "cd06ca120ec4a763a3582b21823bd8070cd72f9180934592165cb8f3dff382f7",
+    "github_page_url": "https://www.captaincookieface.com/ccfu_proofs/ccfu_proof_25_stability_of_w.html"
+  },
+  {
+    "id": "2605255777417",
+    "hash": "96735680f96721bbf0641a26f6b1a66a2a784a8053e67304ce5d4a9512419d4f",
+    "github_page_url": "https://www.captaincookieface.com/ccfu_proofs/ccfu_proof_26_fixed_point_sig_2_2_for_degree_2_memory_maps.html"
   }
 ]

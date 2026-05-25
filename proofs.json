@@ -247,5 +247,16 @@
     "image_url": "https://sctyarsrfly7bdblam6jcixc3aat5tj6di7lkdiqn3aqlz6m4q3q.turbo-gateway.com/kKeARlEq8fCMKwM8kSLi2AE-zT4aPrUNEG7BBefM5Dc",
     "in_scope": false,
     "script_url": "https://www.captaincookieface.com/scripts/ccfu_script_1_verify_higher_closure_py.html"
+  },
+  {
+    "id": "2605255776212",
+    "safecreative_url": "https://www.safecreative.org/work/2605255776212-ccfu-proof-25-stability-of-_w",
+    "title": "CCFU Proof 25 — Stability of Ω_W",
+    "date": "05/25/2026",
+    "text": "Given.\ndim GL(7) = 49. dim Λ³(R⁷) = C(7,3) = 35.\ndim Stab = 14 [Proof 23].\n\n    dim orbit = 49 − 14 = 35 = dim Λ³(R⁷).\n\nOrbit is open. Ω_W is stable.  ∎\n\n[Dependency: Proof 23.]",
+    "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/25",
+    "tweet_url": "",
+    "image_url": "https://xnawy6yssit6gpyxzm3yashzjqs4tyg4zga4mp2cigiljs5tscya.turbo-gateway.com/u0FsexKSJ-M_F8s3gEj5TCXJ4NzJgcY_QkGQtMuzkLA",
+    "in_scope": false
   }
 ]

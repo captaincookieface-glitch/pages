@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CCFU Script 4 — verify_gl7_orbit.py</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #fff; }
+    .block { margin-bottom: 20px; padding: 15px; border: 1px solid #eee; word-wrap: break-word; }
+    .key { color: #000; font-size: 2em !important; text-transform: capitalize; font-weight: bold; }
+    .hash { word-break: break-all; color: #4287f5; }
+    a { color: #4287f5; text-decoration: underline; }
+    pre { white-space: pre-wrap; }
+    code { background: #f4f4f4; padding: 2px 4px; font-size: 0.9em; }
+    pre > code { display: block; padding: 12px; overflow-x: auto; white-space: pre; }
+    button { font-family: inherit; padding: 6px 10px; border: 1px solid #ccc; background: #f9f9f9; cursor: pointer; }
+    h1 { margin-bottom: 10px; font-size: 32px; }
+    nav { background-color: #e1e1e1; padding: 10px; }
+    nav > ul { display: flex; flex-wrap: wrap; list-style: none; padding: 0; margin: 0; }
+    nav > ul > li, nav > ul > li > a { display: flex; flex-direction: column; text-align: center; margin: 0; }
+    nav ul li img { max-width: 80px; width: 100%; height: auto; border-radius: 40px; }
+    .arrow { width: 50px; height: 80px; font-size: 38px; }
+    iframe { border-radius: 4px; }
+  </style>
+</head>
+<body>
+<article itemscope itemtype="https://schema.org/CreativeWork">
+  <meta itemprop="identifier" content="2605255779602">
+  <meta itemprop="dateCreated" content="05/25/2026">
+<h1 itemprop="name">CCFU Script 4 — verify_gl7_orbit.py</h1>
+<nav aria-label="Breadcrumb" class="breadcrumb">
+  <ul>
+    <li><a href="../"><img src="../assets/images/AFB9C382-3B34-4925-B318-E7083E758055.png" alt="Home"/><span>Home</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><a href="./"><img src="../assets/images/scripts-1024.svg" alt="CCFU"/><span>Scripts</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><img src="../assets/images/scripts-1024.svg" alt="CCFU"/><span>CCFU Script 4 — verify_gl7_orbit.py</span></li>
+  </ul>
+</nav>
+  <div class="block" id="rendered">
+
+    <div class="block">
+      <div class="key">id</div>
+      <pre>2605255779602</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">safecreative_url</div>
+      <a href="https://www.safecreative.org/work/2605255779602-ccfu-script-4-verify_gl7_orbit-py" target="_blank">https://www.safecreative.org/work/2605255779602-ccfu-script-4-verify_gl7_orbit-py</a>
+    </div>
+
+    <div class="block">
+      <div class="key">title</div>
+      <pre>CCFU Script 4 — verify_gl7_orbit.py</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">date</div>
+      <pre>05/25/2026</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">text</div>
+      <details><summary style="cursor:pointer; color:#4287f5; margin-bottom:8px;">Show source code</summary><pre><code>&quot;&quot;&quot;
+verify_gl7_orbit.py — GL(7) orbit certificates
+=======================================================
+
+Numerical verifier for the four C2-compatible split patterns.
+Compared with the original uploaded script, this version uses scipy.optimize
+least_squares on the 35 independent 3-form coefficients, which avoids the long
+stall observed in pair 2 with L-BFGS-B.
+
+Run: python3 verify_gl7_orbit.py
+&quot;&quot;&quot;
+
+from itertools import permutations, combinations
+import time
+
+import numpy as np
+from scipy.optimize import least_squares
+
+canonical = {
+    (0, 1, 2): +1, (0, 3, 4): -1, (0, 5, 6): -1,
+    (1, 3, 5): -1, (2, 4, 5): +1, (1, 4, 6): +1, (2, 3, 6): +1,
+}
+
+BASIS_3 = [(i, j, k) for i in range(7) for j in range(i + 1, 7) for k in range(j + 1, 7)]
+GL_POSITIONS = [(a, b) for a in range(7) for b in range(7)]
+
+
+def permutation_sign(seq):
+    sign = 1
+    lst = list(seq)
+    for a in range(len(lst)):
+        for b in range(a + 1, len(lst)):
+            if lst[a] &gt; lst[b]:
+                sign *= -1
+    return sign
+
+
+def build_omega_tensor(pattern_triples_signed):
+    Omega = np.zeros((7, 7, 7))
+    for triple, s in pattern_triples_signed.items():
+        for p in permutations(triple):
+            Omega[p[0], p[1], p[2]] = s * permutation_sign(p)
+    return Omega
+
+
+def assign_signs_to_pattern(triple_list):
+    &quot;&quot;&quot;Return the first sign assignment with full orbit-rank 35.&quot;&quot;&quot;
+    triple_list = sorted(triple_list)
+    n = len(triple_list)
+    for signs_int in range(2 ** n):
+        signs = [(1 if (signs_int &gt;&gt; k) &amp; 1 else -1) for k in range(n)]
+        signed = {triple_list[k]: signs[k] for k in range(n)}
+        Omega = build_omega_tensor(signed)
+        M = np.zeros((35, 49))
+        for ri, (i, j, k) in enumerate(BASIS_3):
+            for ci, (a, b) in enumerate(GL_POSITIONS):
+                val = 0.0
+                if b == i:
+                    val += Omega[a, j, k]
+                if b == j:
+                    val += Omega[i, a, k]
+                if b == k:
+                    val += Omega[i, j, a]
+                M[ri, ci] = val
+        if np.linalg.matrix_rank(M, tol=1e-9) == 35:
+            return signed
+    return None
+
+
+test_patterns_lists = [
+    [(0, 1, 2), (0, 1, 4), (0, 2, 5), (0, 5, 6), (1, 4, 6), (2, 3, 5), (3, 4, 6)],
+    [(0, 1, 2), (0, 1, 4), (0, 2, 5), (0, 5, 6), (1, 4, 6), (2, 3, 6), (3, 4, 5)],
+    [(0, 1, 2), (0, 1, 4), (0, 2, 6), (0, 5, 6), (1, 3, 5), (2, 4, 5), (3, 4, 6)],
+    [(0, 1, 2), (0, 1, 4), (0, 3, 5), (0, 5, 6), (1, 2, 6), (2, 4, 5), (3, 4, 6)],
+]
+
+
+def apply_h(h, O):
+    return np.einsum('ai,bj,ck,abc-&gt;ijk', h, h, h, O)
+
+
+def normalize_h(h):
+    d = np.linalg.det(h)
+    if abs(d) &lt; 1e-12:
+        return None
+    return h * (abs(d) ** (-1.0 / 7.0))
+
+
+def best_c_and_residual(h_normed, O1, O2):
+    applied = apply_h(h_normed, O1)
+    c = float(np.sum(applied * O2)) / float(np.sum(O2 * O2))
+    diff = applied - c * O2
+    return c, float(np.sum(diff ** 2))
+
+
+def tensor_basis_vector(O):
+    return np.array([O[i, j, k] for i, j, k in BASIS_3], dtype=float)
+
+
+def residual_vector(params, O1, O2_basis):
+    h = params[:49].reshape(7, 7)
+    c = params[49]
+    h_normed = normalize_h(h)
+    if h_normed is None:
+        return np.ones(len(BASIS_3), dtype=float) * 1e4
+    applied = apply_h(h_normed, O1)
+    applied_basis = tensor_basis_vector(applied)
+    return applied_basis - c * O2_basis
+
+
+def find_gl7_map(O1, O2, n_attempts=60, max_nfev=2000):
+    &quot;&quot;&quot;Find h and scalar c with h*O1 ~ c*O2.
+
+    least_squares is much more reliable here than finite-difference L-BFGS-B
+    on the squared loss; the original method stalls on the second test pair.
+    &quot;&quot;&quot;
+    norm_O2 = float(np.sum(O2 ** 2))
+    O2_basis = tensor_basis_vector(O2)
+    best = (float('inf'), None, None)
+
+    for attempt in range(n_attempts):
+        rng = np.random.default_rng(attempt)
+        if attempt &lt; 15:
+            h_init = np.eye(7) + 0.3 * rng.standard_normal((7, 7))
+        elif attempt &lt; 30:
+            h_init = np.eye(7) + 0.8 * rng.standard_normal((7, 7))
+        elif attempt &lt; 50:
+            h_init = rng.standard_normal((7, 7))
+        else:
+            perm = rng.permutation(7)
+            h_init = np.eye(7)[perm] + 0.3 * rng.standard_normal((7, 7))
+
+        h_normed_init = normalize_h(h_init)
+        if h_normed_init is None:
+            continue
+
+        c_init, _ = best_c_and_residual(h_normed_init, O1, O2)
+        x0 = np.concatenate([h_normed_init.flatten(), [c_init]])
+
+        try:
+            result = least_squares(
+                residual_vector,
+                x0,
+                args=(O1, O2_basis),
+                method='trf',
+                max_nfev=max_nfev,
+                ftol=1e-12,
+                xtol=1e-12,
+                gtol=1e-12,
+            )
+            h_final = result.x[:49].reshape(7, 7)
+            h_normed = normalize_h(h_final)
+            if h_normed is None:
+                continue
+            c, res = best_c_and_residual(h_normed, O1, O2)
+            rel = res / norm_O2
+            if rel &lt; best[0]:
+                best = (rel, h_normed, c)
+            if rel &lt; 1e-14:
+                break
+        except Exception as exc:
+            print(f&quot;    attempt {attempt}: optimizer exception: {exc}&quot;)
+            continue
+
+    return best
+
+
+def hitchin_lambda(O):
+    &quot;&quot;&quot;Compute Hitchin bilinear form b_Omega and determinant.&quot;&quot;&quot;
+    idx = list(range(7))
+    b = np.zeros((7, 7))
+    for a in range(7):
+        for bb in range(7):
+            total = 0.0
+            for c2a in combinations(idx, 2):
+                rem = [x for x in idx if x not in c2a]
+                for c2b in combinations(rem, 2):
+                    c3 = tuple(x for x in rem if x not in c2b)
+                    if len(c3) != 3:
+                        continue
+                    va = O[a, c2a[0], c2a[1]]
+                    vb = O[bb, c2b[0], c2b[1]]
+                    vo = O[c3[0], c3[1], c3[2]]
+                    if va == 0 or vb == 0 or vo == 0:
+                        continue
+                    perm = list(c2a) + list(c2b) + list(c3)
+                    if len(set(perm)) != 7:
+                        continue
+                    total += permutation_sign(perm) * va * vb * vo
+            b[a][bb] = total / 6.0
+    eigs = np.linalg.eigvalsh(b)
+    pos = int(np.sum(eigs &gt; 0.01))
+    neg = int(np.sum(eigs &lt; -0.01))
+    det_b = np.linalg.det(b)
+    return (pos, neg), det_b
+
+
+def main():
+    O1 = build_omega_tensor(canonical)
+    print(f&quot;Canonical Ω built. ||Ω₁||² = {np.sum(O1 ** 2)}&quot;)
+
+    hsig_can, _ = hitchin_lambda(O1)
+    orbit_can = 'SPLIT' if hsig_can in [(3, 4), (4, 3)] else 'COMPACT'
+    print(f&quot;Canonical: sig(b_Ω)={hsig_can}, orbit={orbit_can}&quot;)
+    print()
+
+    results = []
+    for idx, pat_list in enumerate(test_patterns_lists):
+        print(f&quot;\nPair {idx + 1}: Canonical ↔ {pat_list}&quot;)
+        pattern_signed = assign_signs_to_pattern(pat_list)
+        if pattern_signed is None:
+            print(&quot;  No valid sign assignment. Skipping.&quot;)
+            continue
+        O2 = build_omega_tensor(pattern_signed)
+        start = time.time()
+        rel_residual, h, c = find_gl7_map(O1, O2, n_attempts=60)
+        elapsed = time.time() - start
+        det_h = np.linalg.det(h) if h is not None else 0.0
+        hsig2, _ = hitchin_lambda(O2)
+        orbit = 'SPLIT' if hsig2 in [(3, 4), (4, 3)] else 'COMPACT'
+        status = '✓' if rel_residual &lt; 1e-8 else '✗'
+        print(f&quot;  {status} residual={rel_residual:.2e}, c={c:.3f}, det(h)={det_h:.3f}, time={elapsed:.1f}s&quot;)
+        print(f&quot;    sig(b_Ω)={hsig2} → {orbit}&quot;)
+        results.append((idx + 1, rel_residual &lt; 1e-8, rel_residual, c))
+
+    print(f&quot;\nSUMMARY: {sum(1 for _, s, _, _ in results if s)}/{len(results)} verified.&quot;)
+    return 0 if all(s for _, s, _, _ in results) else 1
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())</code></pre></details>
+    </div>
+
+    <div class="block">
+      <div class="key">nft_url</div>
+      <a href="https://opensea.io/item/base/0x8a3ee2dbaa1c33f3cb3d927497f4ae798b598b65/4" target="_blank">https://opensea.io/item/base/0x8a3ee2dbaa1c33f3cb3d927497f4ae798b598b65/4</a>
+    </div>
+
+    <div class="block">
+      <div class="key">tweet_url</div>
+      <pre></pre>
+    </div>
+
+  </div>
+  <div class="block">
+    <div class="key">SHA-256</div>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <div class="hash" id="hashResult"></div>
+      <button id="copyHashBtn" type="button">Copy</button>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="key">Visualization</div>
+    <iframe src="https://n7yxlilt6xe7unvfxhmhbyz7nupdbhywj2ybwqqdq3kz3wrwsnra.ardrive.net/b_F1oXP1yfo2pbnYcOM_bR4wnxZOsBtCA4bVndo2k2I" 
+     title="CCFU Script 4 — verify_gl7_orbit.py" 
+     style="width: 100%; height: 600px; border: 1px solid #eee;"
+     sandbox="allow-scripts allow-same-origin"
+     loading="lazy"></iframe>
+  </div>
+
+</article>
+<script>
+(async () => {
+  const entry = {
+    id: `2605255779602`,
+    safecreative_url: `https://www.safecreative.org/work/2605255779602-ccfu-script-4-verify_gl7_orbit-py`,
+    title: `CCFU Script 4 — verify_gl7_orbit.py`,
+    date: `05/25/2026`,
+    text: `"""
+verify_gl7_orbit.py — GL(7) orbit certificates
+=======================================================
+
+Numerical verifier for the four C2-compatible split patterns.
+Compared with the original uploaded script, this version uses scipy.optimize
+least_squares on the 35 independent 3-form coefficients, which avoids the long
+stall observed in pair 2 with L-BFGS-B.
+
+Run: python3 verify_gl7_orbit.py
+"""
+
+from itertools import permutations, combinations
+import time
+
+import numpy as np
+from scipy.optimize import least_squares
+
+canonical = {
+    (0, 1, 2): +1, (0, 3, 4): -1, (0, 5, 6): -1,
+    (1, 3, 5): -1, (2, 4, 5): +1, (1, 4, 6): +1, (2, 3, 6): +1,
+}
+
+BASIS_3 = [(i, j, k) for i in range(7) for j in range(i + 1, 7) for k in range(j + 1, 7)]
+GL_POSITIONS = [(a, b) for a in range(7) for b in range(7)]
+
+
+def permutation_sign(seq):
+    sign = 1
+    lst = list(seq)
+    for a in range(len(lst)):
+        for b in range(a + 1, len(lst)):
+            if lst[a] > lst[b]:
+                sign *= -1
+    return sign
+
+
+def build_omega_tensor(pattern_triples_signed):
+    Omega = np.zeros((7, 7, 7))
+    for triple, s in pattern_triples_signed.items():
+        for p in permutations(triple):
+            Omega[p[0], p[1], p[2]] = s * permutation_sign(p)
+    return Omega
+
+
+def assign_signs_to_pattern(triple_list):
+    """Return the first sign assignment with full orbit-rank 35."""
+    triple_list = sorted(triple_list)
+    n = len(triple_list)
+    for signs_int in range(2 ** n):
+        signs = [(1 if (signs_int >> k) & 1 else -1) for k in range(n)]
+        signed = {triple_list[k]: signs[k] for k in range(n)}
+        Omega = build_omega_tensor(signed)
+        M = np.zeros((35, 49))
+        for ri, (i, j, k) in enumerate(BASIS_3):
+            for ci, (a, b) in enumerate(GL_POSITIONS):
+                val = 0.0
+                if b == i:
+                    val += Omega[a, j, k]
+                if b == j:
+                    val += Omega[i, a, k]
+                if b == k:
+                    val += Omega[i, j, a]
+                M[ri, ci] = val
+        if np.linalg.matrix_rank(M, tol=1e-9) == 35:
+            return signed
+    return None
+
+
+test_patterns_lists = [
+    [(0, 1, 2), (0, 1, 4), (0, 2, 5), (0, 5, 6), (1, 4, 6), (2, 3, 5), (3, 4, 6)],
+    [(0, 1, 2), (0, 1, 4), (0, 2, 5), (0, 5, 6), (1, 4, 6), (2, 3, 6), (3, 4, 5)],
+    [(0, 1, 2), (0, 1, 4), (0, 2, 6), (0, 5, 6), (1, 3, 5), (2, 4, 5), (3, 4, 6)],
+    [(0, 1, 2), (0, 1, 4), (0, 3, 5), (0, 5, 6), (1, 2, 6), (2, 4, 5), (3, 4, 6)],
+]
+
+
+def apply_h(h, O):
+    return np.einsum('ai,bj,ck,abc->ijk', h, h, h, O)
+
+
+def normalize_h(h):
+    d = np.linalg.det(h)
+    if abs(d) < 1e-12:
+        return None
+    return h * (abs(d) ** (-1.0 / 7.0))
+
+
+def best_c_and_residual(h_normed, O1, O2):
+    applied = apply_h(h_normed, O1)
+    c = float(np.sum(applied * O2)) / float(np.sum(O2 * O2))
+    diff = applied - c * O2
+    return c, float(np.sum(diff ** 2))
+
+
+def tensor_basis_vector(O):
+    return np.array([O[i, j, k] for i, j, k in BASIS_3], dtype=float)
+
+
+def residual_vector(params, O1, O2_basis):
+    h = params[:49].reshape(7, 7)
+    c = params[49]
+    h_normed = normalize_h(h)
+    if h_normed is None:
+        return np.ones(len(BASIS_3), dtype=float) * 1e4
+    applied = apply_h(h_normed, O1)
+    applied_basis = tensor_basis_vector(applied)
+    return applied_basis - c * O2_basis
+
+
+def find_gl7_map(O1, O2, n_attempts=60, max_nfev=2000):
+    """Find h and scalar c with h*O1 ~ c*O2.
+
+    least_squares is much more reliable here than finite-difference L-BFGS-B
+    on the squared loss; the original method stalls on the second test pair.
+    """
+    norm_O2 = float(np.sum(O2 ** 2))
+    O2_basis = tensor_basis_vector(O2)
+    best = (float('inf'), None, None)
+
+    for attempt in range(n_attempts):
+        rng = np.random.default_rng(attempt)
+        if attempt < 15:
+            h_init = np.eye(7) + 0.3 * rng.standard_normal((7, 7))
+        elif attempt < 30:
+            h_init = np.eye(7) + 0.8 * rng.standard_normal((7, 7))
+        elif attempt < 50:
+            h_init = rng.standard_normal((7, 7))
+        else:
+            perm = rng.permutation(7)
+            h_init = np.eye(7)[perm] + 0.3 * rng.standard_normal((7, 7))
+
+        h_normed_init = normalize_h(h_init)
+        if h_normed_init is None:
+            continue
+
+        c_init, _ = best_c_and_residual(h_normed_init, O1, O2)
+        x0 = np.concatenate([h_normed_init.flatten(), [c_init]])
+
+        try:
+            result = least_squares(
+                residual_vector,
+                x0,
+                args=(O1, O2_basis),
+                method='trf',
+                max_nfev=max_nfev,
+                ftol=1e-12,
+                xtol=1e-12,
+                gtol=1e-12,
+            )
+            h_final = result.x[:49].reshape(7, 7)
+            h_normed = normalize_h(h_final)
+            if h_normed is None:
+                continue
+            c, res = best_c_and_residual(h_normed, O1, O2)
+            rel = res / norm_O2
+            if rel < best[0]:
+                best = (rel, h_normed, c)
+            if rel < 1e-14:
+                break
+        except Exception as exc:
+            print(f"    attempt {attempt}: optimizer exception: {exc}")
+            continue
+
+    return best
+
+
+def hitchin_lambda(O):
+    """Compute Hitchin bilinear form b_Omega and determinant."""
+    idx = list(range(7))
+    b = np.zeros((7, 7))
+    for a in range(7):
+        for bb in range(7):
+            total = 0.0
+            for c2a in combinations(idx, 2):
+                rem = [x for x in idx if x not in c2a]
+                for c2b in combinations(rem, 2):
+                    c3 = tuple(x for x in rem if x not in c2b)
+                    if len(c3) != 3:
+                        continue
+                    va = O[a, c2a[0], c2a[1]]
+                    vb = O[bb, c2b[0], c2b[1]]
+                    vo = O[c3[0], c3[1], c3[2]]
+                    if va == 0 or vb == 0 or vo == 0:
+                        continue
+                    perm = list(c2a) + list(c2b) + list(c3)
+                    if len(set(perm)) != 7:
+                        continue
+                    total += permutation_sign(perm) * va * vb * vo
+            b[a][bb] = total / 6.0
+    eigs = np.linalg.eigvalsh(b)
+    pos = int(np.sum(eigs > 0.01))
+    neg = int(np.sum(eigs < -0.01))
+    det_b = np.linalg.det(b)
+    return (pos, neg), det_b
+
+
+def main():
+    O1 = build_omega_tensor(canonical)
+    print(f"Canonical Ω built. ||Ω₁||² = {np.sum(O1 ** 2)}")
+
+    hsig_can, _ = hitchin_lambda(O1)
+    orbit_can = 'SPLIT' if hsig_can in [(3, 4), (4, 3)] else 'COMPACT'
+    print(f"Canonical: sig(b_Ω)={hsig_can}, orbit={orbit_can}")
+    print()
+
+    results = []
+    for idx, pat_list in enumerate(test_patterns_lists):
+        print(f"\\nPair {idx + 1}: Canonical ↔ {pat_list}")
+        pattern_signed = assign_signs_to_pattern(pat_list)
+        if pattern_signed is None:
+            print("  No valid sign assignment. Skipping.")
+            continue
+        O2 = build_omega_tensor(pattern_signed)
+        start = time.time()
+        rel_residual, h, c = find_gl7_map(O1, O2, n_attempts=60)
+        elapsed = time.time() - start
+        det_h = np.linalg.det(h) if h is not None else 0.0
+        hsig2, _ = hitchin_lambda(O2)
+        orbit = 'SPLIT' if hsig2 in [(3, 4), (4, 3)] else 'COMPACT'
+        status = '✓' if rel_residual < 1e-8 else '✗'
+        print(f"  {status} residual={rel_residual:.2e}, c={c:.3f}, det(h)={det_h:.3f}, time={elapsed:.1f}s")
+        print(f"    sig(b_Ω)={hsig2} → {orbit}")
+        results.append((idx + 1, rel_residual < 1e-8, rel_residual, c))
+
+    print(f"\\nSUMMARY: {sum(1 for _, s, _, _ in results if s)}/{len(results)} verified.")
+    return 0 if all(s for _, s, _, _ in results) else 1
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())`,
+    nft_url: `https://opensea.io/item/base/0x8a3ee2dbaa1c33f3cb3d927497f4ae798b598b65/4`,
+    tweet_url: ``
+  };
+  const canonicalString = [entry.id, entry.safecreative_url, entry.title, entry.date, entry.text, entry.nft_url, entry.tweet_url].join('\n---\n');
+  const data = new TextEncoder().encode(canonicalString);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashHex = [...new Uint8Array(hashBuffer)].map(b => b.toString(16).padStart(2, '0')).join('');
+  document.getElementById('hashResult').textContent = hashHex;
+  document.getElementById('copyHashBtn').addEventListener('click', () => { navigator.clipboard.writeText(hashHex); alert('Hash copied'); });
+})();
+</script>
+</body></html>

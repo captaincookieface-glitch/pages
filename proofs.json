@@ -258,5 +258,15 @@
     "tweet_url": "",
     "image_url": "https://xnawy6yssit6gpyxzm3yashzjqs4tyg4zga4mp2cigiljs5tscya.turbo-gateway.com/u0FsexKSJ-M_F8s3gEj5TCXJ4NzJgcY_QkGQtMuzkLA",
     "in_scope": false
+  },
+  {
+    "id": "2605255777417",
+    "safecreative_url": "https://www.safecreative.org/work/2605255777417-ccfu-proof-26-fixed-point-sig-2-2-for-degree-2-memory-maps",
+    "title": "CCFU Proof 26 — Fixed-Point sig(2,2) for Degree-2 Memory Maps",
+    "date": "05/25/2026",
+    "text": "Given.\nGeneral holomorphic degree-2 memory map on C² = R⁴:\n    F(z,w) = (z² + αzw + βw, z + γw), α,γ ∈ R, β ∈ R, β ≠ 0.\n\nJacobian at the fixed point (origin):\n    J(0) = [[0, 0, β, 0],\n            [0, 0, 0, β],\n            [1, 0, γ, 0],\n            [0, 1, 0, γ]]\n\nNote: α does not appear at the origin (αzw vanishes at z=0).\n\nEigenvalues of J(0)ᵀGJ(0):\n    λ₁ = β(γ − √(γ²+1)), multiplicity 2\n    λ₂ = β(γ + √(γ²+1)), multiplicity 2\n\nSince √(γ²+1) > |γ| for all real γ:\n    γ − √(γ²+1) < 0  always\n    γ + √(γ²+1) > 0  always\n\nIf β > 0: λ₁ < 0 (×2), λ₂ > 0 (×2) → sig(2,2).\nIf β < 0: λ₁ > 0 (×2), λ₂ < 0 (×2) → sig(2,2).  ∎\n\nsig(2,2) holds at the fixed point for every map in this class.\nNo choice of F avoids sig(2,2).\n[Self-contained. Uses Proof 3 setup.]",
+    "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/26",
+    "tweet_url": "",
+    "image_url": "https://x7p6mubaa5yligauzpoky3h33zmzy4pufpqn7akju4gprvvkqexa.ardrive.net/v9_mUCAHcLQYFMvcrGz73lmccfQr4N-BSacM-NaqgS4"
   }
 ]

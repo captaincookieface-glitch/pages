@@ -235,5 +235,17 @@
     "image_url": "https://ejholwojvgbv7dfzdfp22mq2fftidz4444ncoxsy4evgckqwvwva.arweave.net/Ik7l2cmpg1-MuRlfrTIaKWaB55znGideWOEqYSoWrao",
     "in_scope": false,
     "script_url": "https://www.captaincookieface.com/scripts/ccfu_script_1_verify_higher_closure_py.html"
+  },
+  {
+    "id": "2605245776109",
+    "safecreative_url": "https://www.safecreative.org/work/2605245776109-ccfu-proof-24-sig-b_-_w-3-4-",
+    "title": "CCFU Proof 24 — sig(b_{Ω_W}) = (3,4)",
+    "date": "05/24/2026",
+    "text": "Given.\nΩ_W from Proof 22.\n\nThe Hitchin bilinear form [Proof 21, Step 4]:\n\n    b_{Ω_W} = [[-6, 0, 0, 0, 0, 0, 0],\n               [ 0, 0, 0, 0, 3, 0, 0],\n               [ 0, 0, 0, 0, 0, 3, 0],\n               [ 0, 0, 0, 0, 0, 0, 3],\n               [ 0, 3, 0, 0, 0, 0, 0],\n               [ 0, 0, 3, 0, 0, 0, 0],\n               [ 0, 0, 0, 3, 0, 0, 0]]\n\nEigenvalues: −6 (×1), −3 (×3), +3 (×3).\nsig(b_{Ω_W}) = (3,4).  ∎\n\nThis can be computed by hand: the matrix is block-diagonal\nwith a 1×1 block (−6) and three 2×2 blocks [[0,3],[3,0]]\neach with eigenvalues ±3.\n\n[Dependency: Proof 22. Algebraic — hand computation.]",
+    "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/24",
+    "tweet_url": "",
+    "image_url": "https://sctyarsrfly7bdblam6jcixc3aat5tj6di7lkdiqn3aqlz6m4q3q.turbo-gateway.com/kKeARlEq8fCMKwM8kSLi2AE-zT4aPrUNEG7BBefM5Dc",
+    "in_scope": false,
+    "script_url": "https://www.captaincookieface.com/scripts/ccfu_script_1_verify_higher_closure_py.html"
   }
 ]

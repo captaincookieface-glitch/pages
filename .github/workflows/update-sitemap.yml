@@ -53,27 +53,22 @@ jobs:
 
             # 2. CCF section
             echo "${BASE_URL}/captain_cookie_face/"
-            echo "${BASE_URL}/captain_cookie_face/index.html"
             extract_urls "$CCF_INDEX" "captain_cookie_face"
 
             # 3. Theories section
             echo "${BASE_URL}/theories/"
-            echo "${BASE_URL}/theories/index.html"
             extract_urls "$THEORIES_INDEX" "theories"
 
             # 4. Simulators section
             echo "${BASE_URL}/ccfu_simulators/"
-            echo "${BASE_URL}/ccfu_simulators/index.html"
             extract_urls "$SIMULATORS_INDEX" "ccfu_simulators"
 
             # 5. Proofs section
             echo "${BASE_URL}/ccfu_proofs/"
-            echo "${BASE_URL}/ccfu_proofs/index.html"
             extract_urls "$PROOFS_INDEX" "ccfu_proofs"
 
             # 6. Scripts section
             echo "${BASE_URL}/scripts/"
-            echo "${BASE_URL}/scripts/index.html"
             extract_urls "$SCRIPTS_INDEX" "scripts"
           } > /tmp/all_urls.txt
 

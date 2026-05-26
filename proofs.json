@@ -280,6 +280,18 @@
     "tweet_url": "",
     "image_url": "https://rysxspt7vzajt7a5k7webfc7you5l33fs5zw5266pskbs6aiur4a.arweave.net/jiV5Pn-uQJn8HVfsQJRfw6nV72WXc27r3nyUGXgIpHg",
     "in_scope": false,
-    "script_url": "https://www.captaincookieface.com/scripts/ccfu_script_3_proof_27_exhaustive_orbit_py.html, https://www.captaincookieface.com/scripts/ccfu_script_4_verify_gl7_orbit_py.html"
+    "script_url": "https://www.captaincookieface.com/scripts/ccfu_script_3_proof_27_exhaustive_orbit_py.html,https://www.captaincookieface.com/scripts/ccfu_script_4_verify_gl7_orbit_py.html"
+  },
+  {
+    "id": "2605265789431",
+    "safecreative_url": "https://www.safecreative.org/work/2605265789431-ccfu-proof-28-stab-_w-g2-split-",
+    "title": "CCFU Proof 28 — Stab(Ω_W) ≅ g₂(split)",
+    "date": "05/26/2026",
+    "text": "Given.\nΩ_W from Proof 22.\ndim Stab(Ω_W) = 14 [Proof 23].\n\nG₂ identification (CCFU Script 2):\n    1. dim g = 14.\n    2. g closed under commutators (Lie subalgebra).\n    3. g = [g,g] (perfect).\n    4. Killing form nondegenerate (semisimple — Cartan criterion).\n    5. R⁷ irreducible (commutant = scalars — Schur).\n    6. Simple (ad-commutant dim 1).\n    7. Killing signature (8,6) (split real form — Cartan 1914).\n    8. g ⊂ so(b_{Ω_W}) (preserves Hitchin metric).\n\nBy Killing's classification (1887):\nthe only 14-dimensional simple Lie algebra (over C) is g₂.\nBy Cartan's classification of real forms (1914):\nKilling signature (8,6) identifies the split real form.\n\nTherefore Stab(Ω_W) has Lie algebra g₂(split).  ∎\n\nExternal references:\n    Killing 1887 (classification of simple Lie algebras over C).\n    Cartan 1914 (classification of real forms).\n    Cartan criterion (Killing nondegenerate ↔ semisimple).\n    Schur's lemma (commutant = scalars ↔ irreducible).\n\n[Dependencies: Proofs 22, 23.]",
+    "nft_url": "https://opensea.io/item/base/0x5188731a5ae60f92ba8c7e55d4193ff793ebd6d2/28",
+    "tweet_url": "",
+    "image_url": "https://ycjci5tin5lkgvvp5yyi4ss7m44idhxqmegqyujuw7htkzw4qlta.turbo-gateway.com/wJIkdmhvVqNWr-4wjkpfZziBnvBhDQxRNLfPNWbcguY",
+    "in_scope": false,
+    "script_url": "https://www.captaincookieface.com/scripts/ccfu_script_2_proof_g2_complete_py.html"
   }
 ]

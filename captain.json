@@ -1913,6 +1913,16 @@
       "nft_url": "https://opensea.io/item/base/0xfa583a819f70dd23213384b50ee1a20a5f083fa6/87",
       "tweet_url": "https://x.com/captaincoo39471/status/2060955532207227058",
       "image_url": "https://erhkqg74jv6ci7aojtedrvzgeevugewya2ymdxzzur3blulkkioq.arweave.net/JE6oG_xNfCR8DkzIONcmIStDEtgGsMHfOaR2FdFqUh0"
+    },
+    {
+      "id": "2606015839789",
+      "safecreative_url": "https://www.safecreative.org/work/2606015839789-the-ccf-anti-palindrome-matrix",
+      "title": "The CCF Anti-Palindrome Matrix",
+      "date": "06/01/2026",
+      "text": "A₄ = [[0, 0, 0, 1],\n          [1, 0, 0, −√5],\n          [0, 1, 0, 0],\n          [0, 0, 1, √5]]",
+      "nft_url": "https://opensea.io/item/base/0xfa583a819f70dd23213384b50ee1a20a5f083fa6/88",
+      "tweet_url": "https://x.com/captaincoo39471/status/2061370901224915224",
+      "image_url": "https://e2edswyos7ijffrsqfhqwj6uhftbsq35j55f6vqxziwbthrno2ha.arweave.net/Jog5Ww6X0JKWMoFPCyfUOWYZQ31Pel9WF8osGZ4tdo4"
     }
   ]
 }

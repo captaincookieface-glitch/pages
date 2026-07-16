@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CCFU Script 5 — verify_cartan_bridge.py</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #fff; }
+    .block { margin-bottom: 20px; padding: 15px; border: 1px solid #eee; word-wrap: break-word; }
+    .key { color: #000; font-size: 2em !important; text-transform: capitalize; font-weight: bold; }
+    .hash { word-break: break-all; color: #4287f5; }
+    a { color: #4287f5; text-decoration: underline; }
+    pre { white-space: pre-wrap; }
+    code { background: #f4f4f4; padding: 2px 4px; font-size: 0.9em; }
+    pre > code { display: block; padding: 12px; overflow-x: auto; white-space: pre; }
+    button { font-family: inherit; padding: 6px 10px; border: 1px solid #ccc; background: #f9f9f9; cursor: pointer; }
+    h1 { margin-bottom: 10px; font-size: 32px; }
+    nav { background-color: #e1e1e1; padding: 10px; }
+    nav > ul { display: flex; flex-wrap: wrap; list-style: none; padding: 0; margin: 0; }
+    nav > ul > li, nav > ul > li > a { display: flex; flex-direction: column; text-align: center; margin: 0; }
+    nav ul li img { max-width: 80px; width: 100%; height: auto; border-radius: 40px; }
+    .arrow { width: 50px; height: 80px; font-size: 38px; }
+    iframe { border-radius: 4px; }
+  </style>
+</head>
+<body>
+<article itemscope itemtype="https://schema.org/CreativeWork">
+  <meta itemprop="identifier" content="2607166402839">
+  <meta itemprop="dateCreated" content="07/16/2026">
+<h1 itemprop="name">CCFU Script 5 — verify_cartan_bridge.py</h1>
+<nav aria-label="Breadcrumb" class="breadcrumb">
+  <ul>
+    <li><a href="../"><img src="../assets/images/AFB9C382-3B34-4925-B318-E7083E758055.png" alt="Home"/><span>Home</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><a href="./"><img src="../assets/images/scripts-1024.svg" alt="CCFU"/><span>Scripts</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><img src="../assets/images/scripts-1024.svg" alt="CCFU"/><span>CCFU Script 5 — verify_cartan_bridge.py</span></li>
+  </ul>
+</nav>
+  <div class="block" id="rendered">
+
+    <div class="block">
+      <div class="key">id</div>
+      <pre>2607166402839</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">safecreative_url</div>
+      <a href="https://www.safecreative.org/work/2607166402839-ccfu-script-5-verify_cartan_bridge-py" target="_blank">https://www.safecreative.org/work/2607166402839-ccfu-script-5-verify_cartan_bridge-py</a>
+    </div>
+
+    <div class="block">
+      <div class="key">title</div>
+      <pre>CCFU Script 5 — verify_cartan_bridge.py</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">date</div>
+      <pre>07/16/2026</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">text</div>
+      <details><summary style="cursor:pointer; color:#4287f5; margin-bottom:8px;">Show source code</summary><pre><code>#!/usr/bin/env python3
+&quot;&quot;&quot;
+CCFU Script 5 — verify_cartan_bridge.py (v7)
+============================================
+Exact SymPy verification of the algebraic Cartan-bridge claims.
+
+PROVENANCE (v7): this version is the external verifier's refactor of the
+corpus's v6, ADOPTED after in-session verification. It carries every v6
+certificate AND closes the one item v6 declared [OPEN, wanted]: an
+in-file algebraic transitivity certificate — one CONSTANT nonzero 6x6
+action minor per affine chart (six polynomial charts covering Q, with
+explicit overlap witnesses), so globality of the (2,3,5) structure uses
+NO external homogeneity theorem. Sixth external junction: not found but
+BUILT by the verifier. The COMPUTED/DEDUCED/NOT CLAIMED separation is
+the reviewer's architecture, adopted as corpus practice.
+
+This version deliberately separates three kinds of statements:
+
+  COMPUTED   exact symbolic identities/ranks checked by this file;
+  DEDUCED    short mathematical consequences of the computed certificates;
+  NOT CLAIMED facts that require an additional modelling choice or a
+              separate kinematic computation.
+
+Computed here
+-------------
+1. The Hitchin bilinear form induced by Omega_W has signature (3,4).
+2. The infinitesimal stabilizer g of Omega_W has dimension 14, preserves b,
+   and acts transitively on the projectivized null cone.  Transitivity is
+   certified in-file by one constant nonzero 6x6 action minor on each of six
+   affine charts; no external G2/P theorem is used.
+3. D_[x] = ker(i_x Omega_W)/&lt;x&gt; is globally a (2,3,5) distribution.
+   The bracket growth is checked exactly at one concrete point and then
+   transported by the computed transitive symmetry action.
+4. Relative to the explicitly chosen W_diag-adapted Cartan involution,
+   k is a maximal compact algebra su(2) + su(2).  One factor fixes W_diag
+   pointwise and the other acts irreducibly on it.
+5. For the compact-orthogonal horizontal lift, the representation-spectral
+   amplitude ratio is rho = s_body/s_spatial = 3.  On the full gauge family,
+   3 is the unique maximum for every nonzero horizontal direction.
+
+Not claimed here
+----------------
+* Omega_W alone canonically selects W_diag.  W_diag is an explicit modelling
+  input used to choose the Cartan involution; the script verifies compatibility.
+* The spectral ratio is, by itself, a physical rolling-radius theorem.  That
+  identification requires a separate no-slip/no-twist kinematic map.
+
+All arithmetic is exact: integers, rationals, and algebraic numbers only.
+&quot;&quot;&quot;
+
+from __future__ import annotations
+
+from functools import reduce
+from itertools import combinations, permutations
+from math import gcd
+from typing import Callable, Sequence
+
+import sympy as sp
+
+
+# ---------------------------------------------------------------------------
+# Audit/reporting helpers
+# ---------------------------------------------------------------------------
+
+_CHECKS = 0
+
+
+def check(condition: object, message: str) -&gt; None:
+    &quot;&quot;&quot;Abort on a failed exact check; otherwise record a passed certificate.&quot;&quot;&quot;
+    global _CHECKS
+    if condition is not True and condition != True:  # SymPy booleans included
+        raise SystemExit(f&quot;FAILED: {message}\n  condition = {condition}&quot;)
+    _CHECKS += 1
+    print(f&quot;  \u2713 [COMPUTED] {message}&quot;)
+
+
+def deduced(message: str) -&gt; None:
+    print(f&quot;  [DEDUCED]  {message}&quot;)
+
+
+def note(message: str) -&gt; None:
+    print(f&quot;  [NOTE]     {message}&quot;)
+
+
+def section(title: str) -&gt; None:
+    bar = &quot;=&quot; * 78
+    print(f&quot;\n{bar}\n{title}\n{bar}&quot;)
+
+
+def is_zero_matrix(matrix: sp.MatrixBase) -&gt; bool:
+    return all(sp.simplify(entry) == 0 for entry in matrix)
+
+
+def flat(matrix: sp.MatrixBase) -&gt; sp.Matrix:
+    return sp.Matrix([matrix[i, j] for i in range(matrix.rows) for j in range(matrix.cols)])
+
+
+def same_span(*matrices: sp.MatrixBase) -&gt; bool:
+    &quot;&quot;&quot;Check that all column spaces coincide.&quot;&quot;&quot;
+    ranks = [matrix.rank() for matrix in matrices]
+    if len(set(ranks)) != 1:
+        return False
+    target_rank = ranks[0]
+    joined = matrices[0]
+    for matrix in matrices[1:]:
+        joined = sp.Matrix.hstack(joined, matrix)
+    return joined.rank() == target_rank
+
+
+def exact_sign(value: sp.Expr) -&gt; int:
+    value = sp.simplify(value)
+    if value.is_positive:
+        return 1
+    if value.is_negative:
+        return -1
+    if value == 0:
+        return 0
+    raise ValueError(f&quot;Cannot certify the sign of {value!r} exactly&quot;)
+
+
+def inertia_symmetric(matrix: sp.MatrixBase) -&gt; tuple[int, int, int]:
+    &quot;&quot;&quot;Exact inertia under symmetric congruence: (positive, negative, zero).&quot;&quot;&quot;
+    work = sp.Matrix(matrix)
+    if work != work.T:
+        raise ValueError(&quot;inertia_symmetric requires a symmetric matrix&quot;)
+
+    positive = negative = zero = 0
+    while work.rows:
+        n = work.rows
+
+        diagonal_pivot = next((i for i in range(n) if sp.simplify(work[i, i]) != 0), None)
+        if diagonal_pivot is not None:
+            if diagonal_pivot != 0:
+                perm = [diagonal_pivot] + [i for i in range(n) if i != diagonal_pivot]
+                work = work.extract(perm, perm)
+            pivot = sp.simplify(work[0, 0])
+            sign = exact_sign(pivot)
+            positive += sign &gt; 0
+            negative += sign &lt; 0
+            if n == 1:
+                work = sp.zeros(0, 0)
+            else:
+                column = work[1:, 0]
+                work = sp.simplify(work[1:, 1:] - column * column.T / pivot)
+            continue
+
+        off_diagonal = next(
+            ((i, j) for i in range(n) for j in range(i + 1, n)
+             if sp.simplify(work[i, j]) != 0),
+            None,
+        )
+        if off_diagonal is None:
+            zero += n
+            break
+
+        i, j = off_diagonal
+        perm = [i, j] + [k for k in range(n) if k not in (i, j)]
+        work = work.extract(perm, perm)
+        block = work[:2, :2]
+        # With all diagonal entries zero, block = [[0,a],[a,0]], inertia (1,1).
+        positive += 1
+        negative += 1
+        if n == 2:
+            work = sp.zeros(0, 0)
+        else:
+            cross = work[:2, 2:]
+            work = sp.simplify(work[2:, 2:] - cross.T * block.inv() * cross)
+
+    return int(positive), int(negative), int(zero)
+
+
+
+
+def canonical_nullspace(matrix: sp.MatrixBase) -&gt; list[sp.Matrix]:
+    &quot;&quot;&quot;RREF-canonical nullspace basis in the declared column order.&quot;&quot;&quot;
+    reduced, pivots = sp.Matrix(matrix).rref()
+    free_columns = [column for column in range(matrix.cols) if column not in pivots]
+    basis: list[sp.Matrix] = []
+    for free in free_columns:
+        vector = sp.zeros(matrix.cols, 1)
+        vector[free] = 1
+        for row, pivot in enumerate(pivots):
+            vector[pivot] = -reduced[row, free]
+        basis.append(vector)
+    return basis
+
+def coordinate_solver(basis: Sequence[sp.MatrixBase]) -&gt; tuple[sp.Matrix, Callable[[sp.MatrixBase], sp.Matrix]]:
+    &quot;&quot;&quot;Return the flattened basis matrix and an exact coordinate map on its span.&quot;&quot;&quot;
+    columns = sp.Matrix.hstack(*(flat(matrix) for matrix in basis))
+    dimension = len(basis)
+    check(columns.rank() == dimension, f&quot;basis matrix has full column rank {dimension}&quot;)
+
+    # Pivot columns of columns.T are independent rows of columns.
+    pivot_rows = list(columns.T.rref()[1])
+    square = columns.extract(pivot_rows, list(range(dimension)))
+    inverse = square.inv()
+
+    def coordinates(matrix: sp.MatrixBase) -&gt; sp.Matrix:
+        vector = flat(matrix)
+        coeffs = sp.simplify(inverse * vector.extract(pivot_rows, [0]))
+        if not is_zero_matrix(columns * coeffs - vector):
+            raise ValueError(&quot;matrix is not in the declared span&quot;)
+        return coeffs
+
+    return columns, coordinates
+
+
+def quadratic_matrix(expr: sp.Expr, variables: Sequence[sp.Symbol]) -&gt; sp.Matrix:
+    &quot;&quot;&quot;Symmetric matrix Q such that expr = v.T*Q*v for a homogeneous quadratic.&quot;&quot;&quot;
+    expr = sp.expand(expr)
+    return sp.Matrix(
+        len(variables),
+        len(variables),
+        lambda i, j: sp.diff(expr, variables[i], variables[j]) / 2,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Omega_W and its Hitchin metric
+# ---------------------------------------------------------------------------
+
+section(&quot;1. Build Omega_W and derive its bilinear form&quot;)
+
+DIM = 7
+OMEGA_TERMS = ((0, 1, 4), (0, 2, 5), (0, 3, 6), (1, 2, 3), (4, 5, 6))
+OMEGA = [[[sp.Integer(0) for _ in range(DIM)] for _ in range(DIM)] for _ in range(DIM)]
+
+
+def permutation_sign(values: Sequence[int]) -&gt; int:
+    inversions = sum(values[i] &gt; values[j] for i in range(len(values)) for j in range(i + 1, len(values)))
+    return -1 if inversions % 2 else 1
+
+
+for term in OMEGA_TERMS:
+    for permuted in permutations(term):
+        OMEGA[permuted[0]][permuted[1]][permuted[2]] = sp.Integer(permutation_sign(permuted))
+
+# Hitchin contraction: a symmetric bilinear density, determined up to scale.
+EPSILON = {perm: permutation_sign(perm) for perm in permutations(range(DIM))}
+
+
+def hitchin_entry(i: int, j: int) -&gt; sp.Integer:
+    total = sp.Integer(0)
+    for permuted, sign in EPSILON.items():
+        first = OMEGA[i][permuted[0]][permuted[1]]
+        if first == 0:
+            continue
+        second = OMEGA[j][permuted[2]][permuted[3]]
+        if second == 0:
+            continue
+        third = OMEGA[permuted[4]][permuted[5]][permuted[6]]
+        if third:
+            total += sign * first * second * third
+    return sp.Integer(total)
+
+
+B_RAW = sp.Matrix(DIM, DIM, hitchin_entry)
+check(B_RAW == B_RAW.T, &quot;Hitchin contraction is symmetric&quot;)
+nonzero_entries = [abs(int(entry)) for entry in B_RAW if entry != 0]
+content = reduce(gcd, nonzero_entries)
+B = sp.simplify(B_RAW / content)
+if B[0, 0] &gt; 0:
+    B = -B
+check(all(entry.is_Integer for entry in B), &quot;Hitchin form normalized to a primitive integer matrix&quot;)
+check(reduce(gcd, [abs(int(entry)) for entry in B if entry != 0]) == 1,
+      &quot;normalized Hitchin form has integer content 1&quot;)
+
+# The candidate W_diag is an explicit modelling input, not an output of Omega.
+def standard_vector(index: int) -&gt; sp.Matrix:
+    vector = sp.zeros(DIM, 1)
+    vector[index] = 1
+    return vector
+
+
+E = [standard_vector(i) for i in range(DIM)]
+W_DIAG = sp.Matrix.hstack(E[1] + E[4], E[2] + E[5], E[3] + E[6])
+W_ANTI = sp.Matrix.hstack(E[1] - E[4], E[2] - E[5], E[3] - E[6])
+SQRT2 = sp.sqrt(2)
+P = sp.Matrix.hstack(
+    *(W_DIAG[:, i] / SQRT2 for i in range(3)),
+    E[0] / SQRT2,
+    *(W_ANTI[:, i] / SQRT2 for i in range(3)),
+)
+ETA = sp.diag(1, 1, 1, -1, -1, -1, -1)
+check(is_zero_matrix(sp.simplify(P.T * B * P - ETA)),
+      &quot;W_diag-adapted basis puts b in signature form diag(3 positive, 4 negative)&quot;)
+check(inertia_symmetric(B) == (3, 4, 0), &quot;Hitchin metric has signature (3,4)&quot;)
+note(&quot;W_diag is declared before choosing the Cartan involution; the script will verify compatibility, not canonical selection by Omega.&quot;)
+
+
+# ---------------------------------------------------------------------------
+# Stabilizer algebra and a fully in-file transitivity certificate
+# ---------------------------------------------------------------------------
+
+section(&quot;2. Stabilizer algebra and transitivity on the projective null cone&quot;)
+
+stabilizer_rows: list[list[sp.Expr]] = []
+for i, j, k in combinations(range(DIM), 3):
+    row = [sp.Integer(0)] * (DIM * DIM)
+    for ell in range(DIM):
+        row[DIM * ell + i] += OMEGA[ell][j][k]
+        row[DIM * ell + j] += OMEGA[i][ell][k]
+        row[DIM * ell + k] += OMEGA[i][j][ell]
+    stabilizer_rows.append(row)
+
+STABILIZER_SYSTEM = sp.Matrix(stabilizer_rows)
+G_NULLSPACE = canonical_nullspace(STABILIZER_SYSTEM)
+check(len(G_NULLSPACE) == 14, &quot;dim g = dim stab(Omega_W) = 14&quot;)
+G = [sp.Matrix(DIM, DIM, lambda r, c: vector[DIM * r + c]) for vector in G_NULLSPACE]
+check(all(is_zero_matrix(matrix.T * B + B * matrix) for matrix in G),
+      &quot;all 14 infinitesimal Omega-stabilizers preserve the Hitchin metric b&quot;)
+x_symbols = sp.symbols(&quot;x0:7&quot;)
+X_SYMBOLIC = sp.Matrix(x_symbols)
+check(all(sp.simplify((X_SYMBOLIC.T * B * matrix * X_SYMBOLIC)[0]) == 0 for matrix in G),
+      &quot;infinitesimal orbit directions are tangent to every b-level set&quot;)
+NULL_QUADRATIC = sp.factor((X_SYMBOLIC.T * B * X_SYMBOLIC)[0] / 2)
+check(NULL_QUADRATIC == -x_symbols[0] ** 2 + x_symbols[1] * x_symbols[4]
+      + x_symbols[2] * x_symbols[5] + x_symbols[3] * x_symbols[6],
+      &quot;null equation is -x0^2 + x1*x4 + x2*x5 + x3*x6 = 0&quot;)
+
+ACTION = sp.Matrix.hstack(*(matrix * X_SYMBOLIC for matrix in G), X_SYMBOLIC)
+PAIR = {1: 4, 2: 5, 3: 6, 4: 1, 5: 2, 6: 3}
+# Certificates are row indices, column indices, and the expected constant minor.
+# Columns 0..13 are g*x; column 14 is the radial vector x.
+ACTION_CERTIFICATES = {
+    1: ((0, 1, 2, 3, 5, 6), (0, 1, 2, 4, 6, 9), sp.Rational(-1, 2)),
+    2: ((0, 1, 2, 3, 4, 6), (3, 4, 5, 6, 7, 10), sp.Rational(-1, 2)),
+    3: ((0, 1, 2, 3, 4, 5), (8, 9, 10, 11, 12, 13), sp.Rational(-1, 2)),
+    4: ((0, 2, 3, 4, 5, 6), (3, 5, 6, 8, 10, 11), sp.Rational(1, 4)),
+    5: ((0, 1, 3, 4, 5, 6), (0, 1, 6, 8, 9, 12), sp.Rational(-1, 4)),
+    6: ((0, 1, 2, 4, 5, 6), (0, 2, 3, 4, 7, 13), sp.Rational(1, 4)),
+}
+
+chart_substitutions: dict[int, dict[sp.Symbol, sp.Expr]] = {}
+for fixed_index in range(1, 7):
+    solved_index = PAIR[fixed_index]
+    solved_value = x_symbols[0] ** 2
+    for left, right in ((1, 4), (2, 5), (3, 6)):
+        if {left, right} != {fixed_index, solved_index}:
+            solved_value -= x_symbols[left] * x_symbols[right]
+    substitution = {x_symbols[fixed_index]: 1, x_symbols[solved_index]: solved_value}
+    chart_substitutions[fixed_index] = substitution
+    check(sp.simplify(NULL_QUADRATIC.subs(substitution)) == 0,
+          f&quot;chart U_{fixed_index}: x{fixed_index}=1 solves the null equation polynomially&quot;)
+
+    rows, columns, expected = ACTION_CERTIFICATES[fixed_index]
+    determinant = sp.factor(ACTION.subs(substitution).extract(rows, columns).det())
+    check(determinant == expected,
+          f&quot;chart U_{fixed_index}: certified 6x6 action minor is the nonzero constant {expected}&quot;)
+
+# The six charts cover Q: a null vector with x1=...=x6=0 must also have x0=0.
+check(sp.simplify(NULL_QUADRATIC.subs({x_symbols[i]: 0 for i in range(1, 7)})) == -x_symbols[0] ** 2,
+      &quot;U_1,...,U_6 cover every nonzero null line&quot;)
+
+# Explicit overlap witnesses connect all six affine charts to U_1.
+for other in range(2, 7):
+    witness = sp.Matrix([1, 1, 0, 0, 1, 0, 0])
+    witness[other] = 1
+    # If other=4 this changes nothing; unpaired extra coordinates do not alter q.
+    check(sp.simplify((witness.T * B * witness)[0]) == 0
+          and witness[1] != 0 and witness[other] != 0,
+          f&quot;U_1 intersects U_{other} at an explicit null line&quot;)
+
+# Mathematical deduction from the exact certificates:
+# * each U_i is R^5 (the displayed polynomial parametrization), hence connected;
+# * rank([g*x,x])=6 gives a 5-dimensional/open projective orbit at every point;
+# * a connected chart cannot split into disjoint open orbits;
+# * the overlap witnesses identify the orbit on every chart.
+deduced(&quot;Every identity-component orbit is open on each connected affine chart U_i ≅ R^5.&quot;)
+deduced(&quot;The overlaps U_1∩U_i force the six chart-orbits to coincide; therefore the action is transitive on Q.&quot;)
+
+
+# ---------------------------------------------------------------------------
+# The (2,3,5) distribution: exact local witness + transitive transport
+# ---------------------------------------------------------------------------
+
+section(&quot;3. The distribution D = ker(i_x Omega)/&lt;x&gt; and its growth vector&quot;)
+
+BASE = E[1]
+CONTRACTION_BASE = sp.Matrix(DIM, DIM, lambda j, k: OMEGA[1][j][k])
+KERNEL_BASE = CONTRACTION_BASE.nullspace()
+EXPECTED_KERNEL_BASE = sp.Matrix.hstack(E[1], E[5], E[6])
+check(len(KERNEL_BASE) == 3 and same_span(sp.Matrix.hstack(*KERNEL_BASE), EXPECTED_KERNEL_BASE),
+      &quot;at [e1], ker(i_e1 Omega) = span(e1,e5,e6), so dim D_[e1] = 2&quot;)
+check(all(sp.simplify((BASE.T * B * vector)[0]) == 0 for vector in KERNEL_BASE),
+      &quot;at [e1], ker(i_e1 Omega) lies in e1^perp&quot;)
+
+# Work in U_1, with x1=1 and x4 solved by the cone equation.
+t0, t2, t3, t5, t6 = sp.symbols(&quot;t0 t2 t3 t5 t6&quot;)
+chart_variables = (t0, t2, t3, t5, t6)
+t4 = t0 ** 2 - t2 * t5 - t3 * t6
+X_CHART = sp.Matrix([t0, 1, t2, t3, t4, t5, t6])
+check(sp.simplify((X_CHART.T * B * X_CHART)[0]) == 0, &quot;the U_1 parametrization lies on the null cone&quot;)
+
+CONTRACTION = sp.Matrix(
+    DIM,
+    DIM,
+    lambda j, k: sum(X_CHART[i] * OMEGA[i][j][k] for i in range(DIM)),
+)
+KERNEL_FUNCTION_FIELD = CONTRACTION.nullspace()
+check(len(KERNEL_FUNCTION_FIELD) == 3,
+      &quot;over the U_1 function field, ker(i_x Omega) has generic dimension 3&quot;)
+
+
+def clear_denominators(vector: sp.MatrixBase) -&gt; tuple[sp.Matrix, sp.Expr]:
+    denominators = [sp.fraction(sp.cancel(entry))[1] for entry in vector]
+    common = sp.lcm(denominators)
+    return sp.Matrix([sp.expand(sp.cancel(common * entry)) for entry in vector]), sp.factor(common)
+
+
+polynomial_fields: list[sp.Matrix] = []
+field_denominators: list[sp.Expr] = []
+for kernel_vector in KERNEL_FUNCTION_FIELD:
+    # Remove the radial component so dx1=0 in this affine chart.
+    tangent_lift = sp.simplify(kernel_vector - kernel_vector[1] * X_CHART)
+    chart_field = sp.Matrix([tangent_lift[0], tangent_lift[2], tangent_lift[3], tangent_lift[5], tangent_lift[6]])
+    if is_zero_matrix(chart_field):
+        continue
+    polynomial_field, denominator = clear_denominators(chart_field)
+    differential_t4 = (
+        2 * t0 * polynomial_field[0]
+        - t5 * polynomial_field[1]
+        - t6 * polynomial_field[2]
+        - t2 * polynomial_field[3]
+        - t3 * polynomial_field[4]
+    )
+    polynomial_lift = sp.Matrix([
+        polynomial_field[0], 0, polynomial_field[1], polynomial_field[2],
+        differential_t4, polynomial_field[3], polynomial_field[4],
+    ])
+    check(is_zero_matrix(sp.simplify(CONTRACTION * polynomial_lift)),
+          &quot;a denominator-cleared chart field still lies in ker(i_x Omega)&quot;)
+    polynomial_fields.append(polynomial_field)
+    field_denominators.append(denominator)
+
+check(len(polynomial_fields) &gt;= 2, &quot;at least two polynomial chart generators were produced&quot;)
+
+# A concrete exact witness; no generic-rank statement is substituted for a pointwise check.
+GROWTH_WITNESS = {t0: 1, t2: 0, t3: 0, t5: 0, t6: 1}
+check(all(sp.simplify(den.subs(GROWTH_WITNESS)) != 0 for den in field_denominators),
+      &quot;all denominator clearings are legitimate at the chosen growth witness&quot;)
+
+field_pair: tuple[sp.Matrix, sp.Matrix] | None = None
+for first_index, second_index in combinations(range(len(polynomial_fields)), 2):
+    candidate = sp.Matrix.hstack(polynomial_fields[first_index], polynomial_fields[second_index])
+    if candidate.subs(GROWTH_WITNESS).rank() == 2:
+        field_pair = polynomial_fields[first_index], polynomial_fields[second_index]
+        break
+check(field_pair is not None, &quot;two local generators span D at the concrete witness&quot;)
+FIELD_X, FIELD_Y = field_pair  # type: ignore[misc]
+
+
+def lie_bracket(first: sp.MatrixBase, second: sp.MatrixBase) -&gt; sp.Matrix:
+    return sp.Matrix([
+        sp.expand(sum(
+            first[j] * sp.diff(second[i], chart_variables[j])
+            - second[j] * sp.diff(first[i], chart_variables[j])
+            for j in range(5)
+        ))
+        for i in range(5)
+    ])
+
+
+BRACKET_XY = lie_bracket(FIELD_X, FIELD_Y)
+BRACKET_XXY = lie_bracket(FIELD_X, BRACKET_XY)
+BRACKET_YXY = lie_bracket(FIELD_Y, BRACKET_XY)
+RANK_2 = sp.Matrix.hstack(FIELD_X, FIELD_Y).subs(GROWTH_WITNESS).rank()
+RANK_3 = sp.Matrix.hstack(FIELD_X, FIELD_Y, BRACKET_XY).subs(GROWTH_WITNESS).rank()
+RANK_5 = sp.Matrix.hstack(FIELD_X, FIELD_Y, BRACKET_XY, BRACKET_XXY, BRACKET_YXY).subs(GROWTH_WITNESS).rank()
+check((RANK_2, RANK_3, RANK_5) == (2, 3, 5),
+      &quot;at x=(1,1,0,0,1,0,1), the exact derived ranks are (2,3,5)&quot;)
+
+deduced(&quot;The identity component preserves Omega and b, hence preserves D and all derived flags.&quot;)
+deduced(&quot;Transitivity transports the concrete (2,3,5) witness to every point of Q; D is globally a smooth (2,3,5) distribution.&quot;)
+
+
+# ---------------------------------------------------------------------------
+# Cartan involution, maximal compact algebra, and intrinsic ideal splitting
+# ---------------------------------------------------------------------------
+
+section(&quot;4. W_diag-adapted Cartan decomposition and k = su(2) + su(2)&quot;)
+
+P_INV = P.inv()
+G_P = [sp.simplify(P_INV * matrix * P) for matrix in G]
+G_FLAT, coordinates_in_g = coordinate_solver(G_P)
+
+# True Killing form via the adjoint representation.
+AD_G: list[sp.Matrix] = []
+for left in G_P:
+    AD_G.append(sp.Matrix.hstack(*(coordinates_in_g(left * right - right * left) for right in G_P)))
+KILLING = sp.Matrix(14, 14, lambda i, j: sp.simplify((AD_G[i] * AD_G[j]).trace()))
+TRACE_7 = sp.Matrix(14, 14, lambda i, j: sp.simplify((G_P[i] * G_P[j]).trace()))
+check(is_zero_matrix(KILLING - 4 * TRACE_7), &quot;B_Killing = 4 tr_7 exactly on g&quot;)
+check(inertia_symmetric(KILLING) == (8, 6, 0), &quot;Killing form has exact inertia (8,6,0)&quot;)
+
+# theta(X)=-X^T in the W_diag-adapted orthonormal basis.
+THETA_COLUMNS = []
+for matrix in G_P:
+    THETA_COLUMNS.append(coordinates_in_g(-matrix.T))
+THETA = sp.Matrix.hstack(*THETA_COLUMNS)
+check(is_zero_matrix(THETA * THETA - sp.eye(14)), &quot;theta(X)=-X^T is an involution of g&quot;)
+B_THETA = sp.simplify(-KILLING * THETA)
+check(B_THETA == B_THETA.T and inertia_symmetric(B_THETA) == (14, 0, 0),
+      &quot;-B_Killing(X,theta Y) is positive definite&quot;)
+deduced(&quot;Therefore theta is a Cartan involution of g.&quot;)
+
+coefficients = sp.symbols(&quot;g0:14&quot;)
+GENERIC_G = sum((coefficients[i] * G_P[i] for i in range(14)), sp.zeros(DIM, DIM))
+fixed_equations = [GENERIC_G[i, j] + GENERIC_G[j, i] for i in range(DIM) for j in range(i, DIM)]
+fixed_system, _ = sp.linear_eq_to_matrix(fixed_equations, coefficients)
+K_COEFFICIENTS = fixed_system.nullspace()
+check(len(K_COEFFICIENTS) == 6, &quot;the fixed algebra k=Fix(theta) has dimension 6&quot;)
+deduced(&quot;The fixed algebra of a Cartan involution is maximal compact; hence this k is maximal compact.&quot;)
+K_P = [sum((vector[i] * G_P[i] for i in range(14)), sp.zeros(DIM, DIM)) for vector in K_COEFFICIENTS]
+K_ORIGINAL = [sp.simplify(P * matrix * P_INV) for matrix in K_P]
+K_FLAT, coordinates_in_k = coordinate_solver(K_P)
+
+AD_K = [sp.Matrix.hstack(*(coordinates_in_k(left * right - right * left) for right in K_P)) for left in K_P]
+commutant_variables = sp.symbols(&quot;z0:36&quot;)
+COMMUTANT_GENERIC = sp.Matrix(6, 6, commutant_variables)
+commutant_equations: list[sp.Expr] = []
+for adjoint in AD_K:
+    commutant_equations.extend(list(COMMUTANT_GENERIC * adjoint - adjoint * COMMUTANT_GENERIC))
+commutant_system, _ = sp.linear_eq_to_matrix(commutant_equations, commutant_variables)
+COMMUTANT_BASIS = [sp.Matrix(6, 6, vector) for vector in commutant_system.nullspace()]
+check(len(COMMUTANT_BASIS) == 2, &quot;the commutant of ad(k) on k has dimension 2&quot;)
+
+NONSCALAR_COMMUTANT = next(
+    matrix for matrix in COMMUTANT_BASIS
+    if sp.Matrix.hstack(flat(matrix), flat(sp.eye(6))).rank() == 2
+)
+commutant_eigenvalues = NONSCALAR_COMMUTANT.eigenvals()
+check(len(commutant_eigenvalues) == 2 and sorted(commutant_eigenvalues.values()) == [3, 3],
+      &quot;a non-scalar central endomorphism splits k into two 3-dimensional eigenspaces&quot;)
+
+IDEAL_COEFFICIENTS: list[sp.Matrix] = []
+IDEALS_P: list[list[sp.Matrix]] = []
+for eigenvalue in commutant_eigenvalues:
+    vectors = (NONSCALAR_COMMUTANT - eigenvalue * sp.eye(6)).nullspace()
+    coefficient_basis = sp.Matrix.hstack(*vectors)
+    ideal = [sum((vector[i] * K_P[i] for i in range(6)), sp.zeros(DIM, DIM)) for vector in vectors]
+    IDEAL_COEFFICIENTS.append(coefficient_basis)
+    IDEALS_P.append(ideal)
+
+K_COEFF_MATRIX = sp.Matrix.hstack(*K_COEFFICIENTS)
+KILLING_ON_K = sp.simplify(K_COEFF_MATRIX.T * KILLING * K_COEFF_MATRIX)
+for index, (coefficient_basis, ideal) in enumerate(zip(IDEAL_COEFFICIENTS, IDEALS_P), start=1):
+    ideal_flat = sp.Matrix.hstack(*(flat(matrix) for matrix in ideal))
+    check(ideal_flat.rank() == 3, f&quot;ideal k_{index} has dimension 3&quot;)
+    check(all(sp.Matrix.hstack(ideal_flat, flat(left * right - right * left)).rank() == 3
+              for left in ideal for right in ideal),
+          f&quot;ideal k_{index} is closed under the Lie bracket&quot;)
+    restricted_killing = sp.simplify(coefficient_basis.T * KILLING_ON_K * coefficient_basis)
+    check(inertia_symmetric(restricted_killing) == (0, 3, 0),
+          f&quot;Killing form is negative definite on the 3-dimensional ideal k_{index}&quot;)
+
+check(all(is_zero_matrix(left * right - right * left)
+          for left in IDEALS_P[0] for right in IDEALS_P[1]),
+      &quot;[k_1,k_2]=0 and k=k_1 direct-sum k_2&quot;)
+deduced(&quot;Each nonabelian 3-dimensional compact ideal is su(2); therefore k = su(2) direct-sum su(2).&quot;)
+
+
+# ---------------------------------------------------------------------------
+# Verify the declared W_diag against the chosen compact decomposition
+# ---------------------------------------------------------------------------
+
+section(&quot;5. Compatibility of the declared W_diag with the two compact factors&quot;)
+
+IDEALS_ORIGINAL = [[sp.simplify(P * matrix * P_INV) for matrix in ideal] for ideal in IDEALS_P]
+fixed_dimensions: list[int] = []
+fixed_spaces: list[sp.Matrix] = []
+for ideal in IDEALS_ORIGINAL:
+    stacked = sp.Matrix.vstack(*ideal)
+    kernel = stacked.nullspace()
+    fixed_dimensions.append(len(kernel))
+    fixed_spaces.append(sp.Matrix.hstack(*kernel) if kernel else sp.zeros(DIM, 0))
+
+check(sorted(fixed_dimensions) == [0, 3], &quot;exactly one compact factor fixes a 3-space pointwise&quot;)
+BODY_INDEX = fixed_dimensions.index(3)
+SPATIAL_INDEX = 1 - BODY_INDEX
+check(same_span(fixed_spaces[BODY_INDEX], W_DIAG),
+      &quot;the pointwise-fixed 3-space is exactly the declared W_diag&quot;)
+
+# Restrict the moving factor to W_diag and verify irreducibility by its commutant.
+W_FLAT, coordinates_in_w = coordinate_solver([W_DIAG[:, i] for i in range(3)])
+SPATIAL_RESTRICTION: list[sp.Matrix] = []
+for generator in IDEALS_ORIGINAL[SPATIAL_INDEX]:
+    columns = []
+    for i in range(3):
+        columns.append(coordinates_in_w(generator * W_DIAG[:, i]))
+    SPATIAL_RESTRICTION.append(sp.Matrix.hstack(*columns))
+
+rep_variables = sp.symbols(&quot;r0:9&quot;)
+REP_GENERIC = sp.Matrix(3, 3, rep_variables)
+rep_equations: list[sp.Expr] = []
+for generator in SPATIAL_RESTRICTION:
+    rep_equations.extend(list(REP_GENERIC * generator - generator * REP_GENERIC))
+rep_system, _ = sp.linear_eq_to_matrix(rep_equations, rep_variables)
+REP_COMMUTANT = rep_system.nullspace()
+check(len(REP_COMMUTANT) == 1 and sp.Matrix(3, 3, REP_COMMUTANT[0]).rank() == 3,
+      &quot;the moving compact factor has scalar commutant on W_diag&quot;)
+deduced(&quot;Compact complete reducibility then makes the 3-dimensional action irreducible, i.e. the real spin-1 representation.&quot;)
+note(&quot;This section verifies the chosen W_diag; it does not assert that Omega_W canonically singles it out.&quot;)
+
+
+# ---------------------------------------------------------------------------
+# Horizontal compact lifts and the exact spectral ratio
+# ---------------------------------------------------------------------------
+
+section(&quot;6. Canonical compact lift and the exact spectral ratio rho=3&quot;)
+
+# Horizontal compact elements at [e1].
+a = sp.symbols(&quot;a0:6&quot;)
+GENERIC_K_ORIGINAL = sum((a[i] * K_ORIGINAL[i] for i in range(6)), sp.zeros(DIM, DIM))
+VELOCITY = GENERIC_K_ORIGINAL * BASE
+# D_[e1] is span(e5,e6) modulo e1, so components 0,2,3,4 must vanish.
+horizontal_equations = [VELOCITY[row] for row in (0, 2, 3, 4)]
+horizontal_system, _ = sp.linear_eq_to_matrix(horizontal_equations, a)
+HORIZONTAL_COEFFICIENTS = horizontal_system.nullspace()
+check(len(HORIZONTAL_COEFFICIENTS) == 3,
+      &quot;compact elements whose velocity lies in D_[e1] form a 3-space&quot;)
+HORIZONTAL_BASIS = [sum((vector[i] * K_ORIGINAL[i] for i in range(6)), sp.zeros(DIM, DIM))
+                    for vector in HORIZONTAL_COEFFICIENTS]
+EVALUATION = sp.Matrix([
+    [(matrix * BASE)[5] for matrix in HORIZONTAL_BASIS],
+    [(matrix * BASE)[6] for matrix in HORIZONTAL_BASIS],
+])
+check(EVALUATION.rank() == 2 and len(EVALUATION.nullspace()) == 1,
+      &quot;evaluation to D_[e1] has rank 2 and a 1-dimensional stabilizer kernel&quot;)
+
+stabilizer_coefficients = EVALUATION.nullspace()[0]
+Z_STABILIZER = sum((stabilizer_coefficients[i] * HORIZONTAL_BASIS[i] for i in range(3)), sp.zeros(DIM, DIM))
+TRACE_FORM = lambda left, right: sp.simplify((left * right).trace())
+check(TRACE_FORM(Z_STABILIZER, Z_STABILIZER) != 0,
+      &quot;the compact stabilizer direction has nonzero Killing norm&quot;)
+
+# Solve simultaneously for prescribed tangent velocity and Killing-orthogonality.
+orthogonality_row = sp.Matrix([[TRACE_FORM(matrix, Z_STABILIZER) for matrix in HORIZONTAL_BASIS]])
+LIFT_SYSTEM = sp.Matrix.vstack(EVALUATION, orthogonality_row)
+check(LIFT_SYSTEM.det() != 0, &quot;each horizontal tangent vector has a unique Killing-orthogonal compact lift&quot;)
+
+ROLLING_LIFTS: list[sp.Matrix] = []
+for target in (sp.Matrix([1, 0, 0]), sp.Matrix([0, 1, 0])):
+    lift_coefficients = sp.simplify(LIFT_SYSTEM.inv() * target)
+    lift = sum((lift_coefficients[i] * HORIZONTAL_BASIS[i] for i in range(3)), sp.zeros(DIM, DIM))
+    ROLLING_LIFTS.append(sp.simplify(lift))
+check(all(TRACE_FORM(lift, Z_STABILIZER) == 0 for lift in ROLLING_LIFTS),
+      &quot;the two standard tangent lifts are Killing-orthogonal to the stabilizer&quot;)
+check(sp.Matrix.hstack(*(lift * BASE for lift in ROLLING_LIFTS)).extract([5, 6], [0, 1]) == sp.eye(2),
+      &quot;the two lifts evaluate exactly to e5 and e6 in D_[e1]&quot;)
+
+# Representation-theoretic normalization of squared amplitudes.
+BODY_IDEAL = IDEALS_ORIGINAL[BODY_INDEX]
+SPATIAL_IDEAL = IDEALS_ORIGINAL[SPATIAL_INDEX]
+IDEAL_BASIS = BODY_IDEAL + SPATIAL_IDEAL
+IDEAL_FLAT, coordinates_in_ideals = coordinate_solver(IDEAL_BASIS)
+
+u = sp.symbols(&quot;u0:3&quot;)
+lambda_symbol = sp.Symbol(&quot;lambda&quot;)
+BODY_GENERIC = sum((u[i] * BODY_IDEAL[i] for i in range(3)), sp.zeros(DIM, DIM))
+SPATIAL_GENERIC = sum((u[i] * SPATIAL_IDEAL[i] for i in range(3)), sp.zeros(DIM, DIM))
+Q_BODY_GENERIC = sp.factor(-(BODY_GENERIC * BODY_GENERIC).trace() / 4)
+Q_SPATIAL_GENERIC = sp.factor(-(SPATIAL_GENERIC * SPATIAL_GENERIC).trace() / 12)
+check(inertia_symmetric(quadratic_matrix(Q_BODY_GENERIC, u)) == (3, 0, 0),
+      &quot;Q_body=-tr(body^2)/4 is positive definite on the body su(2)&quot;)
+check(inertia_symmetric(quadratic_matrix(Q_SPATIAL_GENERIC, u)) == (3, 0, 0),
+      &quot;Q_spatial=-tr(spatial^2)/12 is positive definite on the spatial su(2)&quot;)
+check(sp.factor(BODY_GENERIC.charpoly(lambda_symbol).as_expr()
+                - lambda_symbol ** 3 * (lambda_symbol ** 2 + Q_BODY_GENERIC) ** 2) == 0,
+      &quot;body spectrum is 0^3 plus spin-1/2 frequencies sqrt(Q_body)&quot;)
+check(sp.factor(SPATIAL_GENERIC.charpoly(lambda_symbol).as_expr()
+                - lambda_symbol * (lambda_symbol ** 2 + Q_SPATIAL_GENERIC) ** 2
+                * (lambda_symbol ** 2 + 4 * Q_SPATIAL_GENERIC)) == 0,
+      &quot;spatial spectrum contains spin-1/2 frequency sqrt(Q_spatial) and contact frequency 2sqrt(Q_spatial)&quot;)
+
+r, s, c = sp.symbols(&quot;r s c&quot;, real=True)
+FULL_LIFT = r * ROLLING_LIFTS[0] + s * ROLLING_LIFTS[1] + c * Z_STABILIZER
+full_coefficients = coordinates_in_ideals(FULL_LIFT)
+BODY_PART = sum((full_coefficients[i] * BODY_IDEAL[i] for i in range(3)), sp.zeros(DIM, DIM))
+SPATIAL_PART = sum((full_coefficients[3 + i] * SPATIAL_IDEAL[i] for i in range(3)), sp.zeros(DIM, DIM))
+Q_BODY = sp.factor(-(BODY_PART * BODY_PART).trace() / 4)
+Q_SPATIAL = sp.factor(-(SPATIAL_PART * SPATIAL_PART).trace() / 12)
+print(f&quot;  [COMPUTED] Q_body(r,s,c)    = {Q_BODY}&quot;)
+print(f&quot;  [COMPUTED] Q_spatial(r,s,c) = {Q_SPATIAL}&quot;)
+
+HORIZONTAL_Q = sp.factor(Q_SPATIAL.subs(c, 0))
+check(inertia_symmetric(quadratic_matrix(HORIZONTAL_Q, (r, s))) == (2, 0, 0),
+      &quot;Q_spatial(r,s,0) is positive for every nonzero horizontal direction&quot;)
+check(sp.simplify(Q_BODY.subs(c, 0) - 9 * Q_SPATIAL.subs(c, 0)) == 0,
+      &quot;in the canonical gauge c=0, Q_body = 9 Q_spatial for the whole horizontal plane&quot;)
+GAP = sp.factor(9 * Q_SPATIAL - Q_BODY)
+GAP_POLY = sp.Poly(GAP, r, s, c)
+check(GAP_POLY.total_degree() == 2
+      and all(monomial == (0, 0, 2) for monomial, _ in GAP_POLY.terms())
+      and exact_sign(GAP_POLY.coeff_monomial(c ** 2)) == 1,
+      f&quot;on the full gauge family, 9 Q_spatial - Q_body = {GAP} is a positive multiple of c^2&quot;)
+
+deduced(&quot;For every (r,s) != (0,0), rho=sqrt(Q_body/Q_spatial) is at most 3 and equals 3 exactly at c=0.&quot;)
+note(&quot;The physical no-slip radius interpretation is intentionally not asserted by this algebra-only script.&quot;)
+
+
+# ---------------------------------------------------------------------------
+# Final report
+# ---------------------------------------------------------------------------
+
+section(&quot;SUMMARY&quot;)
+print(f&quot;  Exact checks passed: {_CHECKS}&quot;)
+print(&quot;  [COMPUTED+DEDUCED] G acts transitively on the projective null quadric via six chart certificates.&quot;)
+print(&quot;  [COMPUTED+DEDUCED] D=ker(i_x Omega)/&lt;x&gt; is globally a (2,3,5) distribution.&quot;)
+print(&quot;  [COMPUTED] Relative to the declared W_diag-adapted Cartan involution, k=su(2)+su(2).&quot;)
+print(&quot;  [COMPUTED] One factor fixes W_diag; the other acts irreducibly on it.&quot;)
+print(&quot;  [COMPUTED] The canonical representation-spectral amplitude ratio is rho=3, uniquely maximal along gauge fibers.&quot;)
+print(&quot;  [NOT CLAIMED] Omega alone canonically selects W_diag, or rho is already a physical radius ratio.&quot;)</code></pre></details>
+    </div>
+
+    <div class="block">
+      <div class="key">nft_url</div>
+      <a href="https://opensea.io/item/base/0x8a3ee2dbaa1c33f3cb3d927497f4ae798b598b65/5" target="_blank">https://opensea.io/item/base/0x8a3ee2dbaa1c33f3cb3d927497f4ae798b598b65/5</a>
+    </div>
+
+    <div class="block">
+      <div class="key">tweet_url</div>
+      <pre></pre>
+    </div>
+
+  </div>
+  <div class="block">
+    <div class="key">SHA-256</div>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <div class="hash" id="hashResult"></div>
+      <button id="copyHashBtn" type="button">Copy</button>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="key">Visualization</div>
+    <iframe src="https://fvzuxgmq4so2x3clpq2wo2qajpoumbsqq66owfkgrbg2fgdq4axq.turbo-gateway.com/LXNLmZDknavsS3w1Z2oAS91GBlCHvOsVRohNophw4C8" 
+     title="CCFU Script 5 — verify_cartan_bridge.py" 
+     style="width: 100%; height: 600px; border: 1px solid #eee;"
+     sandbox="allow-scripts allow-same-origin"
+     loading="lazy"></iframe>
+  </div>
+
+</article>
+<script>
+(async () => {
+  const entry = {
+    id: `2607166402839`,
+    safecreative_url: `https://www.safecreative.org/work/2607166402839-ccfu-script-5-verify_cartan_bridge-py`,
+    title: `CCFU Script 5 — verify_cartan_bridge.py`,
+    date: `07/16/2026`,
+    text: `#!/usr/bin/env python3
+"""
+CCFU Script 5 — verify_cartan_bridge.py (v7)
+============================================
+Exact SymPy verification of the algebraic Cartan-bridge claims.
+
+PROVENANCE (v7): this version is the external verifier's refactor of the
+corpus's v6, ADOPTED after in-session verification. It carries every v6
+certificate AND closes the one item v6 declared [OPEN, wanted]: an
+in-file algebraic transitivity certificate — one CONSTANT nonzero 6x6
+action minor per affine chart (six polynomial charts covering Q, with
+explicit overlap witnesses), so globality of the (2,3,5) structure uses
+NO external homogeneity theorem. Sixth external junction: not found but
+BUILT by the verifier. The COMPUTED/DEDUCED/NOT CLAIMED separation is
+the reviewer's architecture, adopted as corpus practice.
+
+This version deliberately separates three kinds of statements:
+
+  COMPUTED   exact symbolic identities/ranks checked by this file;
+  DEDUCED    short mathematical consequences of the computed certificates;
+  NOT CLAIMED facts that require an additional modelling choice or a
+              separate kinematic computation.
+
+Computed here
+-------------
+1. The Hitchin bilinear form induced by Omega_W has signature (3,4).
+2. The infinitesimal stabilizer g of Omega_W has dimension 14, preserves b,
+   and acts transitively on the projectivized null cone.  Transitivity is
+   certified in-file by one constant nonzero 6x6 action minor on each of six
+   affine charts; no external G2/P theorem is used.
+3. D_[x] = ker(i_x Omega_W)/<x> is globally a (2,3,5) distribution.
+   The bracket growth is checked exactly at one concrete point and then
+   transported by the computed transitive symmetry action.
+4. Relative to the explicitly chosen W_diag-adapted Cartan involution,
+   k is a maximal compact algebra su(2) + su(2).  One factor fixes W_diag
+   pointwise and the other acts irreducibly on it.
+5. For the compact-orthogonal horizontal lift, the representation-spectral
+   amplitude ratio is rho = s_body/s_spatial = 3.  On the full gauge family,
+   3 is the unique maximum for every nonzero horizontal direction.
+
+Not claimed here
+----------------
+* Omega_W alone canonically selects W_diag.  W_diag is an explicit modelling
+  input used to choose the Cartan involution; the script verifies compatibility.
+* The spectral ratio is, by itself, a physical rolling-radius theorem.  That
+  identification requires a separate no-slip/no-twist kinematic map.
+
+All arithmetic is exact: integers, rationals, and algebraic numbers only.
+"""
+
+from __future__ import annotations
+
+from functools import reduce
+from itertools import combinations, permutations
+from math import gcd
+from typing import Callable, Sequence
+
+import sympy as sp
+
+
+# ---------------------------------------------------------------------------
+# Audit/reporting helpers
+# ---------------------------------------------------------------------------
+
+_CHECKS = 0
+
+
+def check(condition: object, message: str) -> None:
+    """Abort on a failed exact check; otherwise record a passed certificate."""
+    global _CHECKS
+    if condition is not True and condition != True:  # SymPy booleans included
+        raise SystemExit(f"FAILED: {message}\\n  condition = {condition}")
+    _CHECKS += 1
+    print(f"  \\u2713 [COMPUTED] {message}")
+
+
+def deduced(message: str) -> None:
+    print(f"  [DEDUCED]  {message}")
+
+
+def note(message: str) -> None:
+    print(f"  [NOTE]     {message}")
+
+
+def section(title: str) -> None:
+    bar = "=" * 78
+    print(f"\\n{bar}\\n{title}\\n{bar}")
+
+
+def is_zero_matrix(matrix: sp.MatrixBase) -> bool:
+    return all(sp.simplify(entry) == 0 for entry in matrix)
+
+
+def flat(matrix: sp.MatrixBase) -> sp.Matrix:
+    return sp.Matrix([matrix[i, j] for i in range(matrix.rows) for j in range(matrix.cols)])
+
+
+def same_span(*matrices: sp.MatrixBase) -> bool:
+    """Check that all column spaces coincide."""
+    ranks = [matrix.rank() for matrix in matrices]
+    if len(set(ranks)) != 1:
+        return False
+    target_rank = ranks[0]
+    joined = matrices[0]
+    for matrix in matrices[1:]:
+        joined = sp.Matrix.hstack(joined, matrix)
+    return joined.rank() == target_rank
+
+
+def exact_sign(value: sp.Expr) -> int:
+    value = sp.simplify(value)
+    if value.is_positive:
+        return 1
+    if value.is_negative:
+        return -1
+    if value == 0:
+        return 0
+    raise ValueError(f"Cannot certify the sign of {value!r} exactly")
+
+
+def inertia_symmetric(matrix: sp.MatrixBase) -> tuple[int, int, int]:
+    """Exact inertia under symmetric congruence: (positive, negative, zero)."""
+    work = sp.Matrix(matrix)
+    if work != work.T:
+        raise ValueError("inertia_symmetric requires a symmetric matrix")
+
+    positive = negative = zero = 0
+    while work.rows:
+        n = work.rows
+
+        diagonal_pivot = next((i for i in range(n) if sp.simplify(work[i, i]) != 0), None)
+        if diagonal_pivot is not None:
+            if diagonal_pivot != 0:
+                perm = [diagonal_pivot] + [i for i in range(n) if i != diagonal_pivot]
+                work = work.extract(perm, perm)
+            pivot = sp.simplify(work[0, 0])
+            sign = exact_sign(pivot)
+            positive += sign > 0
+            negative += sign < 0
+            if n == 1:
+                work = sp.zeros(0, 0)
+            else:
+                column = work[1:, 0]
+                work = sp.simplify(work[1:, 1:] - column * column.T / pivot)
+            continue
+
+        off_diagonal = next(
+            ((i, j) for i in range(n) for j in range(i + 1, n)
+             if sp.simplify(work[i, j]) != 0),
+            None,
+        )
+        if off_diagonal is None:
+            zero += n
+            break
+
+        i, j = off_diagonal
+        perm = [i, j] + [k for k in range(n) if k not in (i, j)]
+        work = work.extract(perm, perm)
+        block = work[:2, :2]
+        # With all diagonal entries zero, block = [[0,a],[a,0]], inertia (1,1).
+        positive += 1
+        negative += 1
+        if n == 2:
+            work = sp.zeros(0, 0)
+        else:
+            cross = work[:2, 2:]
+            work = sp.simplify(work[2:, 2:] - cross.T * block.inv() * cross)
+
+    return int(positive), int(negative), int(zero)
+
+
+
+
+def canonical_nullspace(matrix: sp.MatrixBase) -> list[sp.Matrix]:
+    """RREF-canonical nullspace basis in the declared column order."""
+    reduced, pivots = sp.Matrix(matrix).rref()
+    free_columns = [column for column in range(matrix.cols) if column not in pivots]
+    basis: list[sp.Matrix] = []
+    for free in free_columns:
+        vector = sp.zeros(matrix.cols, 1)
+        vector[free] = 1
+        for row, pivot in enumerate(pivots):
+            vector[pivot] = -reduced[row, free]
+        basis.append(vector)
+    return basis
+
+def coordinate_solver(basis: Sequence[sp.MatrixBase]) -> tuple[sp.Matrix, Callable[[sp.MatrixBase], sp.Matrix]]:
+    """Return the flattened basis matrix and an exact coordinate map on its span."""
+    columns = sp.Matrix.hstack(*(flat(matrix) for matrix in basis))
+    dimension = len(basis)
+    check(columns.rank() == dimension, f"basis matrix has full column rank {dimension}")
+
+    # Pivot columns of columns.T are independent rows of columns.
+    pivot_rows = list(columns.T.rref()[1])
+    square = columns.extract(pivot_rows, list(range(dimension)))
+    inverse = square.inv()
+
+    def coordinates(matrix: sp.MatrixBase) -> sp.Matrix:
+        vector = flat(matrix)
+        coeffs = sp.simplify(inverse * vector.extract(pivot_rows, [0]))
+        if not is_zero_matrix(columns * coeffs - vector):
+            raise ValueError("matrix is not in the declared span")
+        return coeffs
+
+    return columns, coordinates
+
+
+def quadratic_matrix(expr: sp.Expr, variables: Sequence[sp.Symbol]) -> sp.Matrix:
+    """Symmetric matrix Q such that expr = v.T*Q*v for a homogeneous quadratic."""
+    expr = sp.expand(expr)
+    return sp.Matrix(
+        len(variables),
+        len(variables),
+        lambda i, j: sp.diff(expr, variables[i], variables[j]) / 2,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Omega_W and its Hitchin metric
+# ---------------------------------------------------------------------------
+
+section("1. Build Omega_W and derive its bilinear form")
+
+DIM = 7
+OMEGA_TERMS = ((0, 1, 4), (0, 2, 5), (0, 3, 6), (1, 2, 3), (4, 5, 6))
+OMEGA = [[[sp.Integer(0) for _ in range(DIM)] for _ in range(DIM)] for _ in range(DIM)]
+
+
+def permutation_sign(values: Sequence[int]) -> int:
+    inversions = sum(values[i] > values[j] for i in range(len(values)) for j in range(i + 1, len(values)))
+    return -1 if inversions % 2 else 1
+
+
+for term in OMEGA_TERMS:
+    for permuted in permutations(term):
+        OMEGA[permuted[0]][permuted[1]][permuted[2]] = sp.Integer(permutation_sign(permuted))
+
+# Hitchin contraction: a symmetric bilinear density, determined up to scale.
+EPSILON = {perm: permutation_sign(perm) for perm in permutations(range(DIM))}
+
+
+def hitchin_entry(i: int, j: int) -> sp.Integer:
+    total = sp.Integer(0)
+    for permuted, sign in EPSILON.items():
+        first = OMEGA[i][permuted[0]][permuted[1]]
+        if first == 0:
+            continue
+        second = OMEGA[j][permuted[2]][permuted[3]]
+        if second == 0:
+            continue
+        third = OMEGA[permuted[4]][permuted[5]][permuted[6]]
+        if third:
+            total += sign * first * second * third
+    return sp.Integer(total)
+
+
+B_RAW = sp.Matrix(DIM, DIM, hitchin_entry)
+check(B_RAW == B_RAW.T, "Hitchin contraction is symmetric")
+nonzero_entries = [abs(int(entry)) for entry in B_RAW if entry != 0]
+content = reduce(gcd, nonzero_entries)
+B = sp.simplify(B_RAW / content)
+if B[0, 0] > 0:
+    B = -B
+check(all(entry.is_Integer for entry in B), "Hitchin form normalized to a primitive integer matrix")
+check(reduce(gcd, [abs(int(entry)) for entry in B if entry != 0]) == 1,
+      "normalized Hitchin form has integer content 1")
+
+# The candidate W_diag is an explicit modelling input, not an output of Omega.
+def standard_vector(index: int) -> sp.Matrix:
+    vector = sp.zeros(DIM, 1)
+    vector[index] = 1
+    return vector
+
+
+E = [standard_vector(i) for i in range(DIM)]
+W_DIAG = sp.Matrix.hstack(E[1] + E[4], E[2] + E[5], E[3] + E[6])
+W_ANTI = sp.Matrix.hstack(E[1] - E[4], E[2] - E[5], E[3] - E[6])
+SQRT2 = sp.sqrt(2)
+P = sp.Matrix.hstack(
+    *(W_DIAG[:, i] / SQRT2 for i in range(3)),
+    E[0] / SQRT2,
+    *(W_ANTI[:, i] / SQRT2 for i in range(3)),
+)
+ETA = sp.diag(1, 1, 1, -1, -1, -1, -1)
+check(is_zero_matrix(sp.simplify(P.T * B * P - ETA)),
+      "W_diag-adapted basis puts b in signature form diag(3 positive, 4 negative)")
+check(inertia_symmetric(B) == (3, 4, 0), "Hitchin metric has signature (3,4)")
+note("W_diag is declared before choosing the Cartan involution; the script will verify compatibility, not canonical selection by Omega.")
+
+
+# ---------------------------------------------------------------------------
+# Stabilizer algebra and a fully in-file transitivity certificate
+# ---------------------------------------------------------------------------
+
+section("2. Stabilizer algebra and transitivity on the projective null cone")
+
+stabilizer_rows: list[list[sp.Expr]] = []
+for i, j, k in combinations(range(DIM), 3):
+    row = [sp.Integer(0)] * (DIM * DIM)
+    for ell in range(DIM):
+        row[DIM * ell + i] += OMEGA[ell][j][k]
+        row[DIM * ell + j] += OMEGA[i][ell][k]
+        row[DIM * ell + k] += OMEGA[i][j][ell]
+    stabilizer_rows.append(row)
+
+STABILIZER_SYSTEM = sp.Matrix(stabilizer_rows)
+G_NULLSPACE = canonical_nullspace(STABILIZER_SYSTEM)
+check(len(G_NULLSPACE) == 14, "dim g = dim stab(Omega_W) = 14")
+G = [sp.Matrix(DIM, DIM, lambda r, c: vector[DIM * r + c]) for vector in G_NULLSPACE]
+check(all(is_zero_matrix(matrix.T * B + B * matrix) for matrix in G),
+      "all 14 infinitesimal Omega-stabilizers preserve the Hitchin metric b")
+x_symbols = sp.symbols("x0:7")
+X_SYMBOLIC = sp.Matrix(x_symbols)
+check(all(sp.simplify((X_SYMBOLIC.T * B * matrix * X_SYMBOLIC)[0]) == 0 for matrix in G),
+      "infinitesimal orbit directions are tangent to every b-level set")
+NULL_QUADRATIC = sp.factor((X_SYMBOLIC.T * B * X_SYMBOLIC)[0] / 2)
+check(NULL_QUADRATIC == -x_symbols[0] ** 2 + x_symbols[1] * x_symbols[4]
+      + x_symbols[2] * x_symbols[5] + x_symbols[3] * x_symbols[6],
+      "null equation is -x0^2 + x1*x4 + x2*x5 + x3*x6 = 0")
+
+ACTION = sp.Matrix.hstack(*(matrix * X_SYMBOLIC for matrix in G), X_SYMBOLIC)
+PAIR = {1: 4, 2: 5, 3: 6, 4: 1, 5: 2, 6: 3}
+# Certificates are row indices, column indices, and the expected constant minor.
+# Columns 0..13 are g*x; column 14 is the radial vector x.
+ACTION_CERTIFICATES = {
+    1: ((0, 1, 2, 3, 5, 6), (0, 1, 2, 4, 6, 9), sp.Rational(-1, 2)),
+    2: ((0, 1, 2, 3, 4, 6), (3, 4, 5, 6, 7, 10), sp.Rational(-1, 2)),
+    3: ((0, 1, 2, 3, 4, 5), (8, 9, 10, 11, 12, 13), sp.Rational(-1, 2)),
+    4: ((0, 2, 3, 4, 5, 6), (3, 5, 6, 8, 10, 11), sp.Rational(1, 4)),
+    5: ((0, 1, 3, 4, 5, 6), (0, 1, 6, 8, 9, 12), sp.Rational(-1, 4)),
+    6: ((0, 1, 2, 4, 5, 6), (0, 2, 3, 4, 7, 13), sp.Rational(1, 4)),
+}
+
+chart_substitutions: dict[int, dict[sp.Symbol, sp.Expr]] = {}
+for fixed_index in range(1, 7):
+    solved_index = PAIR[fixed_index]
+    solved_value = x_symbols[0] ** 2
+    for left, right in ((1, 4), (2, 5), (3, 6)):
+        if {left, right} != {fixed_index, solved_index}:
+            solved_value -= x_symbols[left] * x_symbols[right]
+    substitution = {x_symbols[fixed_index]: 1, x_symbols[solved_index]: solved_value}
+    chart_substitutions[fixed_index] = substitution
+    check(sp.simplify(NULL_QUADRATIC.subs(substitution)) == 0,
+          f"chart U_{fixed_index}: x{fixed_index}=1 solves the null equation polynomially")
+
+    rows, columns, expected = ACTION_CERTIFICATES[fixed_index]
+    determinant = sp.factor(ACTION.subs(substitution).extract(rows, columns).det())
+    check(determinant == expected,
+          f"chart U_{fixed_index}: certified 6x6 action minor is the nonzero constant {expected}")
+
+# The six charts cover Q: a null vector with x1=...=x6=0 must also have x0=0.
+check(sp.simplify(NULL_QUADRATIC.subs({x_symbols[i]: 0 for i in range(1, 7)})) == -x_symbols[0] ** 2,
+      "U_1,...,U_6 cover every nonzero null line")
+
+# Explicit overlap witnesses connect all six affine charts to U_1.
+for other in range(2, 7):
+    witness = sp.Matrix([1, 1, 0, 0, 1, 0, 0])
+    witness[other] = 1
+    # If other=4 this changes nothing; unpaired extra coordinates do not alter q.
+    check(sp.simplify((witness.T * B * witness)[0]) == 0
+          and witness[1] != 0 and witness[other] != 0,
+          f"U_1 intersects U_{other} at an explicit null line")
+
+# Mathematical deduction from the exact certificates:
+# * each U_i is R^5 (the displayed polynomial parametrization), hence connected;
+# * rank([g*x,x])=6 gives a 5-dimensional/open projective orbit at every point;
+# * a connected chart cannot split into disjoint open orbits;
+# * the overlap witnesses identify the orbit on every chart.
+deduced("Every identity-component orbit is open on each connected affine chart U_i ≅ R^5.")
+deduced("The overlaps U_1∩U_i force the six chart-orbits to coincide; therefore the action is transitive on Q.")
+
+
+# ---------------------------------------------------------------------------
+# The (2,3,5) distribution: exact local witness + transitive transport
+# ---------------------------------------------------------------------------
+
+section("3. The distribution D = ker(i_x Omega)/<x> and its growth vector")
+
+BASE = E[1]
+CONTRACTION_BASE = sp.Matrix(DIM, DIM, lambda j, k: OMEGA[1][j][k])
+KERNEL_BASE = CONTRACTION_BASE.nullspace()
+EXPECTED_KERNEL_BASE = sp.Matrix.hstack(E[1], E[5], E[6])
+check(len(KERNEL_BASE) == 3 and same_span(sp.Matrix.hstack(*KERNEL_BASE), EXPECTED_KERNEL_BASE),
+      "at [e1], ker(i_e1 Omega) = span(e1,e5,e6), so dim D_[e1] = 2")
+check(all(sp.simplify((BASE.T * B * vector)[0]) == 0 for vector in KERNEL_BASE),
+      "at [e1], ker(i_e1 Omega) lies in e1^perp")
+
+# Work in U_1, with x1=1 and x4 solved by the cone equation.
+t0, t2, t3, t5, t6 = sp.symbols("t0 t2 t3 t5 t6")
+chart_variables = (t0, t2, t3, t5, t6)
+t4 = t0 ** 2 - t2 * t5 - t3 * t6
+X_CHART = sp.Matrix([t0, 1, t2, t3, t4, t5, t6])
+check(sp.simplify((X_CHART.T * B * X_CHART)[0]) == 0, "the U_1 parametrization lies on the null cone")
+
+CONTRACTION = sp.Matrix(
+    DIM,
+    DIM,
+    lambda j, k: sum(X_CHART[i] * OMEGA[i][j][k] for i in range(DIM)),
+)
+KERNEL_FUNCTION_FIELD = CONTRACTION.nullspace()
+check(len(KERNEL_FUNCTION_FIELD) == 3,
+      "over the U_1 function field, ker(i_x Omega) has generic dimension 3")
+
+
+def clear_denominators(vector: sp.MatrixBase) -> tuple[sp.Matrix, sp.Expr]:
+    denominators = [sp.fraction(sp.cancel(entry))[1] for entry in vector]
+    common = sp.lcm(denominators)
+    return sp.Matrix([sp.expand(sp.cancel(common * entry)) for entry in vector]), sp.factor(common)
+
+
+polynomial_fields: list[sp.Matrix] = []
+field_denominators: list[sp.Expr] = []
+for kernel_vector in KERNEL_FUNCTION_FIELD:
+    # Remove the radial component so dx1=0 in this affine chart.
+    tangent_lift = sp.simplify(kernel_vector - kernel_vector[1] * X_CHART)
+    chart_field = sp.Matrix([tangent_lift[0], tangent_lift[2], tangent_lift[3], tangent_lift[5], tangent_lift[6]])
+    if is_zero_matrix(chart_field):
+        continue
+    polynomial_field, denominator = clear_denominators(chart_field)
+    differential_t4 = (
+        2 * t0 * polynomial_field[0]
+        - t5 * polynomial_field[1]
+        - t6 * polynomial_field[2]
+        - t2 * polynomial_field[3]
+        - t3 * polynomial_field[4]
+    )
+    polynomial_lift = sp.Matrix([
+        polynomial_field[0], 0, polynomial_field[1], polynomial_field[2],
+        differential_t4, polynomial_field[3], polynomial_field[4],
+    ])
+    check(is_zero_matrix(sp.simplify(CONTRACTION * polynomial_lift)),
+          "a denominator-cleared chart field still lies in ker(i_x Omega)")
+    polynomial_fields.append(polynomial_field)
+    field_denominators.append(denominator)
+
+check(len(polynomial_fields) >= 2, "at least two polynomial chart generators were produced")
+
+# A concrete exact witness; no generic-rank statement is substituted for a pointwise check.
+GROWTH_WITNESS = {t0: 1, t2: 0, t3: 0, t5: 0, t6: 1}
+check(all(sp.simplify(den.subs(GROWTH_WITNESS)) != 0 for den in field_denominators),
+      "all denominator clearings are legitimate at the chosen growth witness")
+
+field_pair: tuple[sp.Matrix, sp.Matrix] | None = None
+for first_index, second_index in combinations(range(len(polynomial_fields)), 2):
+    candidate = sp.Matrix.hstack(polynomial_fields[first_index], polynomial_fields[second_index])
+    if candidate.subs(GROWTH_WITNESS).rank() == 2:
+        field_pair = polynomial_fields[first_index], polynomial_fields[second_index]
+        break
+check(field_pair is not None, "two local generators span D at the concrete witness")
+FIELD_X, FIELD_Y = field_pair  # type: ignore[misc]
+
+
+def lie_bracket(first: sp.MatrixBase, second: sp.MatrixBase) -> sp.Matrix:
+    return sp.Matrix([
+        sp.expand(sum(
+            first[j] * sp.diff(second[i], chart_variables[j])
+            - second[j] * sp.diff(first[i], chart_variables[j])
+            for j in range(5)
+        ))
+        for i in range(5)
+    ])
+
+
+BRACKET_XY = lie_bracket(FIELD_X, FIELD_Y)
+BRACKET_XXY = lie_bracket(FIELD_X, BRACKET_XY)
+BRACKET_YXY = lie_bracket(FIELD_Y, BRACKET_XY)
+RANK_2 = sp.Matrix.hstack(FIELD_X, FIELD_Y).subs(GROWTH_WITNESS).rank()
+RANK_3 = sp.Matrix.hstack(FIELD_X, FIELD_Y, BRACKET_XY).subs(GROWTH_WITNESS).rank()
+RANK_5 = sp.Matrix.hstack(FIELD_X, FIELD_Y, BRACKET_XY, BRACKET_XXY, BRACKET_YXY).subs(GROWTH_WITNESS).rank()
+check((RANK_2, RANK_3, RANK_5) == (2, 3, 5),
+      "at x=(1,1,0,0,1,0,1), the exact derived ranks are (2,3,5)")
+
+deduced("The identity component preserves Omega and b, hence preserves D and all derived flags.")
+deduced("Transitivity transports the concrete (2,3,5) witness to every point of Q; D is globally a smooth (2,3,5) distribution.")
+
+
+# ---------------------------------------------------------------------------
+# Cartan involution, maximal compact algebra, and intrinsic ideal splitting
+# ---------------------------------------------------------------------------
+
+section("4. W_diag-adapted Cartan decomposition and k = su(2) + su(2)")
+
+P_INV = P.inv()
+G_P = [sp.simplify(P_INV * matrix * P) for matrix in G]
+G_FLAT, coordinates_in_g = coordinate_solver(G_P)
+
+# True Killing form via the adjoint representation.
+AD_G: list[sp.Matrix] = []
+for left in G_P:
+    AD_G.append(sp.Matrix.hstack(*(coordinates_in_g(left * right - right * left) for right in G_P)))
+KILLING = sp.Matrix(14, 14, lambda i, j: sp.simplify((AD_G[i] * AD_G[j]).trace()))
+TRACE_7 = sp.Matrix(14, 14, lambda i, j: sp.simplify((G_P[i] * G_P[j]).trace()))
+check(is_zero_matrix(KILLING - 4 * TRACE_7), "B_Killing = 4 tr_7 exactly on g")
+check(inertia_symmetric(KILLING) == (8, 6, 0), "Killing form has exact inertia (8,6,0)")
+
+# theta(X)=-X^T in the W_diag-adapted orthonormal basis.
+THETA_COLUMNS = []
+for matrix in G_P:
+    THETA_COLUMNS.append(coordinates_in_g(-matrix.T))
+THETA = sp.Matrix.hstack(*THETA_COLUMNS)
+check(is_zero_matrix(THETA * THETA - sp.eye(14)), "theta(X)=-X^T is an involution of g")
+B_THETA = sp.simplify(-KILLING * THETA)
+check(B_THETA == B_THETA.T and inertia_symmetric(B_THETA) == (14, 0, 0),
+      "-B_Killing(X,theta Y) is positive definite")
+deduced("Therefore theta is a Cartan involution of g.")
+
+coefficients = sp.symbols("g0:14")
+GENERIC_G = sum((coefficients[i] * G_P[i] for i in range(14)), sp.zeros(DIM, DIM))
+fixed_equations = [GENERIC_G[i, j] + GENERIC_G[j, i] for i in range(DIM) for j in range(i, DIM)]
+fixed_system, _ = sp.linear_eq_to_matrix(fixed_equations, coefficients)
+K_COEFFICIENTS = fixed_system.nullspace()
+check(len(K_COEFFICIENTS) == 6, "the fixed algebra k=Fix(theta) has dimension 6")
+deduced("The fixed algebra of a Cartan involution is maximal compact; hence this k is maximal compact.")
+K_P = [sum((vector[i] * G_P[i] for i in range(14)), sp.zeros(DIM, DIM)) for vector in K_COEFFICIENTS]
+K_ORIGINAL = [sp.simplify(P * matrix * P_INV) for matrix in K_P]
+K_FLAT, coordinates_in_k = coordinate_solver(K_P)
+
+AD_K = [sp.Matrix.hstack(*(coordinates_in_k(left * right - right * left) for right in K_P)) for left in K_P]
+commutant_variables = sp.symbols("z0:36")
+COMMUTANT_GENERIC = sp.Matrix(6, 6, commutant_variables)
+commutant_equations: list[sp.Expr] = []
+for adjoint in AD_K:
+    commutant_equations.extend(list(COMMUTANT_GENERIC * adjoint - adjoint * COMMUTANT_GENERIC))
+commutant_system, _ = sp.linear_eq_to_matrix(commutant_equations, commutant_variables)
+COMMUTANT_BASIS = [sp.Matrix(6, 6, vector) for vector in commutant_system.nullspace()]
+check(len(COMMUTANT_BASIS) == 2, "the commutant of ad(k) on k has dimension 2")
+
+NONSCALAR_COMMUTANT = next(
+    matrix for matrix in COMMUTANT_BASIS
+    if sp.Matrix.hstack(flat(matrix), flat(sp.eye(6))).rank() == 2
+)
+commutant_eigenvalues = NONSCALAR_COMMUTANT.eigenvals()
+check(len(commutant_eigenvalues) == 2 and sorted(commutant_eigenvalues.values()) == [3, 3],
+      "a non-scalar central endomorphism splits k into two 3-dimensional eigenspaces")
+
+IDEAL_COEFFICIENTS: list[sp.Matrix] = []
+IDEALS_P: list[list[sp.Matrix]] = []
+for eigenvalue in commutant_eigenvalues:
+    vectors = (NONSCALAR_COMMUTANT - eigenvalue * sp.eye(6)).nullspace()
+    coefficient_basis = sp.Matrix.hstack(*vectors)
+    ideal = [sum((vector[i] * K_P[i] for i in range(6)), sp.zeros(DIM, DIM)) for vector in vectors]
+    IDEAL_COEFFICIENTS.append(coefficient_basis)
+    IDEALS_P.append(ideal)
+
+K_COEFF_MATRIX = sp.Matrix.hstack(*K_COEFFICIENTS)
+KILLING_ON_K = sp.simplify(K_COEFF_MATRIX.T * KILLING * K_COEFF_MATRIX)
+for index, (coefficient_basis, ideal) in enumerate(zip(IDEAL_COEFFICIENTS, IDEALS_P), start=1):
+    ideal_flat = sp.Matrix.hstack(*(flat(matrix) for matrix in ideal))
+    check(ideal_flat.rank() == 3, f"ideal k_{index} has dimension 3")
+    check(all(sp.Matrix.hstack(ideal_flat, flat(left * right - right * left)).rank() == 3
+              for left in ideal for right in ideal),
+          f"ideal k_{index} is closed under the Lie bracket")
+    restricted_killing = sp.simplify(coefficient_basis.T * KILLING_ON_K * coefficient_basis)
+    check(inertia_symmetric(restricted_killing) == (0, 3, 0),
+          f"Killing form is negative definite on the 3-dimensional ideal k_{index}")
+
+check(all(is_zero_matrix(left * right - right * left)
+          for left in IDEALS_P[0] for right in IDEALS_P[1]),
+      "[k_1,k_2]=0 and k=k_1 direct-sum k_2")
+deduced("Each nonabelian 3-dimensional compact ideal is su(2); therefore k = su(2) direct-sum su(2).")
+
+
+# ---------------------------------------------------------------------------
+# Verify the declared W_diag against the chosen compact decomposition
+# ---------------------------------------------------------------------------
+
+section("5. Compatibility of the declared W_diag with the two compact factors")
+
+IDEALS_ORIGINAL = [[sp.simplify(P * matrix * P_INV) for matrix in ideal] for ideal in IDEALS_P]
+fixed_dimensions: list[int] = []
+fixed_spaces: list[sp.Matrix] = []
+for ideal in IDEALS_ORIGINAL:
+    stacked = sp.Matrix.vstack(*ideal)
+    kernel = stacked.nullspace()
+    fixed_dimensions.append(len(kernel))
+    fixed_spaces.append(sp.Matrix.hstack(*kernel) if kernel else sp.zeros(DIM, 0))
+
+check(sorted(fixed_dimensions) == [0, 3], "exactly one compact factor fixes a 3-space pointwise")
+BODY_INDEX = fixed_dimensions.index(3)
+SPATIAL_INDEX = 1 - BODY_INDEX
+check(same_span(fixed_spaces[BODY_INDEX], W_DIAG),
+      "the pointwise-fixed 3-space is exactly the declared W_diag")
+
+# Restrict the moving factor to W_diag and verify irreducibility by its commutant.
+W_FLAT, coordinates_in_w = coordinate_solver([W_DIAG[:, i] for i in range(3)])
+SPATIAL_RESTRICTION: list[sp.Matrix] = []
+for generator in IDEALS_ORIGINAL[SPATIAL_INDEX]:
+    columns = []
+    for i in range(3):
+        columns.append(coordinates_in_w(generator * W_DIAG[:, i]))
+    SPATIAL_RESTRICTION.append(sp.Matrix.hstack(*columns))
+
+rep_variables = sp.symbols("r0:9")
+REP_GENERIC = sp.Matrix(3, 3, rep_variables)
+rep_equations: list[sp.Expr] = []
+for generator in SPATIAL_RESTRICTION:
+    rep_equations.extend(list(REP_GENERIC * generator - generator * REP_GENERIC))
+rep_system, _ = sp.linear_eq_to_matrix(rep_equations, rep_variables)
+REP_COMMUTANT = rep_system.nullspace()
+check(len(REP_COMMUTANT) == 1 and sp.Matrix(3, 3, REP_COMMUTANT[0]).rank() == 3,
+      "the moving compact factor has scalar commutant on W_diag")
+deduced("Compact complete reducibility then makes the 3-dimensional action irreducible, i.e. the real spin-1 representation.")
+note("This section verifies the chosen W_diag; it does not assert that Omega_W canonically singles it out.")
+
+
+# ---------------------------------------------------------------------------
+# Horizontal compact lifts and the exact spectral ratio
+# ---------------------------------------------------------------------------
+
+section("6. Canonical compact lift and the exact spectral ratio rho=3")
+
+# Horizontal compact elements at [e1].
+a = sp.symbols("a0:6")
+GENERIC_K_ORIGINAL = sum((a[i] * K_ORIGINAL[i] for i in range(6)), sp.zeros(DIM, DIM))
+VELOCITY = GENERIC_K_ORIGINAL * BASE
+# D_[e1] is span(e5,e6) modulo e1, so components 0,2,3,4 must vanish.
+horizontal_equations = [VELOCITY[row] for row in (0, 2, 3, 4)]
+horizontal_system, _ = sp.linear_eq_to_matrix(horizontal_equations, a)
+HORIZONTAL_COEFFICIENTS = horizontal_system.nullspace()
+check(len(HORIZONTAL_COEFFICIENTS) == 3,
+      "compact elements whose velocity lies in D_[e1] form a 3-space")
+HORIZONTAL_BASIS = [sum((vector[i] * K_ORIGINAL[i] for i in range(6)), sp.zeros(DIM, DIM))
+                    for vector in HORIZONTAL_COEFFICIENTS]
+EVALUATION = sp.Matrix([
+    [(matrix * BASE)[5] for matrix in HORIZONTAL_BASIS],
+    [(matrix * BASE)[6] for matrix in HORIZONTAL_BASIS],
+])
+check(EVALUATION.rank() == 2 and len(EVALUATION.nullspace()) == 1,
+      "evaluation to D_[e1] has rank 2 and a 1-dimensional stabilizer kernel")
+
+stabilizer_coefficients = EVALUATION.nullspace()[0]
+Z_STABILIZER = sum((stabilizer_coefficients[i] * HORIZONTAL_BASIS[i] for i in range(3)), sp.zeros(DIM, DIM))
+TRACE_FORM = lambda left, right: sp.simplify((left * right).trace())
+check(TRACE_FORM(Z_STABILIZER, Z_STABILIZER) != 0,
+      "the compact stabilizer direction has nonzero Killing norm")
+
+# Solve simultaneously for prescribed tangent velocity and Killing-orthogonality.
+orthogonality_row = sp.Matrix([[TRACE_FORM(matrix, Z_STABILIZER) for matrix in HORIZONTAL_BASIS]])
+LIFT_SYSTEM = sp.Matrix.vstack(EVALUATION, orthogonality_row)
+check(LIFT_SYSTEM.det() != 0, "each horizontal tangent vector has a unique Killing-orthogonal compact lift")
+
+ROLLING_LIFTS: list[sp.Matrix] = []
+for target in (sp.Matrix([1, 0, 0]), sp.Matrix([0, 1, 0])):
+    lift_coefficients = sp.simplify(LIFT_SYSTEM.inv() * target)
+    lift = sum((lift_coefficients[i] * HORIZONTAL_BASIS[i] for i in range(3)), sp.zeros(DIM, DIM))
+    ROLLING_LIFTS.append(sp.simplify(lift))
+check(all(TRACE_FORM(lift, Z_STABILIZER) == 0 for lift in ROLLING_LIFTS),
+      "the two standard tangent lifts are Killing-orthogonal to the stabilizer")
+check(sp.Matrix.hstack(*(lift * BASE for lift in ROLLING_LIFTS)).extract([5, 6], [0, 1]) == sp.eye(2),
+      "the two lifts evaluate exactly to e5 and e6 in D_[e1]")
+
+# Representation-theoretic normalization of squared amplitudes.
+BODY_IDEAL = IDEALS_ORIGINAL[BODY_INDEX]
+SPATIAL_IDEAL = IDEALS_ORIGINAL[SPATIAL_INDEX]
+IDEAL_BASIS = BODY_IDEAL + SPATIAL_IDEAL
+IDEAL_FLAT, coordinates_in_ideals = coordinate_solver(IDEAL_BASIS)
+
+u = sp.symbols("u0:3")
+lambda_symbol = sp.Symbol("lambda")
+BODY_GENERIC = sum((u[i] * BODY_IDEAL[i] for i in range(3)), sp.zeros(DIM, DIM))
+SPATIAL_GENERIC = sum((u[i] * SPATIAL_IDEAL[i] for i in range(3)), sp.zeros(DIM, DIM))
+Q_BODY_GENERIC = sp.factor(-(BODY_GENERIC * BODY_GENERIC).trace() / 4)
+Q_SPATIAL_GENERIC = sp.factor(-(SPATIAL_GENERIC * SPATIAL_GENERIC).trace() / 12)
+check(inertia_symmetric(quadratic_matrix(Q_BODY_GENERIC, u)) == (3, 0, 0),
+      "Q_body=-tr(body^2)/4 is positive definite on the body su(2)")
+check(inertia_symmetric(quadratic_matrix(Q_SPATIAL_GENERIC, u)) == (3, 0, 0),
+      "Q_spatial=-tr(spatial^2)/12 is positive definite on the spatial su(2)")
+check(sp.factor(BODY_GENERIC.charpoly(lambda_symbol).as_expr()
+                - lambda_symbol ** 3 * (lambda_symbol ** 2 + Q_BODY_GENERIC) ** 2) == 0,
+      "body spectrum is 0^3 plus spin-1/2 frequencies sqrt(Q_body)")
+check(sp.factor(SPATIAL_GENERIC.charpoly(lambda_symbol).as_expr()
+                - lambda_symbol * (lambda_symbol ** 2 + Q_SPATIAL_GENERIC) ** 2
+                * (lambda_symbol ** 2 + 4 * Q_SPATIAL_GENERIC)) == 0,
+      "spatial spectrum contains spin-1/2 frequency sqrt(Q_spatial) and contact frequency 2sqrt(Q_spatial)")
+
+r, s, c = sp.symbols("r s c", real=True)
+FULL_LIFT = r * ROLLING_LIFTS[0] + s * ROLLING_LIFTS[1] + c * Z_STABILIZER
+full_coefficients = coordinates_in_ideals(FULL_LIFT)
+BODY_PART = sum((full_coefficients[i] * BODY_IDEAL[i] for i in range(3)), sp.zeros(DIM, DIM))
+SPATIAL_PART = sum((full_coefficients[3 + i] * SPATIAL_IDEAL[i] for i in range(3)), sp.zeros(DIM, DIM))
+Q_BODY = sp.factor(-(BODY_PART * BODY_PART).trace() / 4)
+Q_SPATIAL = sp.factor(-(SPATIAL_PART * SPATIAL_PART).trace() / 12)
+print(f"  [COMPUTED] Q_body(r,s,c)    = {Q_BODY}")
+print(f"  [COMPUTED] Q_spatial(r,s,c) = {Q_SPATIAL}")
+
+HORIZONTAL_Q = sp.factor(Q_SPATIAL.subs(c, 0))
+check(inertia_symmetric(quadratic_matrix(HORIZONTAL_Q, (r, s))) == (2, 0, 0),
+      "Q_spatial(r,s,0) is positive for every nonzero horizontal direction")
+check(sp.simplify(Q_BODY.subs(c, 0) - 9 * Q_SPATIAL.subs(c, 0)) == 0,
+      "in the canonical gauge c=0, Q_body = 9 Q_spatial for the whole horizontal plane")
+GAP = sp.factor(9 * Q_SPATIAL - Q_BODY)
+GAP_POLY = sp.Poly(GAP, r, s, c)
+check(GAP_POLY.total_degree() == 2
+      and all(monomial == (0, 0, 2) for monomial, _ in GAP_POLY.terms())
+      and exact_sign(GAP_POLY.coeff_monomial(c ** 2)) == 1,
+      f"on the full gauge family, 9 Q_spatial - Q_body = {GAP} is a positive multiple of c^2")
+
+deduced("For every (r,s) != (0,0), rho=sqrt(Q_body/Q_spatial) is at most 3 and equals 3 exactly at c=0.")
+note("The physical no-slip radius interpretation is intentionally not asserted by this algebra-only script.")
+
+
+# ---------------------------------------------------------------------------
+# Final report
+# ---------------------------------------------------------------------------
+
+section("SUMMARY")
+print(f"  Exact checks passed: {_CHECKS}")
+print("  [COMPUTED+DEDUCED] G acts transitively on the projective null quadric via six chart certificates.")
+print("  [COMPUTED+DEDUCED] D=ker(i_x Omega)/<x> is globally a (2,3,5) distribution.")
+print("  [COMPUTED] Relative to the declared W_diag-adapted Cartan involution, k=su(2)+su(2).")
+print("  [COMPUTED] One factor fixes W_diag; the other acts irreducibly on it.")
+print("  [COMPUTED] The canonical representation-spectral amplitude ratio is rho=3, uniquely maximal along gauge fibers.")
+print("  [NOT CLAIMED] Omega alone canonically selects W_diag, or rho is already a physical radius ratio.")`,
+    nft_url: `https://opensea.io/item/base/0x8a3ee2dbaa1c33f3cb3d927497f4ae798b598b65/5`,
+    tweet_url: ``
+  };
+  const canonicalString = [entry.id, entry.safecreative_url, entry.title, entry.date, entry.text, entry.nft_url, entry.tweet_url].join('\n---\n');
+  const data = new TextEncoder().encode(canonicalString);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashHex = [...new Uint8Array(hashBuffer)].map(b => b.toString(16).padStart(2, '0')).join('');
+  document.getElementById('hashResult').textContent = hashHex;
+  document.getElementById('copyHashBtn').addEventListener('click', () => { navigator.clipboard.writeText(hashHex); alert('Hash copied'); });
+})();
+</script>
+</body></html>

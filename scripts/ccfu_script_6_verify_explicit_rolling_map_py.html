@@ -1,0 +1,2994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CCFU Script 6 — verify_explicit_rolling_map.py</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #fff; }
+    .block { margin-bottom: 20px; padding: 15px; border: 1px solid #eee; word-wrap: break-word; }
+    .key { color: #000; font-size: 2em !important; text-transform: capitalize; font-weight: bold; }
+    .hash { word-break: break-all; color: #4287f5; }
+    a { color: #4287f5; text-decoration: underline; }
+    pre { white-space: pre-wrap; }
+    code { background: #f4f4f4; padding: 2px 4px; font-size: 0.9em; }
+    pre > code { display: block; padding: 12px; overflow-x: auto; white-space: pre; }
+    button { font-family: inherit; padding: 6px 10px; border: 1px solid #ccc; background: #f9f9f9; cursor: pointer; }
+    h1 { margin-bottom: 10px; font-size: 32px; }
+    nav { background-color: #e1e1e1; padding: 10px; }
+    nav > ul { display: flex; flex-wrap: wrap; list-style: none; padding: 0; margin: 0; }
+    nav > ul > li, nav > ul > li > a { display: flex; flex-direction: column; text-align: center; margin: 0; }
+    nav ul li img { max-width: 80px; width: 100%; height: auto; border-radius: 40px; }
+    .arrow { width: 50px; height: 80px; font-size: 38px; }
+    iframe { border-radius: 4px; }
+  </style>
+</head>
+<body>
+<article itemscope itemtype="https://schema.org/CreativeWork">
+  <meta itemprop="identifier" content="2607166408688">
+  <meta itemprop="dateCreated" content="07/16/2026">
+<h1 itemprop="name">CCFU Script 6 — verify_explicit_rolling_map.py</h1>
+<nav aria-label="Breadcrumb" class="breadcrumb">
+  <ul>
+    <li><a href="../"><img src="../assets/images/AFB9C382-3B34-4925-B318-E7083E758055.png" alt="Home"/><span>Home</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><a href="./"><img src="../assets/images/scripts-1024.svg" alt="CCFU"/><span>Scripts</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><img src="../assets/images/scripts-1024.svg" alt="CCFU"/><span>CCFU Script 6 — verify_explicit_rolling_map.py</span></li>
+  </ul>
+</nav>
+  <div class="block" id="rendered">
+
+    <div class="block">
+      <div class="key">id</div>
+      <pre>2607166408688</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">safecreative_url</div>
+      <a href="https://www.safecreative.org/work/2607166408688-ccfu-script-6-verify_explicit_rolling_map-py" target="_blank">https://www.safecreative.org/work/2607166408688-ccfu-script-6-verify_explicit_rolling_map-py</a>
+    </div>
+
+    <div class="block">
+      <div class="key">title</div>
+      <pre>CCFU Script 6 — verify_explicit_rolling_map.py</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">date</div>
+      <pre>07/16/2026</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">text</div>
+      <details><summary style="cursor:pointer; color:#4287f5; margin-bottom:8px;">Show source code</summary><pre><code>&quot;&quot;&quot;
+CCFU Script 6 — verify_explicit_rolling_map.py (shelf v5)
+===========================================================
+
+PROVENANCE: the external verifier's completion pass (his v7), ADOPTED
+after in-session verification as the FINAL version of this file. It is
+a strict superset of shelf v4: same architecture (single source of
+truth, sorted Groebner inputs, K-invariance certificate), plus the
+recorded deferred debts, now closed: the stabilizer Cartan
+decomposition completeness (14 = 6 + 8, with the compact part spanned
+by the K generators) and the boost carrying the cone kernel ONTO the
+image kernel. THE LOOP FOR THIS FILE IS DECLARED CLOSED: any further
+improvement belongs to successor scripts, never to this file.
+
+Exact symbolic certificate for the explicit rolling/null-quadric map.
+
+DETAIL OF THIS COMPLETION PASS:  Exact tangency checks now
+certify that the declared rolling law and its ambient horizontal-field
+extension restrict to vector fields on S^2 x S^3.  Supplement B now proves
+both dimensions in the Cartan decomposition of the 14-dimensional
+stabilizer, identifies its 6-dimensional compact part with the declared
+K = SU(2) x SU(2), and checks that the Fibonacci boost maps onto the full
+3-dimensional image kernel rather than merely into it.  All v6
+certificates remain present.
+
+The declared data are
+
+    Omega_W = e^014 + e^025 + e^036 + e^123 + e^456,
+
+    phi_tilde(x, q) = (q_0, x + q_vec, x - q_vec),
+
+and the lifted rolling velocity
+
+    q_dot = lambda * (0, x cross x_dot) q.
+
+For a unit ball rolling inside a fixed sphere of radius rho, the classical
+kinematic convention used here is the EXTERNAL INPUT
+
+    lambda = -(rho - 1)/2.
+
+What this file certifies, using exact SymPy arithmetic only:
+
+1. The Hitchin bilinear determined by Omega_W is the displayed split form
+   b of signature (3,4).
+2. The projectivization of phi_tilde maps S^2 x S^3 onto the null quadric,
+   is an immersion everywhere, and has exactly the diagonal fibre
+   (x,q) ~ (-x,-q).  It does not descend via q ~ -q to S^2 x SO(3).
+3. The pushed rolling direction is Omega-horizontal iff lambda = -1 for
+   every nonzero real tangent direction.  Under the declared kinematic
+   input this gives rho = 3.
+4. The declared rolling law and its horizontal-field extension are
+   tangent to S^2 x S^3.  At one canonical base point, the pushed rolling
+   plane equals ker(i_v Omega_W)/&lt;v&gt;.  Exact K = SU(2) x SU(2)
+   equivariance, infinitesimal invariance, and transitivity promote this
+   equality to all points.  The growth vector is (2,3,5).
+5. Supplementary checks characterize the K-invariant and rolling-compatible
+   line in a three-parameter 3-form ansatz, prove the stabilizer Cartan
+   decomposition 14=6+8, and verify an explicit, order-independent
+   Fibonacci boost together with its action on the full cone kernel.
+
+The script is deterministic: it contains no random sampling, never
+selects a nullspace vector by list position, canonically orders unordered
+symbolic inputs before algorithmic use, and compares solution sets without
+assuming an output order.
+
+Run:
+
+    python3 verify_explicit_rolling_map.py
+    python3 verify_explicit_rolling_map.py --core-only
+
+The second command skips the two supplementary sections.
+&quot;&quot;&quot;
+
+from __future__ import annotations
+
+import argparse
+import platform
+import sys
+from dataclasses import dataclass
+from itertools import combinations, permutations
+from typing import Iterable, Sequence
+
+import sympy as sp
+
+
+# ---------------------------------------------------------------------------
+# Reporting and exact-comparison helpers
+# ---------------------------------------------------------------------------
+
+
+class VerificationError(RuntimeError):
+    &quot;&quot;&quot;Raised when an exact certificate check fails.&quot;&quot;&quot;
+
+
+@dataclass
+class Reporter:
+    quiet: bool = False
+    checks: int = 0
+    current_section: str = &quot;initialization&quot;
+
+    def header(self, title: str) -&gt; None:
+        self.current_section = title
+        if not self.quiet:
+            print(&quot;=&quot; * 72)
+            print(title)
+            print(&quot;=&quot; * 72)
+
+    def require(self, condition: bool, message: str) -&gt; None:
+        if not bool(condition):
+            raise VerificationError(f&quot;{self.current_section}: {message}&quot;)
+        self.checks += 1
+        if not self.quiet:
+            print(f&quot;  ✓ {message}&quot;)
+
+    def deduce(self, message: str) -&gt; None:
+        if not self.quiet:
+            print(f&quot;  ⇒ {message}&quot;)
+
+
+def scalar_is_zero(value: sp.Expr) -&gt; bool:
+    return sp.simplify(value) == 0
+
+
+def matrix_is_zero(matrix: sp.MatrixBase) -&gt; bool:
+    return all(scalar_is_zero(entry) for entry in matrix)
+
+
+def matrices_equal(left: sp.MatrixBase, right: sp.MatrixBase) -&gt; bool:
+    return left.shape == right.shape and matrix_is_zero(sp.Matrix(left - right))
+
+
+def vector(*entries: sp.Expr | int) -&gt; sp.Matrix:
+    return sp.Matrix(entries)
+
+
+def matrix_family_rank(matrices: Sequence[sp.MatrixBase]) -&gt; int:
+    &quot;&quot;&quot;Rank of a family of equal-shaped matrices after vectorization.&quot;&quot;&quot;
+    if not matrices:
+        return 0
+    shapes = {matrix.shape for matrix in matrices}
+    if len(shapes) != 1:
+        raise ValueError(&quot;matrix_family_rank requires one common matrix shape&quot;)
+    columns = [
+        sp.Matrix(matrix).reshape(matrix.rows * matrix.cols, 1)
+        for matrix in matrices
+    ]
+    return sp.Matrix.hstack(*columns).rank()
+
+
+def canonical_unique_expressions(
+    expressions: Iterable[sp.Expr],
+) -&gt; tuple[sp.Expr, ...]:
+    &quot;&quot;&quot;Expand, deduplicate, and canonically order exact expressions.&quot;&quot;&quot;
+    unique = {sp.expand(expression) for expression in expressions if expression != 0}
+    return tuple(sorted(unique, key=sp.default_sort_key))
+
+
+# ---------------------------------------------------------------------------
+# Alternating 3-forms and the Hitchin bilinear
+# ---------------------------------------------------------------------------
+
+
+DIM = 7
+ThreeForm = Sequence[Sequence[Sequence[sp.Expr]]]
+OMEGA_TERMS = ((0, 1, 4), (0, 2, 5), (0, 3, 6), (1, 2, 3), (4, 5, 6))
+
+
+def permutation_sign(values: Sequence[int]) -&gt; int:
+    sign = 1
+    for i in range(len(values)):
+        for j in range(i + 1, len(values)):
+            if values[i] &gt; values[j]:
+                sign = -sign
+    return sign
+
+
+def alternating_three_form(
+    triples: Iterable[tuple[int, int, int]],
+) -&gt; list[list[list[sp.Integer]]]:
+    omega = [
+        [[sp.Integer(0) for _ in range(DIM)] for _ in range(DIM)]
+        for _ in range(DIM)
+    ]
+    for triple in triples:
+        for permuted in permutations(triple):
+            omega[permuted[0]][permuted[1]][permuted[2]] = sp.Integer(
+                permutation_sign(permuted)
+            )
+    return omega
+
+
+OMEGA = alternating_three_form(OMEGA_TERMS)
+
+
+def contraction_vector(
+    omega: ThreeForm,
+    v: sp.MatrixBase,
+    w: sp.MatrixBase,
+) -&gt; sp.Matrix:
+    &quot;&quot;&quot;Return the covector z -&gt; Omega(v,w,z) in the standard basis.&quot;&quot;&quot;
+    return sp.Matrix(
+        [
+            sp.expand(
+                sum(
+                    v[i] * w[j] * omega[i][j][k]
+                    for i in range(DIM)
+                    for j in range(DIM)
+                    if omega[i][j][k] != 0
+                )
+            )
+            for k in range(DIM)
+        ]
+    )
+
+
+def contraction_matrix(
+    omega: ThreeForm, v: sp.MatrixBase
+) -&gt; sp.Matrix:
+    &quot;&quot;&quot;Matrix C_v with C_v w = Omega(v,w,.) in the standard basis.&quot;&quot;&quot;
+    return sp.Matrix.hstack(
+        *(contraction_vector(omega, v, sp.eye(DIM)[:, j]) for j in range(DIM))
+    )
+
+
+def hitchin_bilinear(
+    omega: ThreeForm,
+) -&gt; sp.Matrix:
+    &quot;&quot;&quot;Compute the unnormalised Hitchin contraction in the fixed orientation.&quot;&quot;&quot;
+    signed_permutations = [
+        (perm, permutation_sign(perm)) for perm in permutations(range(DIM))
+    ]
+    return sp.Matrix(
+        DIM,
+        DIM,
+        lambda i, j: sum(
+            sign
+            * omega[i][perm[0]][perm[1]]
+            * omega[j][perm[2]][perm[3]]
+            * omega[perm[4]][perm[5]][perm[6]]
+            for perm, sign in signed_permutations
+            if omega[i][perm[0]][perm[1]] != 0
+            and omega[j][perm[2]][perm[3]] != 0
+            and omega[perm[4]][perm[5]][perm[6]] != 0
+        ),
+    )
+
+
+def linear_combination_three_forms(
+    parts: Iterable[tuple[sp.Expr, ThreeForm]],
+) -&gt; list[list[list[sp.Expr]]]:
+    &quot;&quot;&quot;Build an exact linear combination of alternating 3-forms.&quot;&quot;&quot;
+    weighted_parts = tuple(parts)
+    return [
+        [
+            [
+                sp.expand(
+                    sum(
+                        coefficient * form[i][j][k]
+                        for coefficient, form in weighted_parts
+                    )
+                )
+                for k in range(DIM)
+            ]
+            for j in range(DIM)
+        ]
+        for i in range(DIM)
+    ]
+
+
+def three_forms_equal(left: ThreeForm, right: ThreeForm) -&gt; bool:
+    &quot;&quot;&quot;Compare two 3-forms coefficientwise in the fixed basis.&quot;&quot;&quot;
+    return all(
+        scalar_is_zero(left[i][j][k] - right[i][j][k])
+        for i in range(DIM)
+        for j in range(DIM)
+        for k in range(DIM)
+    )
+
+
+def infinitesimal_three_form_defects(
+    generator: sp.MatrixBase,
+    omega: ThreeForm,
+) -&gt; tuple[sp.Expr, ...]:
+    &quot;&quot;&quot;Return the nonzero coefficients of A . Omega on basis triples.&quot;&quot;&quot;
+    defects: list[sp.Expr] = []
+    for i, j, k in combinations(range(DIM), 3):
+        defect = sp.expand(
+            sum(
+                generator[l, i] * omega[l][j][k]
+                + generator[l, j] * omega[i][l][k]
+                + generator[l, k] * omega[i][j][l]
+                for l in range(DIM)
+            )
+        )
+        if not scalar_is_zero(defect):
+            defects.append(defect)
+    return tuple(defects)
+
+
+def infinitesimally_preserves_three_form(
+    generator: sp.MatrixBase,
+    omega: ThreeForm,
+) -&gt; bool:
+    &quot;&quot;&quot;Check A . Omega = 0 on the 35 independent basis triples.&quot;&quot;&quot;
+    return not infinitesimal_three_form_defects(generator, omega)
+
+
+def preserves_three_form(
+    transformation: sp.MatrixBase,
+    omega: ThreeForm,
+) -&gt; bool:
+    &quot;&quot;&quot;Check T^* Omega = Omega on the 35 independent basis triples.&quot;&quot;&quot;
+    for i, j, k in combinations(range(DIM), 3):
+        transformed = sum(
+            transformation[a, i]
+            * transformation[b, j]
+            * transformation[c, k]
+            * omega[a][b][c]
+            for a in range(DIM)
+            for b in range(DIM)
+            for c in range(DIM)
+            if omega[a][b][c] != 0
+        )
+        if not scalar_is_zero(transformed - omega[i][j][k]):
+            return False
+    return True
+
+
+B = sp.zeros(DIM, DIM)
+B[0, 0] = -6
+for left, right in ((1, 4), (2, 5), (3, 6)):
+    B[left, right] = 3
+    B[right, left] = 3
+
+SOURCE_SPLIT_METRIC = sp.diag(1, 1, 1, -1, -1, -1, -1)
+
+
+def split_orthonormal_basis() -&gt; sp.Matrix:
+    &quot;&quot;&quot;Columns form a B-orthonormal basis with signature (3,4).&quot;&quot;&quot;
+    root2, root3, root6 = sp.sqrt(2), sp.sqrt(3), sp.sqrt(6)
+    basis = sp.zeros(DIM, DIM)
+    for slot, (left, right) in enumerate(((1, 4), (2, 5), (3, 6))):
+        basis[left, slot] = 1 / (root2 * root3)
+        basis[right, slot] = 1 / (root2 * root3)
+        basis[left, 4 + slot] = 1 / (root2 * root3)
+        basis[right, 4 + slot] = -1 / (root2 * root3)
+    basis[0, 3] = 1 / root6
+    return basis
+
+
+P_SPLIT = split_orthonormal_basis()
+
+
+# ---------------------------------------------------------------------------
+# Quaternions, cross products, and the explicit linear lift
+# ---------------------------------------------------------------------------
+
+
+def quaternion_multiply(left: sp.MatrixBase, right: sp.MatrixBase) -&gt; sp.Matrix:
+    return sp.Matrix(
+        [
+            left[0] * right[0]
+            - left[1] * right[1]
+            - left[2] * right[2]
+            - left[3] * right[3],
+            left[0] * right[1]
+            + left[1] * right[0]
+            + left[2] * right[3]
+            - left[3] * right[2],
+            left[0] * right[2]
+            - left[1] * right[3]
+            + left[2] * right[0]
+            + left[3] * right[1],
+            left[0] * right[3]
+            + left[1] * right[2]
+            - left[2] * right[1]
+            + left[3] * right[0],
+        ]
+    )
+
+
+def cross_product(left: sp.MatrixBase, right: sp.MatrixBase) -&gt; sp.Matrix:
+    return sp.Matrix(
+        [
+            left[1] * right[2] - left[2] * right[1],
+            left[2] * right[0] - left[0] * right[2],
+            left[0] * right[1] - left[1] * right[0],
+        ]
+    )
+
+
+# Source coordinate order: (x_1,x_2,x_3,q_0,q_1,q_2,q_3).
+PHI_LINEAR = sp.Matrix(
+    [
+        [0, 0, 0, 1, 0, 0, 0],
+        [1, 0, 0, 0, 1, 0, 0],
+        [0, 1, 0, 0, 0, 1, 0],
+        [0, 0, 1, 0, 0, 0, 1],
+        [1, 0, 0, 0, -1, 0, 0],
+        [0, 1, 0, 0, 0, -1, 0],
+        [0, 0, 1, 0, 0, 0, -1],
+    ]
+)
+PHI_LINEAR_INV = PHI_LINEAR.inv()
+
+
+def stack_source(x: sp.MatrixBase, q: sp.MatrixBase) -&gt; sp.Matrix:
+    return sp.Matrix.vstack(sp.Matrix(x), sp.Matrix(q))
+
+
+def embed(x: sp.MatrixBase, q: sp.MatrixBase) -&gt; sp.Matrix:
+    return PHI_LINEAR * stack_source(x, q)
+
+
+def unembed(v: sp.MatrixBase) -&gt; tuple[sp.Matrix, sp.Matrix]:
+    source = PHI_LINEAR_INV * sp.Matrix(v)
+    return source[:3, :], source[3:, :]
+
+
+def rolling_source_velocity(
+    x: sp.MatrixBase,
+    q: sp.MatrixBase,
+    x_dot: sp.MatrixBase,
+    lam: sp.Expr,
+) -&gt; sp.Matrix:
+    &quot;&quot;&quot;Return (x_dot, q_dot) for the declared lifted rolling law.&quot;&quot;&quot;
+    pure_angular = sp.Matrix([0, *cross_product(x, x_dot)])
+    q_dot = lam * quaternion_multiply(pure_angular, q)
+    return stack_source(x_dot, q_dot)
+
+
+def rolling_push(
+    x: sp.MatrixBase,
+    q: sp.MatrixBase,
+    x_dot: sp.MatrixBase,
+    lam: sp.Expr,
+) -&gt; sp.Matrix:
+    &quot;&quot;&quot;Push the single source-coordinate rolling velocity through phi_tilde.&quot;&quot;&quot;
+    return PHI_LINEAR * rolling_source_velocity(x, q, x_dot, lam)
+
+
+# ---------------------------------------------------------------------------
+# Source symmetry and rolling vector fields
+# ---------------------------------------------------------------------------
+
+
+def cross_matrix(axis: Sequence[sp.Expr | int]) -&gt; sp.Matrix:
+    u1, u2, u3 = axis
+    return sp.Matrix([[0, -u3, u2], [u3, 0, -u1], [-u2, u1, 0]])
+
+
+def quaternion_left_generator(axis: Sequence[sp.Expr | int]) -&gt; sp.Matrix:
+    u1, u2, u3 = axis
+    return sp.Rational(1, 2) * sp.Matrix(
+        [
+            [0, -u1, -u2, -u3],
+            [u1, 0, -u3, u2],
+            [u2, u3, 0, -u1],
+            [u3, -u2, u1, 0],
+        ]
+    )
+
+
+def quaternion_right_generator(axis: Sequence[sp.Expr | int]) -&gt; sp.Matrix:
+    u1, u2, u3 = axis
+    return sp.Rational(1, 2) * sp.Matrix(
+        [
+            [0, -u1, -u2, -u3],
+            [u1, 0, u3, -u2],
+            [u2, -u3, 0, u1],
+            [u3, u2, -u1, 0],
+        ]
+    )
+
+
+def source_spatial_generator(axis: Sequence[sp.Expr | int]) -&gt; sp.Matrix:
+    generator = sp.zeros(DIM, DIM)
+    generator[:3, :3] = cross_matrix(axis)
+    generator[3:, 3:] = quaternion_left_generator(axis)
+    return generator
+
+
+def source_body_generator(axis: Sequence[sp.Expr | int]) -&gt; sp.Matrix:
+    generator = sp.zeros(DIM, DIM)
+    generator[3:, 3:] = quaternion_right_generator(axis)
+    return generator
+
+
+def transport_to_target(source_generator: sp.MatrixBase) -&gt; sp.Matrix:
+    return sp.simplify(PHI_LINEAR * source_generator * PHI_LINEAR_INV)
+
+
+def horizontal_field(
+    x: sp.MatrixBase, q: sp.MatrixBase, parameter: sp.MatrixBase
+) -&gt; sp.Matrix:
+    &quot;&quot;&quot;A spanning rolling field for lambda=-1; parameter is constant.&quot;&quot;&quot;
+    x_dot = parameter - parameter.dot(x) * x
+    return rolling_source_velocity(x, q, x_dot, sp.Integer(-1))
+
+
+def spatial_symmetry_field(
+    x: sp.MatrixBase, q: sp.MatrixBase, axis: sp.MatrixBase
+) -&gt; sp.Matrix:
+    &quot;&quot;&quot;Infinitesimal spatial symmetry generated by the source matrix.&quot;&quot;&quot;
+    return source_spatial_generator(axis) * stack_source(x, q)
+
+
+def body_symmetry_field(
+    x: sp.MatrixBase, q: sp.MatrixBase, axis: sp.MatrixBase
+) -&gt; sp.Matrix:
+    &quot;&quot;&quot;Infinitesimal body symmetry generated by the source matrix.&quot;&quot;&quot;
+    return source_body_generator(axis) * stack_source(x, q)
+
+
+def lie_bracket(
+    first: sp.MatrixBase,
+    second: sp.MatrixBase,
+    coordinates: Sequence[sp.Symbol],
+) -&gt; sp.Matrix:
+    return sp.expand(
+        second.jacobian(coordinates) * first - first.jacobian(coordinates) * second
+    )
+
+
+# ---------------------------------------------------------------------------
+# Section 1: form, bilinear, and signature
+# ---------------------------------------------------------------------------
+
+
+def verify_form_and_metric(report: Reporter) -&gt; None:
+    report.header(&quot;1. Omega_W and its Hitchin bilinear&quot;)
+
+    derived = hitchin_bilinear(OMEGA)
+    report.require(
+        matrices_equal(derived, 24 * B),
+        &quot;the in-file Hitchin contraction is exactly 24 b&quot;,
+    )
+    report.require(B.det() != 0, &quot;b is nondegenerate&quot;)
+    report.require(
+        matrices_equal(P_SPLIT.T * B * P_SPLIT, SOURCE_SPLIT_METRIC),
+        &quot;P_split^T b P_split = diag(1,1,1,-1,-1,-1,-1)&quot;,
+    )
+    report.deduce(&quot;the null quadric is the split (3,4) quadric determined by Omega_W&quot;)
+
+
+# ---------------------------------------------------------------------------
+# Section 2: exact global geometry of phi
+# ---------------------------------------------------------------------------
+
+
+def verify_map_geometry(report: Reporter) -&gt; None:
+    report.header(&quot;2. The explicit map: nullity, immersion, surjectivity, fibres&quot;)
+
+    report.require(PHI_LINEAR.det() == 8, &quot;det(phi_tilde) = 8, so the lift is a linear isomorphism&quot;)
+    report.require(
+        matrices_equal(PHI_LINEAR_INV * PHI_LINEAR, sp.eye(DIM)),
+        &quot;the displayed inverse of phi_tilde is exact&quot;,
+    )
+    report.require(
+        matrices_equal(PHI_LINEAR.T * B * PHI_LINEAR, 6 * SOURCE_SPLIT_METRIC),
+        &quot;b(phi_tilde(x,q),phi_tilde(x,q)) = 6(|x|^2-|q|^2) identically&quot;,
+    )
+
+    # Explicit inverse on a generic target vector v=(t,u,w).
+    t = sp.Symbol(&quot;t&quot;)
+    u = sp.Matrix(sp.symbols(&quot;u1:4&quot;))
+    w = sp.Matrix(sp.symbols(&quot;w1:4&quot;))
+    generic_v = sp.Matrix([t, *u, *w])
+    inverse_x, inverse_q = unembed(generic_v)
+    expected_x = (u + w) / 2
+    expected_q = sp.Matrix([t, *((u - w) / 2)])
+    report.require(
+        matrices_equal(inverse_x, expected_x) and matrices_equal(inverse_q, expected_q),
+        &quot;phi_tilde^{-1}(t,u,w) = ((u+w)/2, (t,(u-w)/2))&quot;,
+    )
+    report.require(
+        scalar_is_zero(
+            (generic_v.T * B * generic_v)[0]
+            - 6 * (inverse_x.dot(inverse_x) - inverse_q.dot(inverse_q))
+        ),
+        &quot;a null target vector pulls back to equal source norms&quot;,
+    )
+    report.deduce(
+        &quot;every nonzero null line has a normalized preimage in S^2 x S^3, so phi is onto Q&quot;
+    )
+
+    # Global immersion proof: if d[phi](delta z) is radial, invertibility gives
+    # delta z = alpha z.  The following exact reduction shows that such a
+    # radial variation has normal component alpha on each unit-sphere factor.
+    alpha = sp.Symbol(&quot;alpha&quot;, real=True)
+    immersion_x = sp.Matrix(sp.symbols(&quot;ix1:4&quot;, real=True))
+    immersion_q = sp.Matrix(sp.symbols(&quot;iq0:4&quot;, real=True))
+    immersion_variables = (alpha, *immersion_x, *immersion_q)
+    sphere_ideal = sp.groebner(
+        (immersion_x.dot(immersion_x) - 1, immersion_q.dot(immersion_q) - 1),
+        *immersion_variables,
+        order=&quot;grevlex&quot;,
+    )
+    radial_x_normal = sphere_ideal.reduce(
+        sp.expand(immersion_x.dot(alpha * immersion_x))
+    )[1]
+    radial_q_normal = sphere_ideal.reduce(
+        sp.expand(immersion_q.dot(alpha * immersion_q))
+    )[1]
+    report.require(
+        sp.expand(radial_x_normal - alpha) == 0
+        and sp.expand(radial_q_normal - alpha) == 0,
+        &quot;a radial source variation alpha(x,q) is tangent to S^2 x S^3 only when alpha=0&quot;,
+    )
+    normalization_scalars = sp.solveset(
+        alpha**2 - 1,
+        alpha,
+        domain=sp.S.Reals,
+    )
+    report.require(
+        normalization_scalars == sp.FiniteSet(-1, 1),
+        &quot;normalization leaves exactly the two real scalars ±1 on each projective fibre&quot;,
+    )
+    report.deduce(
+        &quot;the projective map is an immersion everywhere and its exact fibre is (x,q) ~ (-x,-q)&quot;
+    )
+
+    symbolic_x = sp.Matrix(sp.symbols(&quot;fx1:4&quot;))
+    symbolic_q = sp.Matrix(sp.symbols(&quot;fq0:4&quot;))
+    report.require(
+        matrices_equal(embed(-symbolic_x, -symbolic_q), -embed(symbolic_x, symbolic_q)),
+        &quot;the diagonal antipodal involution maps to the same null line&quot;,
+    )
+    witness_x = vector(1, 0, 0)
+    witness_q = vector(1, 0, 0, 0)
+    positive = embed(witness_x, witness_q)
+    spin_flipped = embed(witness_x, -witness_q)
+    report.require(
+        not matrices_equal(spin_flipped, positive)
+        and not matrices_equal(spin_flipped, -positive),
+        &quot;q -&gt; -q alone changes the null line: phi does not descend to S^2 x SO(3)&quot;,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Section 3: Groebner certificate for horizontality iff lambda=-1
+# ---------------------------------------------------------------------------
+
+
+def verify_horizontality_and_ratio(report: Reporter) -&gt; None:
+    report.header(&quot;3. Exact horizontality criterion and the conditional radius&quot;)
+
+    x1, x2, x3 = sp.symbols(&quot;x1 x2 x3&quot;, real=True)
+    q0, q1, q2, q3 = sp.symbols(&quot;q0 q1 q2 q3&quot;, real=True)
+    y1, y2, y3 = sp.symbols(&quot;y1 y2 y3&quot;, real=True)
+    lam = sp.Symbol(&quot;lambda&quot;, real=True)
+    x = vector(x1, x2, x3)
+    q = vector(q0, q1, q2, q3)
+    y = vector(y1, y2, y3)
+
+    variables = (x1, x2, x3, q0, q1, q2, q3, y1, y2, y3)
+    constraints = (
+        x.dot(x) - 1,
+        q.dot(q) - 1,
+        x.dot(y),
+    )
+    ideal = sp.groebner(constraints, *variables, order=&quot;grevlex&quot;)
+
+    def reduce_mod_constraints(expression: sp.Expr) -&gt; sp.Expr:
+        return sp.expand(ideal.reduce(sp.expand(expression))[1])
+
+    v = embed(x, q)
+    position_part = embed(y, sp.zeros(4, 1))
+    angular = sp.Matrix([0, *cross_product(x, y)])
+    spin_part = embed(sp.zeros(3, 1), quaternion_multiply(angular, q))
+    source_velocity = rolling_source_velocity(x, q, y, lam)
+    report.require(
+        scalar_is_zero(x.dot(source_velocity[:3, :]) - x.dot(y))
+        and scalar_is_zero(q.dot(source_velocity[3:, :])),
+        &quot;the declared rolling law is tangent to S^2 x S^3 whenever x·x_dot=0&quot;,
+    )
+    report.require(
+        matrices_equal(
+            rolling_push(x, q, y, lam),
+            position_part + lam * spin_part,
+        ),
+        &quot;rolling_push is exactly the push-forward of the declared source rolling velocity&quot;,
+    )
+
+    reduced_position = [
+        reduce_mod_constraints(entry)
+        for entry in contraction_vector(OMEGA, v, position_part)
+    ]
+    reduced_spin = [
+        reduce_mod_constraints(entry)
+        for entry in contraction_vector(OMEGA, v, spin_part)
+    ]
+
+    report.require(
+        all(sp.expand(a - b) == 0 for a, b in zip(reduced_position, reduced_spin)),
+        &quot;all seven reduced defect components equal (1+lambda) R_z&quot;,
+    )
+
+    q_vec_dot_y = q1 * y1 + q2 * y2 + q3 * y3
+    y_norm_sq = y.dot(y)
+    sum_of_squares = sum(component**2 for component in reduced_spin)
+    positive_certificate = 2 * (q_vec_dot_y**2 + 2 * y_norm_sq)
+    report.require(
+        reduce_mod_constraints(sum_of_squares - positive_certificate) == 0,
+        &quot;sum_z R_z^2 = 2((q_vec·y)^2 + 2|y|^2) modulo the constraints&quot;,
+    )
+    report.deduce(
+        &quot;for every real y != 0, R is nonzero; hence horizontality holds iff lambda=-1&quot;
+    )
+
+    rho = sp.Symbol(&quot;rho&quot;, real=True)
+    rho_solutions = sp.solveset(
+        -1 + (rho - 1) / 2,
+        rho,
+        domain=sp.S.Reals,
+    )
+    report.require(
+        rho_solutions == sp.FiniteSet(3),
+        &quot;under the declared input lambda=-(rho-1)/2, lambda=-1 gives rho=3&quot;,
+    )
+    report.deduce(
+        &quot;rho=3 is conditional on that rolling convention; &quot;
+        &quot;the convention is not derived here&quot;
+    )
+
+
+# ---------------------------------------------------------------------------
+# Section 4: K symmetry, transitivity, and distribution equality
+# ---------------------------------------------------------------------------
+
+
+def verify_symmetry_and_distribution(report: Reporter) -&gt; None:
+    report.header(&quot;4. K-equivariance and exact equality of the two plane fields&quot;)
+
+    axes = (vector(1, 0, 0), vector(0, 1, 0), vector(0, 0, 1))
+    spatial_generators = [source_spatial_generator(axis) for axis in axes]
+    body_generators = [source_body_generator(axis) for axis in axes]
+    source_generators = spatial_generators + body_generators
+    target_generators = [transport_to_target(generator) for generator in source_generators]
+
+    cyclic_indices = ((0, 1, 2), (1, 2, 0), (2, 0, 1))
+    report.require(
+        all(
+            matrices_equal(
+                spatial_generators[i] * spatial_generators[j]
+                - spatial_generators[j] * spatial_generators[i],
+                spatial_generators[k],
+            )
+            and matrices_equal(
+                body_generators[i] * body_generators[j]
+                - body_generators[j] * body_generators[i],
+                -body_generators[k],
+            )
+            for i, j, k in cyclic_indices
+        )
+        and all(
+            matrix_is_zero(spatial * body - body * spatial)
+            for spatial in spatial_generators
+            for body in body_generators
+        ),
+        &quot;the six source matrices realize su(2) + su(2), with commuting factors&quot;,
+    )
+    report.require(
+        all(
+            matrices_equal(generator.T, -generator)
+            for generator in source_generators
+        ),
+        &quot;the six source generators preserve the two unit-sphere norms&quot;,
+    )
+    report.require(
+        all(
+            infinitesimally_preserves_three_form(generator, OMEGA)
+            for generator in target_generators
+        ),
+        &quot;all transported su(2)+su(2) generators lie in Stab(Omega_W)&quot;,
+    )
+    report.require(
+        all(matrix_is_zero(generator.T * B + B * generator) for generator in target_generators),
+        &quot;the transported generators also preserve b infinitesimally&quot;,
+    )
+
+    # Generic symbolic Lie-bracket identities certify preservation of the
+    # rolling plane, rather than merely asserting it from geometric language.
+    sx = sp.Matrix(sp.symbols(&quot;sx1:4&quot;, real=True))
+    sq = sp.Matrix(sp.symbols(&quot;sq0:4&quot;, real=True))
+    su = sp.Matrix(sp.symbols(&quot;su1:4&quot;, real=True))
+    sa = sp.Matrix(sp.symbols(&quot;sa1:4&quot;, real=True))
+    source_coordinates = [*sx, *sq]
+    horizontal = horizontal_field(sx, sq, sa)
+    spatial = spatial_symmetry_field(sx, sq, su)
+    body = body_symmetry_field(sx, sq, su)
+    projected_velocity = sa - sa.dot(sx) * sx
+    report.require(
+        scalar_is_zero(
+            sx.dot(horizontal[:3, :])
+            - sa.dot(sx) * (1 - sx.dot(sx))
+        )
+        and scalar_is_zero(sq.dot(horizontal[3:, :])),
+        &quot;the ambient horizontal field H_a is tangent along S^2 x S^3&quot;,
+    )
+    report.require(
+        matrices_equal(
+            PHI_LINEAR * horizontal,
+            rolling_push(sx, sq, projected_velocity, sp.Integer(-1)),
+        ),
+        &quot;H_a is exactly the lambda=-1 rolling field pushed by phi_tilde&quot;,
+    )
+    report.require(
+        matrices_equal(
+            lie_bracket(spatial, horizontal, source_coordinates),
+            -horizontal_field(sx, sq, cross_product(su, sa)),
+        ),
+        &quot;[K_spatial(u), H_a] = -H_(u cross a) identically&quot;,
+    )
+    report.require(
+        matrix_is_zero(lie_bracket(body, horizontal, source_coordinates)),
+        &quot;[K_body(u), H_a] = 0 identically&quot;,
+    )
+    report.deduce(
+        &quot;because the fields are tangent, these ambient polynomial brackets &quot;
+        &quot;restrict to the intrinsic brackets on S^2 x S^3&quot;
+    )
+
+    # The orbit through the canonical source point has full dimension five.
+    x_base = vector(1, 0, 0)
+    q_base = vector(1, 0, 0, 0)
+    source_base = stack_source(x_base, q_base)
+    orbit_tangents = sp.Matrix.hstack(
+        *(generator * source_base for generator in source_generators)
+    )
+    report.require(
+        orbit_tangents.rank() == 5,
+        &quot;the K-orbit through (e1,1) has dimension 5&quot;,
+    )
+    report.deduce(
+        &quot;K is compact, its orbit is closed, full dimension makes it open, &quot;
+        &quot;and S^2 x S^3 is connected: the action is transitive&quot;
+    )
+
+    # Exact base-point comparison.
+    v_base = embed(x_base, q_base)
+    kernel_matrix = contraction_matrix(OMEGA, v_base)
+    kernel_basis = kernel_matrix.nullspace()
+    report.require(len(kernel_basis) == 3, &quot;at v0, dim ker(i_v Omega_W) = 3&quot;)
+    report.require(
+        matrix_is_zero(kernel_matrix * v_base),
+        &quot;the radial vector v0 lies in that kernel&quot;,
+    )
+
+    rolling_basis = sp.Matrix.hstack(
+        rolling_push(x_base, q_base, vector(0, 1, 0), sp.Integer(-1)),
+        rolling_push(x_base, q_base, vector(0, 0, 1), sp.Integer(-1)),
+    )
+    report.require(
+        rolling_basis.rank() == 2,
+        &quot;the pushed rolling plane has rank 2 at the base point&quot;,
+    )
+    report.require(
+        matrix_is_zero(kernel_matrix * rolling_basis),
+        &quot;both pushed generators lie exactly in ker(i_v Omega_W)&quot;,
+    )
+    report.require(
+        sp.Matrix.hstack(rolling_basis, v_base).rank() == 3,
+        &quot;the two pushed directions plus the radial line exhaust the 3-dimensional kernel&quot;,
+    )
+    report.deduce(
+        &quot;K-invariance, equivariance, and transitivity give &quot;
+        &quot;d phi(D_roll) = ker(i_v Omega_W)/&lt;v&gt; globally&quot;
+    )
+
+
+# ---------------------------------------------------------------------------
+# Section 5: growth vector
+# ---------------------------------------------------------------------------
+
+
+def verify_growth_vector(report: Reporter) -&gt; None:
+    report.header(&quot;5. Growth vector (2,3,5)&quot;)
+
+    x = sp.Matrix(sp.symbols(&quot;gx1:4&quot;, real=True))
+    q = sp.Matrix(sp.symbols(&quot;gq0:4&quot;, real=True))
+    coordinates = [*x, *q]
+
+    h2 = horizontal_field(x, q, vector(0, 1, 0))
+    h3 = horizontal_field(x, q, vector(0, 0, 1))
+    first_bracket = lie_bracket(h2, h3, coordinates)
+    second_2 = lie_bracket(h2, first_bracket, coordinates)
+    second_3 = lie_bracket(h3, first_bracket, coordinates)
+
+    base_substitution = {
+        x[0]: 1,
+        x[1]: 0,
+        x[2]: 0,
+        q[0]: 1,
+        q[1]: 0,
+        q[2]: 0,
+        q[3]: 0,
+    }
+
+    def rank_at_base(fields: Sequence[sp.MatrixBase]) -&gt; int:
+        return sp.Matrix.hstack(
+            *(sp.Matrix(field).subs(base_substitution) for field in fields)
+        ).rank()
+
+    ranks = (
+        rank_at_base((h2, h3)),
+        rank_at_base((h2, h3, first_bracket)),
+        rank_at_base((h2, h3, first_bracket, second_2, second_3)),
+    )
+    report.require(ranks == (2, 3, 5), &quot;successive bracket ranks at (e1,1) are 2 -&gt; 3 -&gt; 5&quot;)
+    report.deduce(
+        &quot;K-invariance and transitivity transport the growth vector (2,3,5) &quot;
+        &quot;to every point&quot;
+    )
+
+
+# ---------------------------------------------------------------------------
+# Supplement A: invariant and compatible line in a 3-form ansatz
+# ---------------------------------------------------------------------------
+
+
+def groebner_ideals_equal(first: sp.GroebnerBasis, second: sp.GroebnerBasis) -&gt; bool:
+    first_in_second = all(second.reduce(poly.as_expr())[1] == 0 for poly in first.polys)
+    second_in_first = all(first.reduce(poly.as_expr())[1] == 0 for poly in second.polys)
+    return first_in_second and second_in_first
+
+
+def verify_form_ansatz(report: Reporter) -&gt; None:
+    report.header(
+        &quot;6. Supplement: K-invariance and rolling compatibility in the 3-form ansatz&quot;
+    )
+
+    mixed = alternating_three_form(((0, 1, 4), (0, 2, 5), (0, 3, 6)))
+    volume_left = alternating_three_form(((1, 2, 3),))
+    volume_right = alternating_three_form(((4, 5, 6),))
+    ansatz_basis = (mixed, volume_left, volume_right)
+
+    basis_component_matrix = sp.Matrix(
+        [
+            [form[i][j][k] for form in ansatz_basis]
+            for i, j, k in combinations(range(DIM), 3)
+        ]
+    )
+    report.require(
+        basis_component_matrix.rank() == 3,
+        &quot;the displayed mixed and volume terms form a genuine three-dimensional ansatz&quot;,
+    )
+
+    a, b, c, lam, line_scale = sp.symbols(&quot;a b c lambda t&quot;)
+    form_parts = ((a, mixed), (b, volume_left), (c, volume_right))
+    ansatz_form = linear_combination_three_forms(form_parts)
+    report.require(
+        three_forms_equal(
+            linear_combination_three_forms(
+                (
+                    (sp.Integer(1), mixed),
+                    (sp.Integer(1), volume_left),
+                    (sp.Integer(1), volume_right),
+                )
+            ),
+            OMEGA,
+        ),
+        &quot;the coefficient vector (1,1,1) reproduces Omega_W exactly&quot;,
+    )
+
+    axes = (vector(1, 0, 0), vector(0, 1, 0), vector(0, 0, 1))
+    source_generators = [
+        *(source_spatial_generator(axis) for axis in axes),
+        *(source_body_generator(axis) for axis in axes),
+    ]
+    target_generators = [
+        transport_to_target(generator) for generator in source_generators
+    ]
+
+    report.require(
+        all(
+            any(
+                infinitesimal_three_form_defects(generator, basis_form)
+                for generator in target_generators
+            )
+            for basis_form in ansatz_basis
+        ),
+        &quot;the three ansatz components are not K-invariant individually&quot;,
+    )
+
+    raw_invariance_defects = [
+        defect
+        for generator in target_generators
+        for defect in infinitesimal_three_form_defects(generator, ansatz_form)
+    ]
+    invariance_defects = canonical_unique_expressions(raw_invariance_defects)
+    report.require(
+        invariance_defects
+        == canonical_unique_expressions(reversed(raw_invariance_defects)),
+        &quot;the infinitesimal K-invariance equations have a canonical collection order&quot;,
+    )
+
+    invariance_coefficient_matrix = sp.Matrix(
+        [
+            [sp.diff(defect, coefficient) for coefficient in (a, b, c)]
+            for defect in invariance_defects
+        ]
+    )
+    invariant_line_direction = sp.ones(3, 1)
+    report.require(
+        invariance_coefficient_matrix.rank() == 2
+        and matrix_is_zero(invariance_coefficient_matrix * invariant_line_direction),
+        &quot;the infinitesimal K-invariance equations have kernel span{(1,1,1)}&quot;,
+    )
+
+    invariance_actual = sp.groebner(invariance_defects, a, b, c, order=&quot;lex&quot;)
+    invariance_expected = sp.groebner((a - c, b - c), a, b, c, order=&quot;lex&quot;)
+    report.require(
+        groebner_ideals_equal(invariance_actual, invariance_expected),
+        &quot;the exact infinitesimal K-invariance ideal is &lt;a-c, b-c&gt;&quot;,
+    )
+    report.deduce(
+        &quot;K is connected, so inside this ansatz K-invariance is equivalent to &quot;
+        &quot;(a,b,c)=t(1,1,1)&quot;
+    )
+
+    x1, x2, x3 = sp.symbols(&quot;fx1 fx2 fx3&quot;, real=True)
+    q0, q1, q2, q3 = sp.symbols(&quot;fq0 fq1 fq2 fq3&quot;, real=True)
+    y1, y2, y3 = sp.symbols(&quot;fy1 fy2 fy3&quot;, real=True)
+    x = vector(x1, x2, x3)
+    q = vector(q0, q1, q2, q3)
+    y = vector(y1, y2, y3)
+    variables = (x1, x2, x3, q0, q1, q2, q3, y1, y2, y3)
+    constraints = (x.dot(x) - 1, q.dot(q) - 1, x.dot(y))
+    source_ideal = sp.groebner(constraints, *variables, order=&quot;grevlex&quot;)
+
+    def reduce_source(expression: sp.Expr) -&gt; sp.Expr:
+        return sp.expand(source_ideal.reduce(sp.expand(expression))[1])
+
+    v = embed(x, q)
+    position_part = embed(y, sp.zeros(4, 1))
+    spin_part = embed(
+        sp.zeros(3, 1),
+        quaternion_multiply(sp.Matrix([0, *cross_product(x, y)]), q),
+    )
+
+    coefficient_conditions: list[sp.Expr] = []
+    for target_slot in range(DIM):
+        expression = sp.Integer(0)
+        for coefficient, form in form_parts:
+            expression += coefficient * reduce_source(
+                contraction_vector(form, v, position_part)[target_slot]
+            )
+            expression += lam * coefficient * reduce_source(
+                contraction_vector(form, v, spin_part)[target_slot]
+            )
+        polynomial = sp.Poly(sp.expand(expression), *variables)
+        coefficient_conditions.extend(
+            sp.expand(value) for value in polynomial.as_dict().values() if value != 0
+        )
+
+    ordered_conditions = canonical_unique_expressions(coefficient_conditions)
+    report.require(
+        ordered_conditions
+        == canonical_unique_expressions(reversed(coefficient_conditions)),
+        &quot;the rolling-compatibility equations have a canonical collection order&quot;,
+    )
+    compatibility_actual = sp.groebner(
+        ordered_conditions, lam, a, b, c, order=&quot;lex&quot;
+    )
+    compatibility_expected = sp.groebner(
+        (a - c, b - c, c * (lam + 1)),
+        lam,
+        a,
+        b,
+        c,
+        order=&quot;lex&quot;,
+    )
+    report.require(
+        groebner_ideals_equal(compatibility_actual, compatibility_expected),
+        &quot;the full rolling-compatibility ideal is &lt;a-c, b-c, c(lambda+1)&gt;&quot;,
+    )
+
+    invariant_line_conditions = canonical_unique_expressions(
+        condition.subs({a: line_scale, b: line_scale, c: line_scale})
+        for condition in ordered_conditions
+    )
+    invariant_line_actual = sp.groebner(
+        invariant_line_conditions, lam, line_scale, order=&quot;lex&quot;
+    )
+    invariant_line_expected = sp.groebner(
+        (line_scale * (lam + 1),), lam, line_scale, order=&quot;lex&quot;
+    )
+    report.require(
+        groebner_ideals_equal(invariant_line_actual, invariant_line_expected),
+        &quot;on the K-invariant line, rolling compatibility is exactly t(lambda+1)=0&quot;,
+    )
+    report.deduce(
+        &quot;for every nonzero K-invariant ansatz form, the fixed map and gauge require lambda=-1&quot;
+    )
+    report.deduce(
+        &quot;the conclusion concerns this declared ansatz and phi, &quot;
+        &quot;not a classification of stable 3-forms&quot;
+    )
+
+
+# ---------------------------------------------------------------------------
+# Supplement B: explicit order-independent Fibonacci boost
+# ---------------------------------------------------------------------------
+
+
+BOOST_GENERATOR = sp.Matrix(
+    [
+        [0, 0, 0, 1, 0, 0, 1],
+        [0, 0, 0, 0, 0, 1, 0],
+        [0, 0, 0, 0, -1, 0, 0],
+        [2, 0, 0, 0, 0, 0, 0],
+        [0, 0, -1, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0],
+        [2, 0, 0, 0, 0, 0, 0],
+    ]
+)
+
+
+def golden_boost_matrix() -&gt; sp.Matrix:
+    root5 = sp.sqrt(5)
+    return sp.Matrix(
+        [
+            [sp.Rational(3, 2), 0, 0, root5 / 4, 0, 0, root5 / 4],
+            [0, root5 / 2, 0, 0, 0, sp.Rational(1, 2), 0],
+            [0, 0, root5 / 2, 0, -sp.Rational(1, 2), 0, 0],
+            [root5 / 2, 0, 0, sp.Rational(5, 4), 0, 0, sp.Rational(1, 4)],
+            [0, 0, -sp.Rational(1, 2), 0, root5 / 2, 0, 0],
+            [0, sp.Rational(1, 2), 0, 0, 0, root5 / 2, 0],
+            [root5 / 2, 0, 0, sp.Rational(1, 4), 0, 0, sp.Rational(5, 4)],
+        ]
+    )
+
+
+GOLDEN_BOOST = golden_boost_matrix()
+
+
+def infinitesimal_stabilizer_basis() -&gt; list[sp.Matrix]:
+    rows: list[list[sp.Expr]] = []
+    for i, j, k in combinations(range(DIM), 3):
+        row = [sp.Integer(0)] * (DIM * DIM)
+        for l in range(DIM):
+            row[DIM * l + i] += OMEGA[l][j][k]
+            row[DIM * l + j] += OMEGA[i][l][k]
+            row[DIM * l + k] += OMEGA[i][j][l]
+        rows.append(row)
+    return [
+        sp.Matrix(DIM, DIM, lambda r, c: raw[DIM * r + c])
+        for raw in sp.Matrix(rows).nullspace()
+    ]
+
+
+def cartan_part_coefficient_basis(
+    split_stabilizer_basis: Sequence[sp.MatrixBase],
+    *,
+    symmetric: bool,
+) -&gt; list[sp.Matrix]:
+    &quot;&quot;&quot;Coefficient basis for the symmetric or skew part in split coordinates.&quot;&quot;&quot;
+    coefficients = sp.symbols(f&quot;c0:{len(split_stabilizer_basis)}&quot;)
+    generic = sum(
+        (
+            coefficients[index] * split_stabilizer_basis[index]
+            for index in range(len(split_stabilizer_basis))
+        ),
+        sp.zeros(DIM, DIM),
+    )
+    if symmetric:
+        equations = [
+            generic[i, j] - generic[j, i]
+            for i in range(DIM)
+            for j in range(i + 1, DIM)
+        ]
+    else:
+        equations = [
+            generic[i, j] + generic[j, i]
+            for i in range(DIM)
+            for j in range(i, DIM)
+        ]
+    coefficient_matrix = sp.Matrix(
+        [
+            [sp.diff(equation, coefficient) for coefficient in coefficients]
+            for equation in equations
+        ]
+    )
+    return coefficient_matrix.nullspace()
+
+
+def matrices_from_coefficient_basis(
+    matrix_basis: Sequence[sp.MatrixBase],
+    coefficient_basis: Sequence[sp.MatrixBase],
+) -&gt; list[sp.Matrix]:
+    &quot;&quot;&quot;Reconstruct matrix representatives from coefficient-column vectors.&quot;&quot;&quot;
+    return [
+        sp.simplify(
+            sum(
+                (
+                    coefficient_vector[index] * matrix_basis[index]
+                    for index in range(len(matrix_basis))
+                ),
+                sp.zeros(DIM, DIM),
+            )
+        )
+        for coefficient_vector in coefficient_basis
+    ]
+
+
+def verify_stabilizer_and_fibonacci_boost(report: Reporter) -&gt; None:
+    report.header(&quot;7. Supplement: stabilizer Cartan decomposition and Fibonacci boost&quot;)
+
+    stabilizer_basis = infinitesimal_stabilizer_basis()
+    report.require(len(stabilizer_basis) == 14, &quot;dim Stab(Omega_W) = 14&quot;)
+    report.require(
+        all(matrix_is_zero(item.T * B + B * item) for item in stabilizer_basis),
+        &quot;every computed infinitesimal stabilizer vector is b-skew&quot;,
+    )
+
+    inverse_split = P_SPLIT.inv()
+    split_stabilizer_basis = [
+        sp.simplify(inverse_split * item * P_SPLIT) for item in stabilizer_basis
+    ]
+    compact_coefficients = cartan_part_coefficient_basis(
+        split_stabilizer_basis,
+        symmetric=False,
+    )
+    noncompact_coefficients = cartan_part_coefficient_basis(
+        split_stabilizer_basis,
+        symmetric=True,
+    )
+    compact_basis = matrices_from_coefficient_basis(
+        split_stabilizer_basis,
+        compact_coefficients,
+    )
+    noncompact_basis = matrices_from_coefficient_basis(
+        split_stabilizer_basis,
+        noncompact_coefficients,
+    )
+    report.require(
+        len(compact_basis) == 6
+        and all(matrices_equal(item.T, -item) for item in compact_basis),
+        &quot;the compact skew part k has dimension 6&quot;,
+    )
+    report.require(
+        len(noncompact_basis) == 8
+        and all(matrices_equal(item.T, item) for item in noncompact_basis),
+        &quot;the symmetric noncompact part p has dimension 8&quot;,
+    )
+    report.require(
+        matrix_family_rank([*compact_basis, *noncompact_basis]) == 14,
+        &quot;the stabilizer is the direct Cartan sum g = k + p with 14=6+8&quot;,
+    )
+
+    axes = (vector(1, 0, 0), vector(0, 1, 0), vector(0, 0, 1))
+    compact_k_generators = [
+        transport_to_target(source_spatial_generator(axis)) for axis in axes
+    ] + [
+        transport_to_target(source_body_generator(axis)) for axis in axes
+    ]
+    split_k_generators = [
+        sp.simplify(inverse_split * item * P_SPLIT) for item in compact_k_generators
+    ]
+    report.require(
+        all(
+            infinitesimally_preserves_three_form(item, OMEGA)
+            for item in compact_k_generators
+        )
+        and all(matrices_equal(item.T, -item) for item in split_k_generators),
+        &quot;the declared K generators lie in the compact Cartan part&quot;,
+    )
+    report.require(
+        matrix_family_rank(split_k_generators) == 6
+        and matrix_family_rank([*compact_basis, *split_k_generators]) == 6,
+        &quot;Lie(K) spans the full 6-dimensional compact part k&quot;,
+    )
+    report.deduce(
+        &quot;the 14-dimensional stabilizer has Cartan decomposition g=k+p, &quot;
+        &quot;with k=Lie(SU(2) x SU(2)) and dimensions 6+8&quot;
+    )
+
+    report.require(
+        infinitesimally_preserves_three_form(BOOST_GENERATOR, OMEGA),
+        &quot;the explicit boost generator lies in the infinitesimal stabilizer&quot;,
+    )
+    report.require(
+        matrix_is_zero(BOOST_GENERATOR.T * B + B * BOOST_GENERATOR),
+        &quot;the boost generator is b-skew&quot;,
+    )
+
+    split_generator = sp.simplify(inverse_split * BOOST_GENERATOR * P_SPLIT)
+    report.require(
+        matrices_equal(split_generator, split_generator.T),
+        &quot;in the split orthonormal basis the generator is symmetric, hence lies in p&quot;,
+    )
+
+    spectral_parameter = sp.Symbol(&quot;mu&quot;)
+    expected_characteristic = (
+        spectral_parameter
+        * (spectral_parameter - 2)
+        * (spectral_parameter - 1) ** 2
+        * (spectral_parameter + 1) ** 2
+        * (spectral_parameter + 2)
+    )
+    report.require(
+        sp.factor(BOOST_GENERATOR.charpoly(spectral_parameter).as_expr())
+        == sp.factor(expected_characteristic),
+        &quot;the generator weights are exactly {0, ±1, ±1, ±2}&quot;,
+    )
+
+    golden_ratio = (1 + sp.sqrt(5)) / 2
+    eigenspace_dimensions = []
+    for weight in (-2, -1, 0, 1, 2):
+        eigenspace = (BOOST_GENERATOR - weight * sp.eye(DIM)).nullspace()
+        eigenspace_dimensions.append(len(eigenspace))
+        report.require(
+            all(
+                matrix_is_zero((GOLDEN_BOOST - golden_ratio**weight * sp.eye(DIM)) * eigenvector)
+                for eigenvector in eigenspace
+            ),
+            f&quot;the finite boost acts by phi^{weight} on the eigenspace of weight {weight}&quot;,
+        )
+    report.require(
+        sum(eigenspace_dimensions) == DIM,
+        &quot;the five eigenspaces span R^7, so the displayed finite matrix is phi^X&quot;,
+    )
+    report.require(
+        preserves_three_form(GOLDEN_BOOST, OMEGA),
+        &quot;the finite golden-ratio step preserves Omega_W exactly&quot;,
+    )
+    report.require(
+        matrices_equal(GOLDEN_BOOST.T * B * GOLDEN_BOOST, B),
+        &quot;the finite golden-ratio step preserves b exactly&quot;,
+    )
+
+    e1 = vector(0, 1, 0, 0, 0, 0, 0)
+    image = sp.simplify(GOLDEN_BOOST * e1)
+    expected_image = (
+        sp.sqrt(5) / 2 * e1
+        + sp.Rational(1, 2) * vector(0, 0, 0, 0, 0, 1, 0)
+    )
+    report.require(
+        matrices_equal(image, expected_image),
+        &quot;one step sends e1 to (sqrt(5)/2)e1 + (1/2)e5&quot;,
+    )
+
+    source_x, source_q = unembed(image)
+    common_norm_sq = sp.simplify(source_x.dot(source_x))
+    scale = sp.sqrt(common_norm_sq)
+    normalized_x = sp.simplify(source_x / scale)
+    normalized_q = sp.simplify(source_q / scale)
+    report.require(
+        matrices_equal(normalized_x, vector(sp.sqrt(5), 1, 0) / sp.sqrt(6))
+        and matrices_equal(
+            normalized_q,
+            vector(0, sp.sqrt(5), -1, 0) / sp.sqrt(6),
+        ),
+        &quot;the induced rolling state is x=(sqrt(5),1,0)/sqrt(6), q=(0,sqrt(5),-1,0)/sqrt(6)&quot;,
+    )
+
+    initial_kernel_matrix = contraction_matrix(OMEGA, e1)
+    image_kernel_matrix = contraction_matrix(OMEGA, image)
+    initial_kernel = initial_kernel_matrix.nullspace()
+    image_kernel = image_kernel_matrix.nullspace()
+    report.require(
+        len(initial_kernel) == 3 and len(image_kernel) == 3,
+        &quot;both the initial and boosted contraction kernels have dimension 3&quot;,
+    )
+    transformed_kernel = sp.Matrix.hstack(
+        *(sp.simplify(GOLDEN_BOOST * basis_vector) for basis_vector in initial_kernel)
+    )
+    image_kernel_basis = sp.Matrix.hstack(*image_kernel)
+    report.require(
+        transformed_kernel.rank() == 3
+        and matrix_is_zero(image_kernel_matrix * transformed_kernel),
+        &quot;the boost maps the initial cone kernel into the boosted cone kernel&quot;,
+    )
+    report.require(
+        sp.Matrix.hstack(transformed_kernel, image_kernel_basis).rank() == 3,
+        &quot;the transformed kernel equals the full boosted kernel, hence the projective plane field&quot;,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Driver
+# ---------------------------------------------------------------------------
+
+
+def build_argument_parser() -&gt; argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        &quot;--core-only&quot;,
+        action=&quot;store_true&quot;,
+        help=&quot;skip the 3-form-ansatz and stabilizer/Fibonacci-boost supplements&quot;,
+    )
+    parser.add_argument(
+        &quot;--quiet&quot;,
+        action=&quot;store_true&quot;,
+        help=&quot;print only the final pass/fail line&quot;,
+    )
+    return parser
+
+
+def run_verification(core_only: bool, quiet: bool) -&gt; int:
+    report = Reporter(quiet=quiet)
+    if not quiet:
+        print(
+            f&quot;Python {platform.python_version()} | SymPy {sp.__version__} | exact arithmetic&quot;
+        )
+        print(&quot;Declared external kinematics: lambda = -(rho-1)/2&quot;)
+
+    verify_form_and_metric(report)
+    verify_map_geometry(report)
+    verify_horizontality_and_ratio(report)
+    verify_symmetry_and_distribution(report)
+    verify_growth_vector(report)
+
+    if not core_only:
+        verify_form_ansatz(report)
+        verify_stabilizer_and_fibonacci_boost(report)
+
+    if not quiet:
+        report.header(&quot;CERTIFIED CONCLUSION&quot;)
+        print(&quot;  The explicit spin-cover map identifies the rho=3 rolling plane&quot;)
+        print(&quot;  with ker(i_v Omega_W)/&lt;v&gt; on the split null quadric, under the&quot;)
+        print(&quot;  declared kinematic convention.  The fibre is diagonal ±, not&quot;)
+        print(&quot;  the physical spin flip q -&gt; -q, so no descent to S^2 x SO(3) is claimed.&quot;)
+        print(f&quot;  All {report.checks} exact checks passed.&quot;)
+    else:
+        print(f&quot;PASS: {report.checks} exact checks&quot;)
+    return 0
+
+
+def main(argv: Sequence[str] | None = None) -&gt; int:
+    arguments = build_argument_parser().parse_args(argv)
+    try:
+        return run_verification(core_only=arguments.core_only, quiet=arguments.quiet)
+    except VerificationError as error:
+        print(f&quot;FAILED: {error}&quot;, file=sys.stderr)
+        return 1
+
+
+if __name__ == &quot;__main__&quot;:
+    raise SystemExit(main())</code></pre></details>
+    </div>
+
+    <div class="block">
+      <div class="key">nft_url</div>
+      <a href="https://opensea.io/item/base/0x8a3ee2dbaa1c33f3cb3d927497f4ae798b598b65/6" target="_blank">https://opensea.io/item/base/0x8a3ee2dbaa1c33f3cb3d927497f4ae798b598b65/6</a>
+    </div>
+
+    <div class="block">
+      <div class="key">tweet_url</div>
+      <pre></pre>
+    </div>
+
+  </div>
+  <div class="block">
+    <div class="key">SHA-256</div>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <div class="hash" id="hashResult"></div>
+      <button id="copyHashBtn" type="button">Copy</button>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="key">Visualization</div>
+    <iframe src="https://ccitpprqo5z4afi2rqyvgcfth44f3jlgxzwl22ihopy6xehaktdq.turbo-gateway.com/EJE3vjB3c8AVGowxUwizPzhdpWa-bL1pB3Px65DgVMc" 
+     title="CCFU Script 6 — verify_explicit_rolling_map.py" 
+     style="width: 100%; height: 600px; border: 1px solid #eee;"
+     sandbox="allow-scripts allow-same-origin"
+     loading="lazy"></iframe>
+  </div>
+
+</article>
+<script>
+(async () => {
+  const entry = {
+    id: `2607166408688`,
+    safecreative_url: `https://www.safecreative.org/work/2607166408688-ccfu-script-6-verify_explicit_rolling_map-py`,
+    title: `CCFU Script 6 — verify_explicit_rolling_map.py`,
+    date: `07/16/2026`,
+    text: `"""
+CCFU Script 6 — verify_explicit_rolling_map.py (shelf v5)
+===========================================================
+
+PROVENANCE: the external verifier's completion pass (his v7), ADOPTED
+after in-session verification as the FINAL version of this file. It is
+a strict superset of shelf v4: same architecture (single source of
+truth, sorted Groebner inputs, K-invariance certificate), plus the
+recorded deferred debts, now closed: the stabilizer Cartan
+decomposition completeness (14 = 6 + 8, with the compact part spanned
+by the K generators) and the boost carrying the cone kernel ONTO the
+image kernel. THE LOOP FOR THIS FILE IS DECLARED CLOSED: any further
+improvement belongs to successor scripts, never to this file.
+
+Exact symbolic certificate for the explicit rolling/null-quadric map.
+
+DETAIL OF THIS COMPLETION PASS:  Exact tangency checks now
+certify that the declared rolling law and its ambient horizontal-field
+extension restrict to vector fields on S^2 x S^3.  Supplement B now proves
+both dimensions in the Cartan decomposition of the 14-dimensional
+stabilizer, identifies its 6-dimensional compact part with the declared
+K = SU(2) x SU(2), and checks that the Fibonacci boost maps onto the full
+3-dimensional image kernel rather than merely into it.  All v6
+certificates remain present.
+
+The declared data are
+
+    Omega_W = e^014 + e^025 + e^036 + e^123 + e^456,
+
+    phi_tilde(x, q) = (q_0, x + q_vec, x - q_vec),
+
+and the lifted rolling velocity
+
+    q_dot = lambda * (0, x cross x_dot) q.
+
+For a unit ball rolling inside a fixed sphere of radius rho, the classical
+kinematic convention used here is the EXTERNAL INPUT
+
+    lambda = -(rho - 1)/2.
+
+What this file certifies, using exact SymPy arithmetic only:
+
+1. The Hitchin bilinear determined by Omega_W is the displayed split form
+   b of signature (3,4).
+2. The projectivization of phi_tilde maps S^2 x S^3 onto the null quadric,
+   is an immersion everywhere, and has exactly the diagonal fibre
+   (x,q) ~ (-x,-q).  It does not descend via q ~ -q to S^2 x SO(3).
+3. The pushed rolling direction is Omega-horizontal iff lambda = -1 for
+   every nonzero real tangent direction.  Under the declared kinematic
+   input this gives rho = 3.
+4. The declared rolling law and its horizontal-field extension are
+   tangent to S^2 x S^3.  At one canonical base point, the pushed rolling
+   plane equals ker(i_v Omega_W)/<v>.  Exact K = SU(2) x SU(2)
+   equivariance, infinitesimal invariance, and transitivity promote this
+   equality to all points.  The growth vector is (2,3,5).
+5. Supplementary checks characterize the K-invariant and rolling-compatible
+   line in a three-parameter 3-form ansatz, prove the stabilizer Cartan
+   decomposition 14=6+8, and verify an explicit, order-independent
+   Fibonacci boost together with its action on the full cone kernel.
+
+The script is deterministic: it contains no random sampling, never
+selects a nullspace vector by list position, canonically orders unordered
+symbolic inputs before algorithmic use, and compares solution sets without
+assuming an output order.
+
+Run:
+
+    python3 verify_explicit_rolling_map.py
+    python3 verify_explicit_rolling_map.py --core-only
+
+The second command skips the two supplementary sections.
+"""
+
+from __future__ import annotations
+
+import argparse
+import platform
+import sys
+from dataclasses import dataclass
+from itertools import combinations, permutations
+from typing import Iterable, Sequence
+
+import sympy as sp
+
+
+# ---------------------------------------------------------------------------
+# Reporting and exact-comparison helpers
+# ---------------------------------------------------------------------------
+
+
+class VerificationError(RuntimeError):
+    """Raised when an exact certificate check fails."""
+
+
+@dataclass
+class Reporter:
+    quiet: bool = False
+    checks: int = 0
+    current_section: str = "initialization"
+
+    def header(self, title: str) -> None:
+        self.current_section = title
+        if not self.quiet:
+            print("=" * 72)
+            print(title)
+            print("=" * 72)
+
+    def require(self, condition: bool, message: str) -> None:
+        if not bool(condition):
+            raise VerificationError(f"{self.current_section}: {message}")
+        self.checks += 1
+        if not self.quiet:
+            print(f"  ✓ {message}")
+
+    def deduce(self, message: str) -> None:
+        if not self.quiet:
+            print(f"  ⇒ {message}")
+
+
+def scalar_is_zero(value: sp.Expr) -> bool:
+    return sp.simplify(value) == 0
+
+
+def matrix_is_zero(matrix: sp.MatrixBase) -> bool:
+    return all(scalar_is_zero(entry) for entry in matrix)
+
+
+def matrices_equal(left: sp.MatrixBase, right: sp.MatrixBase) -> bool:
+    return left.shape == right.shape and matrix_is_zero(sp.Matrix(left - right))
+
+
+def vector(*entries: sp.Expr | int) -> sp.Matrix:
+    return sp.Matrix(entries)
+
+
+def matrix_family_rank(matrices: Sequence[sp.MatrixBase]) -> int:
+    """Rank of a family of equal-shaped matrices after vectorization."""
+    if not matrices:
+        return 0
+    shapes = {matrix.shape for matrix in matrices}
+    if len(shapes) != 1:
+        raise ValueError("matrix_family_rank requires one common matrix shape")
+    columns = [
+        sp.Matrix(matrix).reshape(matrix.rows * matrix.cols, 1)
+        for matrix in matrices
+    ]
+    return sp.Matrix.hstack(*columns).rank()
+
+
+def canonical_unique_expressions(
+    expressions: Iterable[sp.Expr],
+) -> tuple[sp.Expr, ...]:
+    """Expand, deduplicate, and canonically order exact expressions."""
+    unique = {sp.expand(expression) for expression in expressions if expression != 0}
+    return tuple(sorted(unique, key=sp.default_sort_key))
+
+
+# ---------------------------------------------------------------------------
+# Alternating 3-forms and the Hitchin bilinear
+# ---------------------------------------------------------------------------
+
+
+DIM = 7
+ThreeForm = Sequence[Sequence[Sequence[sp.Expr]]]
+OMEGA_TERMS = ((0, 1, 4), (0, 2, 5), (0, 3, 6), (1, 2, 3), (4, 5, 6))
+
+
+def permutation_sign(values: Sequence[int]) -> int:
+    sign = 1
+    for i in range(len(values)):
+        for j in range(i + 1, len(values)):
+            if values[i] > values[j]:
+                sign = -sign
+    return sign
+
+
+def alternating_three_form(
+    triples: Iterable[tuple[int, int, int]],
+) -> list[list[list[sp.Integer]]]:
+    omega = [
+        [[sp.Integer(0) for _ in range(DIM)] for _ in range(DIM)]
+        for _ in range(DIM)
+    ]
+    for triple in triples:
+        for permuted in permutations(triple):
+            omega[permuted[0]][permuted[1]][permuted[2]] = sp.Integer(
+                permutation_sign(permuted)
+            )
+    return omega
+
+
+OMEGA = alternating_three_form(OMEGA_TERMS)
+
+
+def contraction_vector(
+    omega: ThreeForm,
+    v: sp.MatrixBase,
+    w: sp.MatrixBase,
+) -> sp.Matrix:
+    """Return the covector z -> Omega(v,w,z) in the standard basis."""
+    return sp.Matrix(
+        [
+            sp.expand(
+                sum(
+                    v[i] * w[j] * omega[i][j][k]
+                    for i in range(DIM)
+                    for j in range(DIM)
+                    if omega[i][j][k] != 0
+                )
+            )
+            for k in range(DIM)
+        ]
+    )
+
+
+def contraction_matrix(
+    omega: ThreeForm, v: sp.MatrixBase
+) -> sp.Matrix:
+    """Matrix C_v with C_v w = Omega(v,w,.) in the standard basis."""
+    return sp.Matrix.hstack(
+        *(contraction_vector(omega, v, sp.eye(DIM)[:, j]) for j in range(DIM))
+    )
+
+
+def hitchin_bilinear(
+    omega: ThreeForm,
+) -> sp.Matrix:
+    """Compute the unnormalised Hitchin contraction in the fixed orientation."""
+    signed_permutations = [
+        (perm, permutation_sign(perm)) for perm in permutations(range(DIM))
+    ]
+    return sp.Matrix(
+        DIM,
+        DIM,
+        lambda i, j: sum(
+            sign
+            * omega[i][perm[0]][perm[1]]
+            * omega[j][perm[2]][perm[3]]
+            * omega[perm[4]][perm[5]][perm[6]]
+            for perm, sign in signed_permutations
+            if omega[i][perm[0]][perm[1]] != 0
+            and omega[j][perm[2]][perm[3]] != 0
+            and omega[perm[4]][perm[5]][perm[6]] != 0
+        ),
+    )
+
+
+def linear_combination_three_forms(
+    parts: Iterable[tuple[sp.Expr, ThreeForm]],
+) -> list[list[list[sp.Expr]]]:
+    """Build an exact linear combination of alternating 3-forms."""
+    weighted_parts = tuple(parts)
+    return [
+        [
+            [
+                sp.expand(
+                    sum(
+                        coefficient * form[i][j][k]
+                        for coefficient, form in weighted_parts
+                    )
+                )
+                for k in range(DIM)
+            ]
+            for j in range(DIM)
+        ]
+        for i in range(DIM)
+    ]
+
+
+def three_forms_equal(left: ThreeForm, right: ThreeForm) -> bool:
+    """Compare two 3-forms coefficientwise in the fixed basis."""
+    return all(
+        scalar_is_zero(left[i][j][k] - right[i][j][k])
+        for i in range(DIM)
+        for j in range(DIM)
+        for k in range(DIM)
+    )
+
+
+def infinitesimal_three_form_defects(
+    generator: sp.MatrixBase,
+    omega: ThreeForm,
+) -> tuple[sp.Expr, ...]:
+    """Return the nonzero coefficients of A . Omega on basis triples."""
+    defects: list[sp.Expr] = []
+    for i, j, k in combinations(range(DIM), 3):
+        defect = sp.expand(
+            sum(
+                generator[l, i] * omega[l][j][k]
+                + generator[l, j] * omega[i][l][k]
+                + generator[l, k] * omega[i][j][l]
+                for l in range(DIM)
+            )
+        )
+        if not scalar_is_zero(defect):
+            defects.append(defect)
+    return tuple(defects)
+
+
+def infinitesimally_preserves_three_form(
+    generator: sp.MatrixBase,
+    omega: ThreeForm,
+) -> bool:
+    """Check A . Omega = 0 on the 35 independent basis triples."""
+    return not infinitesimal_three_form_defects(generator, omega)
+
+
+def preserves_three_form(
+    transformation: sp.MatrixBase,
+    omega: ThreeForm,
+) -> bool:
+    """Check T^* Omega = Omega on the 35 independent basis triples."""
+    for i, j, k in combinations(range(DIM), 3):
+        transformed = sum(
+            transformation[a, i]
+            * transformation[b, j]
+            * transformation[c, k]
+            * omega[a][b][c]
+            for a in range(DIM)
+            for b in range(DIM)
+            for c in range(DIM)
+            if omega[a][b][c] != 0
+        )
+        if not scalar_is_zero(transformed - omega[i][j][k]):
+            return False
+    return True
+
+
+B = sp.zeros(DIM, DIM)
+B[0, 0] = -6
+for left, right in ((1, 4), (2, 5), (3, 6)):
+    B[left, right] = 3
+    B[right, left] = 3
+
+SOURCE_SPLIT_METRIC = sp.diag(1, 1, 1, -1, -1, -1, -1)
+
+
+def split_orthonormal_basis() -> sp.Matrix:
+    """Columns form a B-orthonormal basis with signature (3,4)."""
+    root2, root3, root6 = sp.sqrt(2), sp.sqrt(3), sp.sqrt(6)
+    basis = sp.zeros(DIM, DIM)
+    for slot, (left, right) in enumerate(((1, 4), (2, 5), (3, 6))):
+        basis[left, slot] = 1 / (root2 * root3)
+        basis[right, slot] = 1 / (root2 * root3)
+        basis[left, 4 + slot] = 1 / (root2 * root3)
+        basis[right, 4 + slot] = -1 / (root2 * root3)
+    basis[0, 3] = 1 / root6
+    return basis
+
+
+P_SPLIT = split_orthonormal_basis()
+
+
+# ---------------------------------------------------------------------------
+# Quaternions, cross products, and the explicit linear lift
+# ---------------------------------------------------------------------------
+
+
+def quaternion_multiply(left: sp.MatrixBase, right: sp.MatrixBase) -> sp.Matrix:
+    return sp.Matrix(
+        [
+            left[0] * right[0]
+            - left[1] * right[1]
+            - left[2] * right[2]
+            - left[3] * right[3],
+            left[0] * right[1]
+            + left[1] * right[0]
+            + left[2] * right[3]
+            - left[3] * right[2],
+            left[0] * right[2]
+            - left[1] * right[3]
+            + left[2] * right[0]
+            + left[3] * right[1],
+            left[0] * right[3]
+            + left[1] * right[2]
+            - left[2] * right[1]
+            + left[3] * right[0],
+        ]
+    )
+
+
+def cross_product(left: sp.MatrixBase, right: sp.MatrixBase) -> sp.Matrix:
+    return sp.Matrix(
+        [
+            left[1] * right[2] - left[2] * right[1],
+            left[2] * right[0] - left[0] * right[2],
+            left[0] * right[1] - left[1] * right[0],
+        ]
+    )
+
+
+# Source coordinate order: (x_1,x_2,x_3,q_0,q_1,q_2,q_3).
+PHI_LINEAR = sp.Matrix(
+    [
+        [0, 0, 0, 1, 0, 0, 0],
+        [1, 0, 0, 0, 1, 0, 0],
+        [0, 1, 0, 0, 0, 1, 0],
+        [0, 0, 1, 0, 0, 0, 1],
+        [1, 0, 0, 0, -1, 0, 0],
+        [0, 1, 0, 0, 0, -1, 0],
+        [0, 0, 1, 0, 0, 0, -1],
+    ]
+)
+PHI_LINEAR_INV = PHI_LINEAR.inv()
+
+
+def stack_source(x: sp.MatrixBase, q: sp.MatrixBase) -> sp.Matrix:
+    return sp.Matrix.vstack(sp.Matrix(x), sp.Matrix(q))
+
+
+def embed(x: sp.MatrixBase, q: sp.MatrixBase) -> sp.Matrix:
+    return PHI_LINEAR * stack_source(x, q)
+
+
+def unembed(v: sp.MatrixBase) -> tuple[sp.Matrix, sp.Matrix]:
+    source = PHI_LINEAR_INV * sp.Matrix(v)
+    return source[:3, :], source[3:, :]
+
+
+def rolling_source_velocity(
+    x: sp.MatrixBase,
+    q: sp.MatrixBase,
+    x_dot: sp.MatrixBase,
+    lam: sp.Expr,
+) -> sp.Matrix:
+    """Return (x_dot, q_dot) for the declared lifted rolling law."""
+    pure_angular = sp.Matrix([0, *cross_product(x, x_dot)])
+    q_dot = lam * quaternion_multiply(pure_angular, q)
+    return stack_source(x_dot, q_dot)
+
+
+def rolling_push(
+    x: sp.MatrixBase,
+    q: sp.MatrixBase,
+    x_dot: sp.MatrixBase,
+    lam: sp.Expr,
+) -> sp.Matrix:
+    """Push the single source-coordinate rolling velocity through phi_tilde."""
+    return PHI_LINEAR * rolling_source_velocity(x, q, x_dot, lam)
+
+
+# ---------------------------------------------------------------------------
+# Source symmetry and rolling vector fields
+# ---------------------------------------------------------------------------
+
+
+def cross_matrix(axis: Sequence[sp.Expr | int]) -> sp.Matrix:
+    u1, u2, u3 = axis
+    return sp.Matrix([[0, -u3, u2], [u3, 0, -u1], [-u2, u1, 0]])
+
+
+def quaternion_left_generator(axis: Sequence[sp.Expr | int]) -> sp.Matrix:
+    u1, u2, u3 = axis
+    return sp.Rational(1, 2) * sp.Matrix(
+        [
+            [0, -u1, -u2, -u3],
+            [u1, 0, -u3, u2],
+            [u2, u3, 0, -u1],
+            [u3, -u2, u1, 0],
+        ]
+    )
+
+
+def quaternion_right_generator(axis: Sequence[sp.Expr | int]) -> sp.Matrix:
+    u1, u2, u3 = axis
+    return sp.Rational(1, 2) * sp.Matrix(
+        [
+            [0, -u1, -u2, -u3],
+            [u1, 0, u3, -u2],
+            [u2, -u3, 0, u1],
+            [u3, u2, -u1, 0],
+        ]
+    )
+
+
+def source_spatial_generator(axis: Sequence[sp.Expr | int]) -> sp.Matrix:
+    generator = sp.zeros(DIM, DIM)
+    generator[:3, :3] = cross_matrix(axis)
+    generator[3:, 3:] = quaternion_left_generator(axis)
+    return generator
+
+
+def source_body_generator(axis: Sequence[sp.Expr | int]) -> sp.Matrix:
+    generator = sp.zeros(DIM, DIM)
+    generator[3:, 3:] = quaternion_right_generator(axis)
+    return generator
+
+
+def transport_to_target(source_generator: sp.MatrixBase) -> sp.Matrix:
+    return sp.simplify(PHI_LINEAR * source_generator * PHI_LINEAR_INV)
+
+
+def horizontal_field(
+    x: sp.MatrixBase, q: sp.MatrixBase, parameter: sp.MatrixBase
+) -> sp.Matrix:
+    """A spanning rolling field for lambda=-1; parameter is constant."""
+    x_dot = parameter - parameter.dot(x) * x
+    return rolling_source_velocity(x, q, x_dot, sp.Integer(-1))
+
+
+def spatial_symmetry_field(
+    x: sp.MatrixBase, q: sp.MatrixBase, axis: sp.MatrixBase
+) -> sp.Matrix:
+    """Infinitesimal spatial symmetry generated by the source matrix."""
+    return source_spatial_generator(axis) * stack_source(x, q)
+
+
+def body_symmetry_field(
+    x: sp.MatrixBase, q: sp.MatrixBase, axis: sp.MatrixBase
+) -> sp.Matrix:
+    """Infinitesimal body symmetry generated by the source matrix."""
+    return source_body_generator(axis) * stack_source(x, q)
+
+
+def lie_bracket(
+    first: sp.MatrixBase,
+    second: sp.MatrixBase,
+    coordinates: Sequence[sp.Symbol],
+) -> sp.Matrix:
+    return sp.expand(
+        second.jacobian(coordinates) * first - first.jacobian(coordinates) * second
+    )
+
+
+# ---------------------------------------------------------------------------
+# Section 1: form, bilinear, and signature
+# ---------------------------------------------------------------------------
+
+
+def verify_form_and_metric(report: Reporter) -> None:
+    report.header("1. Omega_W and its Hitchin bilinear")
+
+    derived = hitchin_bilinear(OMEGA)
+    report.require(
+        matrices_equal(derived, 24 * B),
+        "the in-file Hitchin contraction is exactly 24 b",
+    )
+    report.require(B.det() != 0, "b is nondegenerate")
+    report.require(
+        matrices_equal(P_SPLIT.T * B * P_SPLIT, SOURCE_SPLIT_METRIC),
+        "P_split^T b P_split = diag(1,1,1,-1,-1,-1,-1)",
+    )
+    report.deduce("the null quadric is the split (3,4) quadric determined by Omega_W")
+
+
+# ---------------------------------------------------------------------------
+# Section 2: exact global geometry of phi
+# ---------------------------------------------------------------------------
+
+
+def verify_map_geometry(report: Reporter) -> None:
+    report.header("2. The explicit map: nullity, immersion, surjectivity, fibres")
+
+    report.require(PHI_LINEAR.det() == 8, "det(phi_tilde) = 8, so the lift is a linear isomorphism")
+    report.require(
+        matrices_equal(PHI_LINEAR_INV * PHI_LINEAR, sp.eye(DIM)),
+        "the displayed inverse of phi_tilde is exact",
+    )
+    report.require(
+        matrices_equal(PHI_LINEAR.T * B * PHI_LINEAR, 6 * SOURCE_SPLIT_METRIC),
+        "b(phi_tilde(x,q),phi_tilde(x,q)) = 6(|x|^2-|q|^2) identically",
+    )
+
+    # Explicit inverse on a generic target vector v=(t,u,w).
+    t = sp.Symbol("t")
+    u = sp.Matrix(sp.symbols("u1:4"))
+    w = sp.Matrix(sp.symbols("w1:4"))
+    generic_v = sp.Matrix([t, *u, *w])
+    inverse_x, inverse_q = unembed(generic_v)
+    expected_x = (u + w) / 2
+    expected_q = sp.Matrix([t, *((u - w) / 2)])
+    report.require(
+        matrices_equal(inverse_x, expected_x) and matrices_equal(inverse_q, expected_q),
+        "phi_tilde^{-1}(t,u,w) = ((u+w)/2, (t,(u-w)/2))",
+    )
+    report.require(
+        scalar_is_zero(
+            (generic_v.T * B * generic_v)[0]
+            - 6 * (inverse_x.dot(inverse_x) - inverse_q.dot(inverse_q))
+        ),
+        "a null target vector pulls back to equal source norms",
+    )
+    report.deduce(
+        "every nonzero null line has a normalized preimage in S^2 x S^3, so phi is onto Q"
+    )
+
+    # Global immersion proof: if d[phi](delta z) is radial, invertibility gives
+    # delta z = alpha z.  The following exact reduction shows that such a
+    # radial variation has normal component alpha on each unit-sphere factor.
+    alpha = sp.Symbol("alpha", real=True)
+    immersion_x = sp.Matrix(sp.symbols("ix1:4", real=True))
+    immersion_q = sp.Matrix(sp.symbols("iq0:4", real=True))
+    immersion_variables = (alpha, *immersion_x, *immersion_q)
+    sphere_ideal = sp.groebner(
+        (immersion_x.dot(immersion_x) - 1, immersion_q.dot(immersion_q) - 1),
+        *immersion_variables,
+        order="grevlex",
+    )
+    radial_x_normal = sphere_ideal.reduce(
+        sp.expand(immersion_x.dot(alpha * immersion_x))
+    )[1]
+    radial_q_normal = sphere_ideal.reduce(
+        sp.expand(immersion_q.dot(alpha * immersion_q))
+    )[1]
+    report.require(
+        sp.expand(radial_x_normal - alpha) == 0
+        and sp.expand(radial_q_normal - alpha) == 0,
+        "a radial source variation alpha(x,q) is tangent to S^2 x S^3 only when alpha=0",
+    )
+    normalization_scalars = sp.solveset(
+        alpha**2 - 1,
+        alpha,
+        domain=sp.S.Reals,
+    )
+    report.require(
+        normalization_scalars == sp.FiniteSet(-1, 1),
+        "normalization leaves exactly the two real scalars ±1 on each projective fibre",
+    )
+    report.deduce(
+        "the projective map is an immersion everywhere and its exact fibre is (x,q) ~ (-x,-q)"
+    )
+
+    symbolic_x = sp.Matrix(sp.symbols("fx1:4"))
+    symbolic_q = sp.Matrix(sp.symbols("fq0:4"))
+    report.require(
+        matrices_equal(embed(-symbolic_x, -symbolic_q), -embed(symbolic_x, symbolic_q)),
+        "the diagonal antipodal involution maps to the same null line",
+    )
+    witness_x = vector(1, 0, 0)
+    witness_q = vector(1, 0, 0, 0)
+    positive = embed(witness_x, witness_q)
+    spin_flipped = embed(witness_x, -witness_q)
+    report.require(
+        not matrices_equal(spin_flipped, positive)
+        and not matrices_equal(spin_flipped, -positive),
+        "q -> -q alone changes the null line: phi does not descend to S^2 x SO(3)",
+    )
+
+
+# ---------------------------------------------------------------------------
+# Section 3: Groebner certificate for horizontality iff lambda=-1
+# ---------------------------------------------------------------------------
+
+
+def verify_horizontality_and_ratio(report: Reporter) -> None:
+    report.header("3. Exact horizontality criterion and the conditional radius")
+
+    x1, x2, x3 = sp.symbols("x1 x2 x3", real=True)
+    q0, q1, q2, q3 = sp.symbols("q0 q1 q2 q3", real=True)
+    y1, y2, y3 = sp.symbols("y1 y2 y3", real=True)
+    lam = sp.Symbol("lambda", real=True)
+    x = vector(x1, x2, x3)
+    q = vector(q0, q1, q2, q3)
+    y = vector(y1, y2, y3)
+
+    variables = (x1, x2, x3, q0, q1, q2, q3, y1, y2, y3)
+    constraints = (
+        x.dot(x) - 1,
+        q.dot(q) - 1,
+        x.dot(y),
+    )
+    ideal = sp.groebner(constraints, *variables, order="grevlex")
+
+    def reduce_mod_constraints(expression: sp.Expr) -> sp.Expr:
+        return sp.expand(ideal.reduce(sp.expand(expression))[1])
+
+    v = embed(x, q)
+    position_part = embed(y, sp.zeros(4, 1))
+    angular = sp.Matrix([0, *cross_product(x, y)])
+    spin_part = embed(sp.zeros(3, 1), quaternion_multiply(angular, q))
+    source_velocity = rolling_source_velocity(x, q, y, lam)
+    report.require(
+        scalar_is_zero(x.dot(source_velocity[:3, :]) - x.dot(y))
+        and scalar_is_zero(q.dot(source_velocity[3:, :])),
+        "the declared rolling law is tangent to S^2 x S^3 whenever x·x_dot=0",
+    )
+    report.require(
+        matrices_equal(
+            rolling_push(x, q, y, lam),
+            position_part + lam * spin_part,
+        ),
+        "rolling_push is exactly the push-forward of the declared source rolling velocity",
+    )
+
+    reduced_position = [
+        reduce_mod_constraints(entry)
+        for entry in contraction_vector(OMEGA, v, position_part)
+    ]
+    reduced_spin = [
+        reduce_mod_constraints(entry)
+        for entry in contraction_vector(OMEGA, v, spin_part)
+    ]
+
+    report.require(
+        all(sp.expand(a - b) == 0 for a, b in zip(reduced_position, reduced_spin)),
+        "all seven reduced defect components equal (1+lambda) R_z",
+    )
+
+    q_vec_dot_y = q1 * y1 + q2 * y2 + q3 * y3
+    y_norm_sq = y.dot(y)
+    sum_of_squares = sum(component**2 for component in reduced_spin)
+    positive_certificate = 2 * (q_vec_dot_y**2 + 2 * y_norm_sq)
+    report.require(
+        reduce_mod_constraints(sum_of_squares - positive_certificate) == 0,
+        "sum_z R_z^2 = 2((q_vec·y)^2 + 2|y|^2) modulo the constraints",
+    )
+    report.deduce(
+        "for every real y != 0, R is nonzero; hence horizontality holds iff lambda=-1"
+    )
+
+    rho = sp.Symbol("rho", real=True)
+    rho_solutions = sp.solveset(
+        -1 + (rho - 1) / 2,
+        rho,
+        domain=sp.S.Reals,
+    )
+    report.require(
+        rho_solutions == sp.FiniteSet(3),
+        "under the declared input lambda=-(rho-1)/2, lambda=-1 gives rho=3",
+    )
+    report.deduce(
+        "rho=3 is conditional on that rolling convention; "
+        "the convention is not derived here"
+    )
+
+
+# ---------------------------------------------------------------------------
+# Section 4: K symmetry, transitivity, and distribution equality
+# ---------------------------------------------------------------------------
+
+
+def verify_symmetry_and_distribution(report: Reporter) -> None:
+    report.header("4. K-equivariance and exact equality of the two plane fields")
+
+    axes = (vector(1, 0, 0), vector(0, 1, 0), vector(0, 0, 1))
+    spatial_generators = [source_spatial_generator(axis) for axis in axes]
+    body_generators = [source_body_generator(axis) for axis in axes]
+    source_generators = spatial_generators + body_generators
+    target_generators = [transport_to_target(generator) for generator in source_generators]
+
+    cyclic_indices = ((0, 1, 2), (1, 2, 0), (2, 0, 1))
+    report.require(
+        all(
+            matrices_equal(
+                spatial_generators[i] * spatial_generators[j]
+                - spatial_generators[j] * spatial_generators[i],
+                spatial_generators[k],
+            )
+            and matrices_equal(
+                body_generators[i] * body_generators[j]
+                - body_generators[j] * body_generators[i],
+                -body_generators[k],
+            )
+            for i, j, k in cyclic_indices
+        )
+        and all(
+            matrix_is_zero(spatial * body - body * spatial)
+            for spatial in spatial_generators
+            for body in body_generators
+        ),
+        "the six source matrices realize su(2) + su(2), with commuting factors",
+    )
+    report.require(
+        all(
+            matrices_equal(generator.T, -generator)
+            for generator in source_generators
+        ),
+        "the six source generators preserve the two unit-sphere norms",
+    )
+    report.require(
+        all(
+            infinitesimally_preserves_three_form(generator, OMEGA)
+            for generator in target_generators
+        ),
+        "all transported su(2)+su(2) generators lie in Stab(Omega_W)",
+    )
+    report.require(
+        all(matrix_is_zero(generator.T * B + B * generator) for generator in target_generators),
+        "the transported generators also preserve b infinitesimally",
+    )
+
+    # Generic symbolic Lie-bracket identities certify preservation of the
+    # rolling plane, rather than merely asserting it from geometric language.
+    sx = sp.Matrix(sp.symbols("sx1:4", real=True))
+    sq = sp.Matrix(sp.symbols("sq0:4", real=True))
+    su = sp.Matrix(sp.symbols("su1:4", real=True))
+    sa = sp.Matrix(sp.symbols("sa1:4", real=True))
+    source_coordinates = [*sx, *sq]
+    horizontal = horizontal_field(sx, sq, sa)
+    spatial = spatial_symmetry_field(sx, sq, su)
+    body = body_symmetry_field(sx, sq, su)
+    projected_velocity = sa - sa.dot(sx) * sx
+    report.require(
+        scalar_is_zero(
+            sx.dot(horizontal[:3, :])
+            - sa.dot(sx) * (1 - sx.dot(sx))
+        )
+        and scalar_is_zero(sq.dot(horizontal[3:, :])),
+        "the ambient horizontal field H_a is tangent along S^2 x S^3",
+    )
+    report.require(
+        matrices_equal(
+            PHI_LINEAR * horizontal,
+            rolling_push(sx, sq, projected_velocity, sp.Integer(-1)),
+        ),
+        "H_a is exactly the lambda=-1 rolling field pushed by phi_tilde",
+    )
+    report.require(
+        matrices_equal(
+            lie_bracket(spatial, horizontal, source_coordinates),
+            -horizontal_field(sx, sq, cross_product(su, sa)),
+        ),
+        "[K_spatial(u), H_a] = -H_(u cross a) identically",
+    )
+    report.require(
+        matrix_is_zero(lie_bracket(body, horizontal, source_coordinates)),
+        "[K_body(u), H_a] = 0 identically",
+    )
+    report.deduce(
+        "because the fields are tangent, these ambient polynomial brackets "
+        "restrict to the intrinsic brackets on S^2 x S^3"
+    )
+
+    # The orbit through the canonical source point has full dimension five.
+    x_base = vector(1, 0, 0)
+    q_base = vector(1, 0, 0, 0)
+    source_base = stack_source(x_base, q_base)
+    orbit_tangents = sp.Matrix.hstack(
+        *(generator * source_base for generator in source_generators)
+    )
+    report.require(
+        orbit_tangents.rank() == 5,
+        "the K-orbit through (e1,1) has dimension 5",
+    )
+    report.deduce(
+        "K is compact, its orbit is closed, full dimension makes it open, "
+        "and S^2 x S^3 is connected: the action is transitive"
+    )
+
+    # Exact base-point comparison.
+    v_base = embed(x_base, q_base)
+    kernel_matrix = contraction_matrix(OMEGA, v_base)
+    kernel_basis = kernel_matrix.nullspace()
+    report.require(len(kernel_basis) == 3, "at v0, dim ker(i_v Omega_W) = 3")
+    report.require(
+        matrix_is_zero(kernel_matrix * v_base),
+        "the radial vector v0 lies in that kernel",
+    )
+
+    rolling_basis = sp.Matrix.hstack(
+        rolling_push(x_base, q_base, vector(0, 1, 0), sp.Integer(-1)),
+        rolling_push(x_base, q_base, vector(0, 0, 1), sp.Integer(-1)),
+    )
+    report.require(
+        rolling_basis.rank() == 2,
+        "the pushed rolling plane has rank 2 at the base point",
+    )
+    report.require(
+        matrix_is_zero(kernel_matrix * rolling_basis),
+        "both pushed generators lie exactly in ker(i_v Omega_W)",
+    )
+    report.require(
+        sp.Matrix.hstack(rolling_basis, v_base).rank() == 3,
+        "the two pushed directions plus the radial line exhaust the 3-dimensional kernel",
+    )
+    report.deduce(
+        "K-invariance, equivariance, and transitivity give "
+        "d phi(D_roll) = ker(i_v Omega_W)/<v> globally"
+    )
+
+
+# ---------------------------------------------------------------------------
+# Section 5: growth vector
+# ---------------------------------------------------------------------------
+
+
+def verify_growth_vector(report: Reporter) -> None:
+    report.header("5. Growth vector (2,3,5)")
+
+    x = sp.Matrix(sp.symbols("gx1:4", real=True))
+    q = sp.Matrix(sp.symbols("gq0:4", real=True))
+    coordinates = [*x, *q]
+
+    h2 = horizontal_field(x, q, vector(0, 1, 0))
+    h3 = horizontal_field(x, q, vector(0, 0, 1))
+    first_bracket = lie_bracket(h2, h3, coordinates)
+    second_2 = lie_bracket(h2, first_bracket, coordinates)
+    second_3 = lie_bracket(h3, first_bracket, coordinates)
+
+    base_substitution = {
+        x[0]: 1,
+        x[1]: 0,
+        x[2]: 0,
+        q[0]: 1,
+        q[1]: 0,
+        q[2]: 0,
+        q[3]: 0,
+    }
+
+    def rank_at_base(fields: Sequence[sp.MatrixBase]) -> int:
+        return sp.Matrix.hstack(
+            *(sp.Matrix(field).subs(base_substitution) for field in fields)
+        ).rank()
+
+    ranks = (
+        rank_at_base((h2, h3)),
+        rank_at_base((h2, h3, first_bracket)),
+        rank_at_base((h2, h3, first_bracket, second_2, second_3)),
+    )
+    report.require(ranks == (2, 3, 5), "successive bracket ranks at (e1,1) are 2 -> 3 -> 5")
+    report.deduce(
+        "K-invariance and transitivity transport the growth vector (2,3,5) "
+        "to every point"
+    )
+
+
+# ---------------------------------------------------------------------------
+# Supplement A: invariant and compatible line in a 3-form ansatz
+# ---------------------------------------------------------------------------
+
+
+def groebner_ideals_equal(first: sp.GroebnerBasis, second: sp.GroebnerBasis) -> bool:
+    first_in_second = all(second.reduce(poly.as_expr())[1] == 0 for poly in first.polys)
+    second_in_first = all(first.reduce(poly.as_expr())[1] == 0 for poly in second.polys)
+    return first_in_second and second_in_first
+
+
+def verify_form_ansatz(report: Reporter) -> None:
+    report.header(
+        "6. Supplement: K-invariance and rolling compatibility in the 3-form ansatz"
+    )
+
+    mixed = alternating_three_form(((0, 1, 4), (0, 2, 5), (0, 3, 6)))
+    volume_left = alternating_three_form(((1, 2, 3),))
+    volume_right = alternating_three_form(((4, 5, 6),))
+    ansatz_basis = (mixed, volume_left, volume_right)
+
+    basis_component_matrix = sp.Matrix(
+        [
+            [form[i][j][k] for form in ansatz_basis]
+            for i, j, k in combinations(range(DIM), 3)
+        ]
+    )
+    report.require(
+        basis_component_matrix.rank() == 3,
+        "the displayed mixed and volume terms form a genuine three-dimensional ansatz",
+    )
+
+    a, b, c, lam, line_scale = sp.symbols("a b c lambda t")
+    form_parts = ((a, mixed), (b, volume_left), (c, volume_right))
+    ansatz_form = linear_combination_three_forms(form_parts)
+    report.require(
+        three_forms_equal(
+            linear_combination_three_forms(
+                (
+                    (sp.Integer(1), mixed),
+                    (sp.Integer(1), volume_left),
+                    (sp.Integer(1), volume_right),
+                )
+            ),
+            OMEGA,
+        ),
+        "the coefficient vector (1,1,1) reproduces Omega_W exactly",
+    )
+
+    axes = (vector(1, 0, 0), vector(0, 1, 0), vector(0, 0, 1))
+    source_generators = [
+        *(source_spatial_generator(axis) for axis in axes),
+        *(source_body_generator(axis) for axis in axes),
+    ]
+    target_generators = [
+        transport_to_target(generator) for generator in source_generators
+    ]
+
+    report.require(
+        all(
+            any(
+                infinitesimal_three_form_defects(generator, basis_form)
+                for generator in target_generators
+            )
+            for basis_form in ansatz_basis
+        ),
+        "the three ansatz components are not K-invariant individually",
+    )
+
+    raw_invariance_defects = [
+        defect
+        for generator in target_generators
+        for defect in infinitesimal_three_form_defects(generator, ansatz_form)
+    ]
+    invariance_defects = canonical_unique_expressions(raw_invariance_defects)
+    report.require(
+        invariance_defects
+        == canonical_unique_expressions(reversed(raw_invariance_defects)),
+        "the infinitesimal K-invariance equations have a canonical collection order",
+    )
+
+    invariance_coefficient_matrix = sp.Matrix(
+        [
+            [sp.diff(defect, coefficient) for coefficient in (a, b, c)]
+            for defect in invariance_defects
+        ]
+    )
+    invariant_line_direction = sp.ones(3, 1)
+    report.require(
+        invariance_coefficient_matrix.rank() == 2
+        and matrix_is_zero(invariance_coefficient_matrix * invariant_line_direction),
+        "the infinitesimal K-invariance equations have kernel span{(1,1,1)}",
+    )
+
+    invariance_actual = sp.groebner(invariance_defects, a, b, c, order="lex")
+    invariance_expected = sp.groebner((a - c, b - c), a, b, c, order="lex")
+    report.require(
+        groebner_ideals_equal(invariance_actual, invariance_expected),
+        "the exact infinitesimal K-invariance ideal is <a-c, b-c>",
+    )
+    report.deduce(
+        "K is connected, so inside this ansatz K-invariance is equivalent to "
+        "(a,b,c)=t(1,1,1)"
+    )
+
+    x1, x2, x3 = sp.symbols("fx1 fx2 fx3", real=True)
+    q0, q1, q2, q3 = sp.symbols("fq0 fq1 fq2 fq3", real=True)
+    y1, y2, y3 = sp.symbols("fy1 fy2 fy3", real=True)
+    x = vector(x1, x2, x3)
+    q = vector(q0, q1, q2, q3)
+    y = vector(y1, y2, y3)
+    variables = (x1, x2, x3, q0, q1, q2, q3, y1, y2, y3)
+    constraints = (x.dot(x) - 1, q.dot(q) - 1, x.dot(y))
+    source_ideal = sp.groebner(constraints, *variables, order="grevlex")
+
+    def reduce_source(expression: sp.Expr) -> sp.Expr:
+        return sp.expand(source_ideal.reduce(sp.expand(expression))[1])
+
+    v = embed(x, q)
+    position_part = embed(y, sp.zeros(4, 1))
+    spin_part = embed(
+        sp.zeros(3, 1),
+        quaternion_multiply(sp.Matrix([0, *cross_product(x, y)]), q),
+    )
+
+    coefficient_conditions: list[sp.Expr] = []
+    for target_slot in range(DIM):
+        expression = sp.Integer(0)
+        for coefficient, form in form_parts:
+            expression += coefficient * reduce_source(
+                contraction_vector(form, v, position_part)[target_slot]
+            )
+            expression += lam * coefficient * reduce_source(
+                contraction_vector(form, v, spin_part)[target_slot]
+            )
+        polynomial = sp.Poly(sp.expand(expression), *variables)
+        coefficient_conditions.extend(
+            sp.expand(value) for value in polynomial.as_dict().values() if value != 0
+        )
+
+    ordered_conditions = canonical_unique_expressions(coefficient_conditions)
+    report.require(
+        ordered_conditions
+        == canonical_unique_expressions(reversed(coefficient_conditions)),
+        "the rolling-compatibility equations have a canonical collection order",
+    )
+    compatibility_actual = sp.groebner(
+        ordered_conditions, lam, a, b, c, order="lex"
+    )
+    compatibility_expected = sp.groebner(
+        (a - c, b - c, c * (lam + 1)),
+        lam,
+        a,
+        b,
+        c,
+        order="lex",
+    )
+    report.require(
+        groebner_ideals_equal(compatibility_actual, compatibility_expected),
+        "the full rolling-compatibility ideal is <a-c, b-c, c(lambda+1)>",
+    )
+
+    invariant_line_conditions = canonical_unique_expressions(
+        condition.subs({a: line_scale, b: line_scale, c: line_scale})
+        for condition in ordered_conditions
+    )
+    invariant_line_actual = sp.groebner(
+        invariant_line_conditions, lam, line_scale, order="lex"
+    )
+    invariant_line_expected = sp.groebner(
+        (line_scale * (lam + 1),), lam, line_scale, order="lex"
+    )
+    report.require(
+        groebner_ideals_equal(invariant_line_actual, invariant_line_expected),
+        "on the K-invariant line, rolling compatibility is exactly t(lambda+1)=0",
+    )
+    report.deduce(
+        "for every nonzero K-invariant ansatz form, the fixed map and gauge require lambda=-1"
+    )
+    report.deduce(
+        "the conclusion concerns this declared ansatz and phi, "
+        "not a classification of stable 3-forms"
+    )
+
+
+# ---------------------------------------------------------------------------
+# Supplement B: explicit order-independent Fibonacci boost
+# ---------------------------------------------------------------------------
+
+
+BOOST_GENERATOR = sp.Matrix(
+    [
+        [0, 0, 0, 1, 0, 0, 1],
+        [0, 0, 0, 0, 0, 1, 0],
+        [0, 0, 0, 0, -1, 0, 0],
+        [2, 0, 0, 0, 0, 0, 0],
+        [0, 0, -1, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0],
+        [2, 0, 0, 0, 0, 0, 0],
+    ]
+)
+
+
+def golden_boost_matrix() -> sp.Matrix:
+    root5 = sp.sqrt(5)
+    return sp.Matrix(
+        [
+            [sp.Rational(3, 2), 0, 0, root5 / 4, 0, 0, root5 / 4],
+            [0, root5 / 2, 0, 0, 0, sp.Rational(1, 2), 0],
+            [0, 0, root5 / 2, 0, -sp.Rational(1, 2), 0, 0],
+            [root5 / 2, 0, 0, sp.Rational(5, 4), 0, 0, sp.Rational(1, 4)],
+            [0, 0, -sp.Rational(1, 2), 0, root5 / 2, 0, 0],
+            [0, sp.Rational(1, 2), 0, 0, 0, root5 / 2, 0],
+            [root5 / 2, 0, 0, sp.Rational(1, 4), 0, 0, sp.Rational(5, 4)],
+        ]
+    )
+
+
+GOLDEN_BOOST = golden_boost_matrix()
+
+
+def infinitesimal_stabilizer_basis() -> list[sp.Matrix]:
+    rows: list[list[sp.Expr]] = []
+    for i, j, k in combinations(range(DIM), 3):
+        row = [sp.Integer(0)] * (DIM * DIM)
+        for l in range(DIM):
+            row[DIM * l + i] += OMEGA[l][j][k]
+            row[DIM * l + j] += OMEGA[i][l][k]
+            row[DIM * l + k] += OMEGA[i][j][l]
+        rows.append(row)
+    return [
+        sp.Matrix(DIM, DIM, lambda r, c: raw[DIM * r + c])
+        for raw in sp.Matrix(rows).nullspace()
+    ]
+
+
+def cartan_part_coefficient_basis(
+    split_stabilizer_basis: Sequence[sp.MatrixBase],
+    *,
+    symmetric: bool,
+) -> list[sp.Matrix]:
+    """Coefficient basis for the symmetric or skew part in split coordinates."""
+    coefficients = sp.symbols(f"c0:{len(split_stabilizer_basis)}")
+    generic = sum(
+        (
+            coefficients[index] * split_stabilizer_basis[index]
+            for index in range(len(split_stabilizer_basis))
+        ),
+        sp.zeros(DIM, DIM),
+    )
+    if symmetric:
+        equations = [
+            generic[i, j] - generic[j, i]
+            for i in range(DIM)
+            for j in range(i + 1, DIM)
+        ]
+    else:
+        equations = [
+            generic[i, j] + generic[j, i]
+            for i in range(DIM)
+            for j in range(i, DIM)
+        ]
+    coefficient_matrix = sp.Matrix(
+        [
+            [sp.diff(equation, coefficient) for coefficient in coefficients]
+            for equation in equations
+        ]
+    )
+    return coefficient_matrix.nullspace()
+
+
+def matrices_from_coefficient_basis(
+    matrix_basis: Sequence[sp.MatrixBase],
+    coefficient_basis: Sequence[sp.MatrixBase],
+) -> list[sp.Matrix]:
+    """Reconstruct matrix representatives from coefficient-column vectors."""
+    return [
+        sp.simplify(
+            sum(
+                (
+                    coefficient_vector[index] * matrix_basis[index]
+                    for index in range(len(matrix_basis))
+                ),
+                sp.zeros(DIM, DIM),
+            )
+        )
+        for coefficient_vector in coefficient_basis
+    ]
+
+
+def verify_stabilizer_and_fibonacci_boost(report: Reporter) -> None:
+    report.header("7. Supplement: stabilizer Cartan decomposition and Fibonacci boost")
+
+    stabilizer_basis = infinitesimal_stabilizer_basis()
+    report.require(len(stabilizer_basis) == 14, "dim Stab(Omega_W) = 14")
+    report.require(
+        all(matrix_is_zero(item.T * B + B * item) for item in stabilizer_basis),
+        "every computed infinitesimal stabilizer vector is b-skew",
+    )
+
+    inverse_split = P_SPLIT.inv()
+    split_stabilizer_basis = [
+        sp.simplify(inverse_split * item * P_SPLIT) for item in stabilizer_basis
+    ]
+    compact_coefficients = cartan_part_coefficient_basis(
+        split_stabilizer_basis,
+        symmetric=False,
+    )
+    noncompact_coefficients = cartan_part_coefficient_basis(
+        split_stabilizer_basis,
+        symmetric=True,
+    )
+    compact_basis = matrices_from_coefficient_basis(
+        split_stabilizer_basis,
+        compact_coefficients,
+    )
+    noncompact_basis = matrices_from_coefficient_basis(
+        split_stabilizer_basis,
+        noncompact_coefficients,
+    )
+    report.require(
+        len(compact_basis) == 6
+        and all(matrices_equal(item.T, -item) for item in compact_basis),
+        "the compact skew part k has dimension 6",
+    )
+    report.require(
+        len(noncompact_basis) == 8
+        and all(matrices_equal(item.T, item) for item in noncompact_basis),
+        "the symmetric noncompact part p has dimension 8",
+    )
+    report.require(
+        matrix_family_rank([*compact_basis, *noncompact_basis]) == 14,
+        "the stabilizer is the direct Cartan sum g = k + p with 14=6+8",
+    )
+
+    axes = (vector(1, 0, 0), vector(0, 1, 0), vector(0, 0, 1))
+    compact_k_generators = [
+        transport_to_target(source_spatial_generator(axis)) for axis in axes
+    ] + [
+        transport_to_target(source_body_generator(axis)) for axis in axes
+    ]
+    split_k_generators = [
+        sp.simplify(inverse_split * item * P_SPLIT) for item in compact_k_generators
+    ]
+    report.require(
+        all(
+            infinitesimally_preserves_three_form(item, OMEGA)
+            for item in compact_k_generators
+        )
+        and all(matrices_equal(item.T, -item) for item in split_k_generators),
+        "the declared K generators lie in the compact Cartan part",
+    )
+    report.require(
+        matrix_family_rank(split_k_generators) == 6
+        and matrix_family_rank([*compact_basis, *split_k_generators]) == 6,
+        "Lie(K) spans the full 6-dimensional compact part k",
+    )
+    report.deduce(
+        "the 14-dimensional stabilizer has Cartan decomposition g=k+p, "
+        "with k=Lie(SU(2) x SU(2)) and dimensions 6+8"
+    )
+
+    report.require(
+        infinitesimally_preserves_three_form(BOOST_GENERATOR, OMEGA),
+        "the explicit boost generator lies in the infinitesimal stabilizer",
+    )
+    report.require(
+        matrix_is_zero(BOOST_GENERATOR.T * B + B * BOOST_GENERATOR),
+        "the boost generator is b-skew",
+    )
+
+    split_generator = sp.simplify(inverse_split * BOOST_GENERATOR * P_SPLIT)
+    report.require(
+        matrices_equal(split_generator, split_generator.T),
+        "in the split orthonormal basis the generator is symmetric, hence lies in p",
+    )
+
+    spectral_parameter = sp.Symbol("mu")
+    expected_characteristic = (
+        spectral_parameter
+        * (spectral_parameter - 2)
+        * (spectral_parameter - 1) ** 2
+        * (spectral_parameter + 1) ** 2
+        * (spectral_parameter + 2)
+    )
+    report.require(
+        sp.factor(BOOST_GENERATOR.charpoly(spectral_parameter).as_expr())
+        == sp.factor(expected_characteristic),
+        "the generator weights are exactly {0, ±1, ±1, ±2}",
+    )
+
+    golden_ratio = (1 + sp.sqrt(5)) / 2
+    eigenspace_dimensions = []
+    for weight in (-2, -1, 0, 1, 2):
+        eigenspace = (BOOST_GENERATOR - weight * sp.eye(DIM)).nullspace()
+        eigenspace_dimensions.append(len(eigenspace))
+        report.require(
+            all(
+                matrix_is_zero((GOLDEN_BOOST - golden_ratio**weight * sp.eye(DIM)) * eigenvector)
+                for eigenvector in eigenspace
+            ),
+            f"the finite boost acts by phi^{weight} on the eigenspace of weight {weight}",
+        )
+    report.require(
+        sum(eigenspace_dimensions) == DIM,
+        "the five eigenspaces span R^7, so the displayed finite matrix is phi^X",
+    )
+    report.require(
+        preserves_three_form(GOLDEN_BOOST, OMEGA),
+        "the finite golden-ratio step preserves Omega_W exactly",
+    )
+    report.require(
+        matrices_equal(GOLDEN_BOOST.T * B * GOLDEN_BOOST, B),
+        "the finite golden-ratio step preserves b exactly",
+    )
+
+    e1 = vector(0, 1, 0, 0, 0, 0, 0)
+    image = sp.simplify(GOLDEN_BOOST * e1)
+    expected_image = (
+        sp.sqrt(5) / 2 * e1
+        + sp.Rational(1, 2) * vector(0, 0, 0, 0, 0, 1, 0)
+    )
+    report.require(
+        matrices_equal(image, expected_image),
+        "one step sends e1 to (sqrt(5)/2)e1 + (1/2)e5",
+    )
+
+    source_x, source_q = unembed(image)
+    common_norm_sq = sp.simplify(source_x.dot(source_x))
+    scale = sp.sqrt(common_norm_sq)
+    normalized_x = sp.simplify(source_x / scale)
+    normalized_q = sp.simplify(source_q / scale)
+    report.require(
+        matrices_equal(normalized_x, vector(sp.sqrt(5), 1, 0) / sp.sqrt(6))
+        and matrices_equal(
+            normalized_q,
+            vector(0, sp.sqrt(5), -1, 0) / sp.sqrt(6),
+        ),
+        "the induced rolling state is x=(sqrt(5),1,0)/sqrt(6), q=(0,sqrt(5),-1,0)/sqrt(6)",
+    )
+
+    initial_kernel_matrix = contraction_matrix(OMEGA, e1)
+    image_kernel_matrix = contraction_matrix(OMEGA, image)
+    initial_kernel = initial_kernel_matrix.nullspace()
+    image_kernel = image_kernel_matrix.nullspace()
+    report.require(
+        len(initial_kernel) == 3 and len(image_kernel) == 3,
+        "both the initial and boosted contraction kernels have dimension 3",
+    )
+    transformed_kernel = sp.Matrix.hstack(
+        *(sp.simplify(GOLDEN_BOOST * basis_vector) for basis_vector in initial_kernel)
+    )
+    image_kernel_basis = sp.Matrix.hstack(*image_kernel)
+    report.require(
+        transformed_kernel.rank() == 3
+        and matrix_is_zero(image_kernel_matrix * transformed_kernel),
+        "the boost maps the initial cone kernel into the boosted cone kernel",
+    )
+    report.require(
+        sp.Matrix.hstack(transformed_kernel, image_kernel_basis).rank() == 3,
+        "the transformed kernel equals the full boosted kernel, hence the projective plane field",
+    )
+
+
+# ---------------------------------------------------------------------------
+# Driver
+# ---------------------------------------------------------------------------
+
+
+def build_argument_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--core-only",
+        action="store_true",
+        help="skip the 3-form-ansatz and stabilizer/Fibonacci-boost supplements",
+    )
+    parser.add_argument(
+        "--quiet",
+        action="store_true",
+        help="print only the final pass/fail line",
+    )
+    return parser
+
+
+def run_verification(core_only: bool, quiet: bool) -> int:
+    report = Reporter(quiet=quiet)
+    if not quiet:
+        print(
+            f"Python {platform.python_version()} | SymPy {sp.__version__} | exact arithmetic"
+        )
+        print("Declared external kinematics: lambda = -(rho-1)/2")
+
+    verify_form_and_metric(report)
+    verify_map_geometry(report)
+    verify_horizontality_and_ratio(report)
+    verify_symmetry_and_distribution(report)
+    verify_growth_vector(report)
+
+    if not core_only:
+        verify_form_ansatz(report)
+        verify_stabilizer_and_fibonacci_boost(report)
+
+    if not quiet:
+        report.header("CERTIFIED CONCLUSION")
+        print("  The explicit spin-cover map identifies the rho=3 rolling plane")
+        print("  with ker(i_v Omega_W)/<v> on the split null quadric, under the")
+        print("  declared kinematic convention.  The fibre is diagonal ±, not")
+        print("  the physical spin flip q -> -q, so no descent to S^2 x SO(3) is claimed.")
+        print(f"  All {report.checks} exact checks passed.")
+    else:
+        print(f"PASS: {report.checks} exact checks")
+    return 0
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    arguments = build_argument_parser().parse_args(argv)
+    try:
+        return run_verification(core_only=arguments.core_only, quiet=arguments.quiet)
+    except VerificationError as error:
+        print(f"FAILED: {error}", file=sys.stderr)
+        return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())`,
+    nft_url: `https://opensea.io/item/base/0x8a3ee2dbaa1c33f3cb3d927497f4ae798b598b65/6`,
+    tweet_url: ``
+  };
+  const canonicalString = [entry.id, entry.safecreative_url, entry.title, entry.date, entry.text, entry.nft_url, entry.tweet_url].join('\n---\n');
+  const data = new TextEncoder().encode(canonicalString);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashHex = [...new Uint8Array(hashBuffer)].map(b => b.toString(16).padStart(2, '0')).join('');
+  document.getElementById('hashResult').textContent = hashHex;
+  document.getElementById('copyHashBtn').addEventListener('click', () => { navigator.clipboard.writeText(hashHex); alert('Hash copied'); });
+})();
+</script>
+</body></html>

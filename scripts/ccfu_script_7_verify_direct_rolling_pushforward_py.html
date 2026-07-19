@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CCFU Script 7 — verify_direct_rolling_pushforward.py</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #fff; }
+    .block { margin-bottom: 20px; padding: 15px; border: 1px solid #eee; word-wrap: break-word; }
+    .key { color: #000; font-size: 2em !important; text-transform: capitalize; font-weight: bold; }
+    .hash { word-break: break-all; color: #4287f5; }
+    a { color: #4287f5; text-decoration: underline; }
+    pre { white-space: pre-wrap; }
+    code { background: #f4f4f4; padding: 2px 4px; font-size: 0.9em; }
+    pre > code { display: block; padding: 12px; overflow-x: auto; white-space: pre; }
+    button { font-family: inherit; padding: 6px 10px; border: 1px solid #ccc; background: #f9f9f9; cursor: pointer; }
+    h1 { margin-bottom: 10px; font-size: 32px; }
+    nav { background-color: #e1e1e1; padding: 10px; }
+    nav > ul { display: flex; flex-wrap: wrap; list-style: none; padding: 0; margin: 0; }
+    nav > ul > li, nav > ul > li > a { display: flex; flex-direction: column; text-align: center; margin: 0; }
+    nav ul li img { max-width: 80px; width: 100%; height: auto; border-radius: 40px; }
+    .arrow { width: 50px; height: 80px; font-size: 38px; }
+    iframe { border-radius: 4px; }
+  </style>
+</head>
+<body>
+<article itemscope itemtype="https://schema.org/CreativeWork">
+  <meta itemprop="identifier" content="2607196433124">
+  <meta itemprop="dateCreated" content="07/19/2026">
+<h1 itemprop="name">CCFU Script 7 — verify_direct_rolling_pushforward.py</h1>
+<nav aria-label="Breadcrumb" class="breadcrumb">
+  <ul>
+    <li><a href="../"><img src="../assets/images/AFB9C382-3B34-4925-B318-E7083E758055.png" alt="Home"/><span>Home</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><a href="./"><img src="../assets/images/scripts-1024.svg" alt="CCFU"/><span>Scripts</span></a></li>
+    <li><a class="arrow"><span>&#x2192;</span></a></li>
+    <li><img src="../assets/images/scripts-1024.svg" alt="CCFU"/><span>CCFU Script 7 — verify_direct_rolling_pushforward.py</span></li>
+  </ul>
+</nav>
+  <div class="block" id="rendered">
+
+    <div class="block">
+      <div class="key">id</div>
+      <pre>2607196433124</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">safecreative_url</div>
+      <a href="https://www.safecreative.org/work/2607196433124-ccfu-script-7-verify_direct_rolling_pushforward-py" target="_blank">https://www.safecreative.org/work/2607196433124-ccfu-script-7-verify_direct_rolling_pushforward-py</a>
+    </div>
+
+    <div class="block">
+      <div class="key">title</div>
+      <pre>CCFU Script 7 — verify_direct_rolling_pushforward.py</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">date</div>
+      <pre>07/19/2026</pre>
+    </div>
+
+    <div class="block">
+      <div class="key">text</div>
+      <details><summary style="cursor:pointer; color:#4287f5; margin-bottom:8px;">Show source code</summary><pre><code>&quot;&quot;&quot;
+CCFU Script 7 — verify_direct_rolling_pushforward.py (shelf v3)
+===============================================================
+Strict exact certificate for the direct rolling pushforward.
+
+PROVENANCE (shelf v3):
+  adopted from the external verifier's strict review version
+  source SHA-256: f48f1800c5de2b6f3b81344a31b5f6b36aadbe76a56d1784e065ce0768ccb266
+  adopted: 2026-07-18; only this documentation layer differs from it.
+Every v2 certificate is present and strengthened: dPhi is
+DIFFERENTIATED from Phi (not typed); rho = 3 is the monic gcd of the
+FULL 8-component left-annihilator system; at x = Phi(1,1), the left,
+right and 3-form kernels are proved equal; the contraction matrices
+intertwine at the base pair (T^T M_{Omega_W,Tx} T = 2 M_{phi_split,x});
+the ASSUMED inputs A1-A4 are declared upfront; and checks raise
+explicit exceptions, so they survive python -O (bare asserts do not).
+SCOPE: shelf v3 is frozen as a secondary base-point certificate;
+global or projective extensions belong to successor scripts.
+
+ASSUMED INPUTS (not proved here):
+  A1  the ordered source basis (i,j,k ; 1,i,j,k), the split
+      Cayley-Dickson product and conjugation, the bilinear forms
+      Bfull/Bsplit, and the source orientation;
+  A2  Phi and the rolling ansatz (u,rho*u), including the physical reading
+      of rho supplied by the companion rolling-map argument;
+  A3  the typed CCFU basis (ordered and oriented — the Hitchin
+      density depends on the orientation), Omega_W, H and S;
+  A4  the projective readings Delta_[x]=ker(L_x)/&lt;x&gt; and
+      D_[X]=ker(i_X Omega_W)/&lt;X&gt;, and the Baez-Huerta chart.
+
+The script checks exact coordinate consequences of A1--A4.  Part 3 checks
+only an ambient polynomial lift; it proves neither the projective
+diffeomorphism nor a novelty/priority claim.  Checks use explicit exceptions,
+not Python ``assert``, so they remain active under ``python -O``.
+&quot;&quot;&quot;
+
+import sys
+from itertools import permutations, product
+import sympy as sp
+
+
+# ---------- exact-check helpers ----------
+
+PASSED = 0
+TOTAL = 10
+
+
+def zero(expr):
+    if isinstance(expr, sp.MatrixBase):
+        return all(sp.simplify(e) == 0 for e in expr)
+    return sp.simplify(expr) == 0
+
+
+def same(A, B):
+    return A.shape == B.shape and zero(A - B)
+
+
+def require(condition, message):
+    if not bool(condition):
+        raise RuntimeError(message)
+
+
+def ok(kind, message):
+    global PASSED
+    PASSED += 1
+    print(f'[{PASSED:02d}/{TOTAL}] OK [{kind}] {message}')
+
+
+def nsmat(A):
+    ns = A.nullspace()
+    return sp.Matrix.hstack(*ns) if ns else sp.zeros(A.cols, 0)
+
+
+# ---------- quaternions and split octonions ----------
+
+
+def qadd(a, b): return tuple(sp.expand(a[i] + b[i]) for i in range(4))
+def qscale(c, a): return tuple(sp.expand(c*a[i]) for i in range(4))
+def qconj(a): return (a[0], -a[1], -a[2], -a[3])
+
+
+def qmul(a, b):
+    a0, a1, a2, a3 = a; b0, b1, b2, b3 = b
+    return (
+        sp.expand(a0*b0-a1*b1-a2*b2-a3*b3),
+        sp.expand(a0*b1+a1*b0+a2*b3-a3*b2),
+        sp.expand(a0*b2-a1*b3+a2*b0+a3*b1),
+        sp.expand(a0*b3+a1*b2-a2*b1+a3*b0),
+    )
+
+
+def qnorm2(a): return sp.expand(sum(u*u for u in a))
+
+
+def smul(x, y):
+    a, b = x; c, d = y
+    return (qadd(qmul(a, c), qmul(d, qconj(b))),
+            qadd(qmul(qconj(a), d), qmul(c, b)))
+
+
+def fullvec(x):
+    a, b = x
+    return sp.Matrix([*a, *b])       # (1,i,j,k ; 1,i,j,k)
+
+
+def imagproj(x):
+    a, b = x
+    return sp.Matrix([a[1], a[2], a[3], *b])
+
+
+def imagvec(x):
+    require(zero(x[0][0]), f'nonzero scalar component discarded: {x[0][0]}')
+    return imagproj(x)
+
+
+def vecsplit(v):
+    return ((0, v[0], v[1], v[2]), (v[3], v[4], v[5], v[6]))
+
+
+ONE = (1, 0, 0, 0); I = (0, 1, 0, 0); J = (0, 0, 1, 0); K = (0, 0, 0, 1)
+Bsplit = sp.diag(1, 1, 1, -1, -1, -1, -1)
+Bfull = sp.diag(1, 1, 1, 1, -1, -1, -1, -1)
+
+
+def Phi(w1, w2):
+    return (qmul(qmul(qconj(w1), I), w1), qmul(qconj(w1), w2))
+
+
+def dPhi(dw1, dw2):
+    &quot;&quot;&quot;Differentiate Phi(1+t*dw1,1+t*dw2) at t=0; do not type dPhi separately.&quot;&quot;&quot;
+    t = sp.symbols('t', real=True)
+    a, b = Phi(qadd(ONE, qscale(t, dw1)), qadd(ONE, qscale(t, dw2)))
+    D = lambda q: tuple(sp.diff(e, t).subs(t, 0) for e in q)
+    return D(a), D(b)
+
+
+# ---------- source certificate ----------
+
+
+def source_certificate():
+    rho = sp.symbols('rho', real=True)
+    xS = Phi(ONE, ONE); x = imagvec(xS)
+    require(x != sp.zeros(7, 1) and zero((x.T*Bsplit*x)[0]),
+            'Phi(1,1) is not a nonzero null vector')
+    ok('COMPUTED', 'x=Phi(1,1) is a nonzero source null vector')
+
+    yjR_S = dPhi(J, qscale(rho, J)); ykR_S = dPhi(K, qscale(rho, K))
+    yjR = imagvec(yjR_S); ykR = imagvec(ykR_S)
+    eqs = [sp.factor(e) for e in [*fullvec(smul(xS, yjR_S)),
+                                  *fullvec(smul(xS, ykR_S))] if not zero(e)]
+    require(bool(eqs), 'rho equations are empty')
+    gcd = sp.Poly(sp.gcd_list(eqs), rho).monic().as_expr()
+    require(zero(gcd-(rho-3)), f'common rho equation is {gcd}, not rho-3')
+    ok('COMPUTED | A2', 'the full left-annihilator system has unique root rho=3')
+
+    yj = sp.Matrix(yjR.subs(rho, 3)); yk = sp.Matrix(ykR.subs(rho, 3))
+    require(zero(fullvec(smul(xS, vecsplit(yj)))) and
+            zero(fullvec(smul(xS, vecsplit(yk)))),
+            'a rho=3 generator is not in the full left annihilator')
+    ok('COMPUTED', 'both rho=3 generators lie in the full left annihilator')
+
+    z = sp.Matrix(sp.symbols('z0:7', real=True)); zS = vecsplit(z)
+    left = smul(xS, zS)
+    Lfull = fullvec(left).jacobian(z)       # actual 8-component product x*z
+    Lcross = imagproj(left).jacobian(z)    # imaginary projection only
+    Delta = nsmat(Lfull); Sxy = sp.Matrix.hstack(x, yj, yk)
+    require(Lfull.rank() == 4 and Delta.cols == 3 and Sxy.rank() == 3,
+            'wrong source ranks')
+    require(zero(Lfull*Sxy) and sp.Matrix.hstack(Delta, Sxy).rank() == 3,
+            'span{x,yj,yk} is not the full left annihilator')
+    ok('COMPUTED -&gt; DEDUCED',
+       'span{x,y_j,y_k}=ker(L_x), with quotient rank 3-1=2')
+
+    basis = [vecsplit(sp.eye(7).col(i)) for i in range(7)]
+    raw = {(i, j, k): sp.simplify(
+               (fullvec(smul(basis[i], basis[j])).T*Bfull*fullvec(basis[k]))[0])
+           for i, j, k in product(range(7), repeat=3)}
+    require(all(zero(raw[i,j,k]+raw[j,i,k]) and
+                zero(raw[i,j,k]+raw[i,k,j])
+                for i,j,k in product(range(7), repeat=3)),
+            '&lt;e_i e_j,e_k&gt; is not alternating')
+    phi = {key: val for key, val in raw.items() if not zero(val)}
+    ok('COMPUTED', '&lt;e_i e_j,e_k&gt; is alternating on all 343 triples')
+
+    Mphi = sp.Matrix(7, 7, lambda j,k:
+                     sum(x[i]*phi.get((i,j,k), 0) for i in range(7)))
+    Rfull = fullvec(smul(zS, xS)).jacobian(z)
+    Rker, Pker = nsmat(Rfull), nsmat(Mphi)
+    require(Lcross.rank() == Lfull.rank(),
+            'the omitted scalar row changes the annihilator kernel')
+    require(same(Mphi, -Bsplit*Lcross), 'Mphi != -Bsplit*Lcross')
+    require(Rker.cols == Pker.cols == 3 and
+            sp.Matrix.hstack(Delta, Rker, Pker).rank() == 3,
+            'left/right/3-form kernels differ')
+    ok('COMPUTED -&gt; DEDUCED',
+       'ker(L_x)=ker(R_x)=ker(i_x phi_split) at the base point')
+    return x, yj, yk, phi, Mphi
+
+
+# ---------- alternating forms and target bridge ----------
+
+
+def sign(seq):
+    return -1 if sum(seq[i] &gt; seq[j] for i in range(len(seq))
+                     for j in range(i+1, len(seq))) % 2 else 1
+
+
+def altform(sorted_terms):
+    return {p: sp.Integer(val)*sign(p)
+            for t, val in sorted_terms.items() for p in permutations(t)}
+
+
+def formval(form, u, v, w):
+    return sp.expand(sum(c*u[i]*v[j]*w[k] for (i,j,k), c in form.items()))
+
+
+def pullback(A, form):
+    cols = [A.col(i) for i in range(7)]
+    out = {}
+    for i,j,k in product(range(7), repeat=3):
+        val = sp.simplify(formval(form, cols[i], cols[j], cols[k]))
+        if val != 0: out[i,j,k] = val
+    return out
+
+
+def formeq(a, b):
+    return all(zero(a.get(t,0)-b.get(t,0)) for t in product(range(7), repeat=3))
+
+
+def iota(form, x):
+    return sp.Matrix(7, 7, lambda j,k:
+                     sum(x[i]*form.get((i,j,k),0) for i in range(7)))
+
+
+def hitchin_density(form):
+    &quot;&quot;&quot;Unnormalised density for orientation e^0^...^e^6.&quot;&quot;&quot;
+    eps = [(p, sign(p)) for p in permutations(range(7))]
+    return sp.Matrix(7, 7, lambda i,j: sp.simplify(sum(
+        s*form.get((i,p[0],p[1]),0)*form.get((j,p[2],p[3]),0)*
+          form.get((p[4],p[5],p[6]),0) for p,s in eps)))
+
+
+def proportional(A, B):
+    ratios = []
+    for a,b in zip(A,B):
+        if zero(b):
+            if not zero(a): return None
+        else: ratios.append(sp.simplify(a/b))
+    return ratios[0] if ratios and all(zero(r-ratios[0]) for r in ratios) else None
+
+
+def ccfu(v):
+    x1,x2,x3,r0,r1,r2,r3 = v
+    return sp.Matrix([r0, x1+r1, x2+r2, x3+r3,
+                      x1-r1, x2-r2, x3-r3])
+
+
+def target_certificate(x, yj, yk, phi, Mphi):
+    OmegaW = altform({(0,1,4):1, (0,2,5):1, (0,3,6):1,
+                      (1,2,3):1, (4,5,6):1})
+    H = sp.Matrix([[0,0,0,1,0,0,0], [1,0,0,0,-1,0,0],
+                   [0,1,0,0,0,-1,0], [0,0,1,0,0,0,1],
+                   [1,0,0,0,1,0,0], [0,1,0,0,0,1,0],
+                   [0,0,1,0,0,0,-1]])
+    S = sp.diag(1,1,1,1,-1,-1,1); T = H*S
+    Tformula = sp.Matrix.hstack(*(ccfu(sp.eye(7).col(i)) for i in range(7)))
+    require(T.det() == 8 and same(T, Tformula), 'T is not the declared GL bridge')
+    require(formeq(pullback(T, OmegaW), {k:2*v for k,v in phi.items()}),
+            'T^*OmegaW != 2 phi_split')
+    ok('COMPUTED', 'T=H*S=T_CCFU is GL(7) and T^*Omega_W=2 phi_split')
+
+    bW = sp.zeros(7); bW[0,0] = -6
+    for i,j in ((1,4),(2,5),(3,6)): bW[i,j]=bW[j,i]=3
+    kap = proportional(hitchin_density(OmegaW), bW)
+    require(kap == 24, f'Hitchin density factor is {kap}, not 24')
+    require(same(T.T*bW*T, 6*Bsplit), 'metric congruence failed')
+    xC,yjC,ykC = T*x,T*yj,T*yk
+    require(zero((xC.T*bW*xC)[0]), 'Tx is not target-null')
+    ok('COMPUTED -&gt; DEDUCED',
+       'Omega_W induces b_W (factor 24), and T carries the entire null cone')
+
+    MW = iota(OmegaW, xC); KW = nsmat(MW); SxyC = sp.Matrix.hstack(xC,yjC,ykC)
+    require(same(T.T*MW*T, 2*Mphi), 'contraction matrices do not intertwine')
+    require(KW.cols == 3 and SxyC.rank() == 3 and zero(MW*SxyC) and
+            sp.Matrix.hstack(KW,SxyC).rank() == 3,
+            'target distribution does not equal the transported plane')
+    ok('COMPUTED -&gt; DEDUCED',
+       'D_[Tx] is the transported rho=3 rolling plane (quotient rank 2)')
+    return T, kap
+
+
+# ---------- Baez-Huerta ambient-lift compatibility ----------
+
+
+def chart_certificate(T):
+    x1,x2,x3,q0,q1,q2,q3 = sp.symbols('x1 x2 x3 q0 q1 q2 q3', real=True)
+    xs=(0,x1,x2,x3); qs=(q0,q1,q2,q3); r=qmul(xs,qs)
+    tau=sp.Matrix([x1,x2,x3,*r])
+    minus_tau=sp.Matrix([-x1,-x2,-x3,*qmul((0,-x1,-x2,-x3),qs)])
+    require(zero(qnorm2(r)-qnorm2(xs)*qnorm2(qs)),
+            'quaternion norm multiplicativity failed')
+    require(zero(minus_tau+tau), 'ambient lift does not respect x -&gt; -x')
+    require(zero(T*tau-ccfu(tau)), 'T*tau_tilde != phi(x,xq)')
+    ok('COMPUTED | A4',
+       'T*tau_tilde(x,q)=phi(x,xq) as an ambient polynomial identity only')
+
+
+# ---------- entry point ----------
+
+
+def main():
+    global PASSED
+    PASSED = 0
+    print('='*79)
+    print('DIRECT ROLLING PUSHFORWARD — STRICT EXACT SECONDARY CERTIFICATE')
+    print(f'Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}; '
+          f'SymPy {sp.__version__}')
+    print('='*79)
+    print('ASSUMED: A1 algebra/bases; A2 Phi, rolling ansatz and physical rho;')
+    print('         A3 target CCFU data; A4 projective/chart interpretations.\n')
+    x,yj,yk,phi,Mphi = source_certificate()
+    T,kap = target_certificate(x,yj,yk,phi,Mphi)
+    chart_certificate(T)
+    require(PASSED == TOTAL, f'internal test count {PASSED}/{TOTAL}')
+    print(f'\nComputed: x={list(x)}, y_j={list(yj)}, y_k={list(yk)}')
+    print(f'Bridge: det(T)={T.det()}, Hitchin-density factor={kap}')
+    print('No projective-diffeomorphism or novelty/priority claim is certified here.')
+    print('='*79); print(f'SUMMARY: {PASSED}/{TOTAL} PASS'); print('='*79)
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except Exception as exc:
+        print(f'VERIFICATION FAILED: {exc}', file=sys.stderr)
+        raise SystemExit(1)</code></pre></details>
+    </div>
+
+    <div class="block">
+      <div class="key">nft_url</div>
+      <a href="https://opensea.io/item/base/0x8a3ee2dbaa1c33f3cb3d927497f4ae798b598b65/7" target="_blank">https://opensea.io/item/base/0x8a3ee2dbaa1c33f3cb3d927497f4ae798b598b65/7</a>
+    </div>
+
+    <div class="block">
+      <div class="key">tweet_url</div>
+      <pre></pre>
+    </div>
+
+  </div>
+  <div class="block">
+    <div class="key">SHA-256</div>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <div class="hash" id="hashResult"></div>
+      <button id="copyHashBtn" type="button">Copy</button>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="key">Visualization</div>
+    <iframe src="https://gqmoy7xulpaxml7x3rf4vhdkfalvmsvtflq2iebp4467acliedma.arweave.net/NBjsfvRbwXYv99xLypxqKBdWSrMq4aQQL-c98AloINg" 
+     title="CCFU Script 7 — verify_direct_rolling_pushforward.py" 
+     style="width: 100%; height: 600px; border: 1px solid #eee;"
+     sandbox="allow-scripts allow-same-origin"
+     loading="lazy"></iframe>
+  </div>
+
+</article>
+<script>
+(async () => {
+  const entry = {
+    id: `2607196433124`,
+    safecreative_url: `https://www.safecreative.org/work/2607196433124-ccfu-script-7-verify_direct_rolling_pushforward-py`,
+    title: `CCFU Script 7 — verify_direct_rolling_pushforward.py`,
+    date: `07/19/2026`,
+    text: `"""
+CCFU Script 7 — verify_direct_rolling_pushforward.py (shelf v3)
+===============================================================
+Strict exact certificate for the direct rolling pushforward.
+
+PROVENANCE (shelf v3):
+  adopted from the external verifier's strict review version
+  source SHA-256: f48f1800c5de2b6f3b81344a31b5f6b36aadbe76a56d1784e065ce0768ccb266
+  adopted: 2026-07-18; only this documentation layer differs from it.
+Every v2 certificate is present and strengthened: dPhi is
+DIFFERENTIATED from Phi (not typed); rho = 3 is the monic gcd of the
+FULL 8-component left-annihilator system; at x = Phi(1,1), the left,
+right and 3-form kernels are proved equal; the contraction matrices
+intertwine at the base pair (T^T M_{Omega_W,Tx} T = 2 M_{phi_split,x});
+the ASSUMED inputs A1-A4 are declared upfront; and checks raise
+explicit exceptions, so they survive python -O (bare asserts do not).
+SCOPE: shelf v3 is frozen as a secondary base-point certificate;
+global or projective extensions belong to successor scripts.
+
+ASSUMED INPUTS (not proved here):
+  A1  the ordered source basis (i,j,k ; 1,i,j,k), the split
+      Cayley-Dickson product and conjugation, the bilinear forms
+      Bfull/Bsplit, and the source orientation;
+  A2  Phi and the rolling ansatz (u,rho*u), including the physical reading
+      of rho supplied by the companion rolling-map argument;
+  A3  the typed CCFU basis (ordered and oriented — the Hitchin
+      density depends on the orientation), Omega_W, H and S;
+  A4  the projective readings Delta_[x]=ker(L_x)/<x> and
+      D_[X]=ker(i_X Omega_W)/<X>, and the Baez-Huerta chart.
+
+The script checks exact coordinate consequences of A1--A4.  Part 3 checks
+only an ambient polynomial lift; it proves neither the projective
+diffeomorphism nor a novelty/priority claim.  Checks use explicit exceptions,
+not Python \`\`assert\`\`, so they remain active under \`\`python -O\`\`.
+"""
+
+import sys
+from itertools import permutations, product
+import sympy as sp
+
+
+# ---------- exact-check helpers ----------
+
+PASSED = 0
+TOTAL = 10
+
+
+def zero(expr):
+    if isinstance(expr, sp.MatrixBase):
+        return all(sp.simplify(e) == 0 for e in expr)
+    return sp.simplify(expr) == 0
+
+
+def same(A, B):
+    return A.shape == B.shape and zero(A - B)
+
+
+def require(condition, message):
+    if not bool(condition):
+        raise RuntimeError(message)
+
+
+def ok(kind, message):
+    global PASSED
+    PASSED += 1
+    print(f'[{PASSED:02d}/{TOTAL}] OK [{kind}] {message}')
+
+
+def nsmat(A):
+    ns = A.nullspace()
+    return sp.Matrix.hstack(*ns) if ns else sp.zeros(A.cols, 0)
+
+
+# ---------- quaternions and split octonions ----------
+
+
+def qadd(a, b): return tuple(sp.expand(a[i] + b[i]) for i in range(4))
+def qscale(c, a): return tuple(sp.expand(c*a[i]) for i in range(4))
+def qconj(a): return (a[0], -a[1], -a[2], -a[3])
+
+
+def qmul(a, b):
+    a0, a1, a2, a3 = a; b0, b1, b2, b3 = b
+    return (
+        sp.expand(a0*b0-a1*b1-a2*b2-a3*b3),
+        sp.expand(a0*b1+a1*b0+a2*b3-a3*b2),
+        sp.expand(a0*b2-a1*b3+a2*b0+a3*b1),
+        sp.expand(a0*b3+a1*b2-a2*b1+a3*b0),
+    )
+
+
+def qnorm2(a): return sp.expand(sum(u*u for u in a))
+
+
+def smul(x, y):
+    a, b = x; c, d = y
+    return (qadd(qmul(a, c), qmul(d, qconj(b))),
+            qadd(qmul(qconj(a), d), qmul(c, b)))
+
+
+def fullvec(x):
+    a, b = x
+    return sp.Matrix([*a, *b])       # (1,i,j,k ; 1,i,j,k)
+
+
+def imagproj(x):
+    a, b = x
+    return sp.Matrix([a[1], a[2], a[3], *b])
+
+
+def imagvec(x):
+    require(zero(x[0][0]), f'nonzero scalar component discarded: {x[0][0]}')
+    return imagproj(x)
+
+
+def vecsplit(v):
+    return ((0, v[0], v[1], v[2]), (v[3], v[4], v[5], v[6]))
+
+
+ONE = (1, 0, 0, 0); I = (0, 1, 0, 0); J = (0, 0, 1, 0); K = (0, 0, 0, 1)
+Bsplit = sp.diag(1, 1, 1, -1, -1, -1, -1)
+Bfull = sp.diag(1, 1, 1, 1, -1, -1, -1, -1)
+
+
+def Phi(w1, w2):
+    return (qmul(qmul(qconj(w1), I), w1), qmul(qconj(w1), w2))
+
+
+def dPhi(dw1, dw2):
+    """Differentiate Phi(1+t*dw1,1+t*dw2) at t=0; do not type dPhi separately."""
+    t = sp.symbols('t', real=True)
+    a, b = Phi(qadd(ONE, qscale(t, dw1)), qadd(ONE, qscale(t, dw2)))
+    D = lambda q: tuple(sp.diff(e, t).subs(t, 0) for e in q)
+    return D(a), D(b)
+
+
+# ---------- source certificate ----------
+
+
+def source_certificate():
+    rho = sp.symbols('rho', real=True)
+    xS = Phi(ONE, ONE); x = imagvec(xS)
+    require(x != sp.zeros(7, 1) and zero((x.T*Bsplit*x)[0]),
+            'Phi(1,1) is not a nonzero null vector')
+    ok('COMPUTED', 'x=Phi(1,1) is a nonzero source null vector')
+
+    yjR_S = dPhi(J, qscale(rho, J)); ykR_S = dPhi(K, qscale(rho, K))
+    yjR = imagvec(yjR_S); ykR = imagvec(ykR_S)
+    eqs = [sp.factor(e) for e in [*fullvec(smul(xS, yjR_S)),
+                                  *fullvec(smul(xS, ykR_S))] if not zero(e)]
+    require(bool(eqs), 'rho equations are empty')
+    gcd = sp.Poly(sp.gcd_list(eqs), rho).monic().as_expr()
+    require(zero(gcd-(rho-3)), f'common rho equation is {gcd}, not rho-3')
+    ok('COMPUTED | A2', 'the full left-annihilator system has unique root rho=3')
+
+    yj = sp.Matrix(yjR.subs(rho, 3)); yk = sp.Matrix(ykR.subs(rho, 3))
+    require(zero(fullvec(smul(xS, vecsplit(yj)))) and
+            zero(fullvec(smul(xS, vecsplit(yk)))),
+            'a rho=3 generator is not in the full left annihilator')
+    ok('COMPUTED', 'both rho=3 generators lie in the full left annihilator')
+
+    z = sp.Matrix(sp.symbols('z0:7', real=True)); zS = vecsplit(z)
+    left = smul(xS, zS)
+    Lfull = fullvec(left).jacobian(z)       # actual 8-component product x*z
+    Lcross = imagproj(left).jacobian(z)    # imaginary projection only
+    Delta = nsmat(Lfull); Sxy = sp.Matrix.hstack(x, yj, yk)
+    require(Lfull.rank() == 4 and Delta.cols == 3 and Sxy.rank() == 3,
+            'wrong source ranks')
+    require(zero(Lfull*Sxy) and sp.Matrix.hstack(Delta, Sxy).rank() == 3,
+            'span{x,yj,yk} is not the full left annihilator')
+    ok('COMPUTED -> DEDUCED',
+       'span{x,y_j,y_k}=ker(L_x), with quotient rank 3-1=2')
+
+    basis = [vecsplit(sp.eye(7).col(i)) for i in range(7)]
+    raw = {(i, j, k): sp.simplify(
+               (fullvec(smul(basis[i], basis[j])).T*Bfull*fullvec(basis[k]))[0])
+           for i, j, k in product(range(7), repeat=3)}
+    require(all(zero(raw[i,j,k]+raw[j,i,k]) and
+                zero(raw[i,j,k]+raw[i,k,j])
+                for i,j,k in product(range(7), repeat=3)),
+            '<e_i e_j,e_k> is not alternating')
+    phi = {key: val for key, val in raw.items() if not zero(val)}
+    ok('COMPUTED', '<e_i e_j,e_k> is alternating on all 343 triples')
+
+    Mphi = sp.Matrix(7, 7, lambda j,k:
+                     sum(x[i]*phi.get((i,j,k), 0) for i in range(7)))
+    Rfull = fullvec(smul(zS, xS)).jacobian(z)
+    Rker, Pker = nsmat(Rfull), nsmat(Mphi)
+    require(Lcross.rank() == Lfull.rank(),
+            'the omitted scalar row changes the annihilator kernel')
+    require(same(Mphi, -Bsplit*Lcross), 'Mphi != -Bsplit*Lcross')
+    require(Rker.cols == Pker.cols == 3 and
+            sp.Matrix.hstack(Delta, Rker, Pker).rank() == 3,
+            'left/right/3-form kernels differ')
+    ok('COMPUTED -> DEDUCED',
+       'ker(L_x)=ker(R_x)=ker(i_x phi_split) at the base point')
+    return x, yj, yk, phi, Mphi
+
+
+# ---------- alternating forms and target bridge ----------
+
+
+def sign(seq):
+    return -1 if sum(seq[i] > seq[j] for i in range(len(seq))
+                     for j in range(i+1, len(seq))) % 2 else 1
+
+
+def altform(sorted_terms):
+    return {p: sp.Integer(val)*sign(p)
+            for t, val in sorted_terms.items() for p in permutations(t)}
+
+
+def formval(form, u, v, w):
+    return sp.expand(sum(c*u[i]*v[j]*w[k] for (i,j,k), c in form.items()))
+
+
+def pullback(A, form):
+    cols = [A.col(i) for i in range(7)]
+    out = {}
+    for i,j,k in product(range(7), repeat=3):
+        val = sp.simplify(formval(form, cols[i], cols[j], cols[k]))
+        if val != 0: out[i,j,k] = val
+    return out
+
+
+def formeq(a, b):
+    return all(zero(a.get(t,0)-b.get(t,0)) for t in product(range(7), repeat=3))
+
+
+def iota(form, x):
+    return sp.Matrix(7, 7, lambda j,k:
+                     sum(x[i]*form.get((i,j,k),0) for i in range(7)))
+
+
+def hitchin_density(form):
+    """Unnormalised density for orientation e^0^...^e^6."""
+    eps = [(p, sign(p)) for p in permutations(range(7))]
+    return sp.Matrix(7, 7, lambda i,j: sp.simplify(sum(
+        s*form.get((i,p[0],p[1]),0)*form.get((j,p[2],p[3]),0)*
+          form.get((p[4],p[5],p[6]),0) for p,s in eps)))
+
+
+def proportional(A, B):
+    ratios = []
+    for a,b in zip(A,B):
+        if zero(b):
+            if not zero(a): return None
+        else: ratios.append(sp.simplify(a/b))
+    return ratios[0] if ratios and all(zero(r-ratios[0]) for r in ratios) else None
+
+
+def ccfu(v):
+    x1,x2,x3,r0,r1,r2,r3 = v
+    return sp.Matrix([r0, x1+r1, x2+r2, x3+r3,
+                      x1-r1, x2-r2, x3-r3])
+
+
+def target_certificate(x, yj, yk, phi, Mphi):
+    OmegaW = altform({(0,1,4):1, (0,2,5):1, (0,3,6):1,
+                      (1,2,3):1, (4,5,6):1})
+    H = sp.Matrix([[0,0,0,1,0,0,0], [1,0,0,0,-1,0,0],
+                   [0,1,0,0,0,-1,0], [0,0,1,0,0,0,1],
+                   [1,0,0,0,1,0,0], [0,1,0,0,0,1,0],
+                   [0,0,1,0,0,0,-1]])
+    S = sp.diag(1,1,1,1,-1,-1,1); T = H*S
+    Tformula = sp.Matrix.hstack(*(ccfu(sp.eye(7).col(i)) for i in range(7)))
+    require(T.det() == 8 and same(T, Tformula), 'T is not the declared GL bridge')
+    require(formeq(pullback(T, OmegaW), {k:2*v for k,v in phi.items()}),
+            'T^*OmegaW != 2 phi_split')
+    ok('COMPUTED', 'T=H*S=T_CCFU is GL(7) and T^*Omega_W=2 phi_split')
+
+    bW = sp.zeros(7); bW[0,0] = -6
+    for i,j in ((1,4),(2,5),(3,6)): bW[i,j]=bW[j,i]=3
+    kap = proportional(hitchin_density(OmegaW), bW)
+    require(kap == 24, f'Hitchin density factor is {kap}, not 24')
+    require(same(T.T*bW*T, 6*Bsplit), 'metric congruence failed')
+    xC,yjC,ykC = T*x,T*yj,T*yk
+    require(zero((xC.T*bW*xC)[0]), 'Tx is not target-null')
+    ok('COMPUTED -> DEDUCED',
+       'Omega_W induces b_W (factor 24), and T carries the entire null cone')
+
+    MW = iota(OmegaW, xC); KW = nsmat(MW); SxyC = sp.Matrix.hstack(xC,yjC,ykC)
+    require(same(T.T*MW*T, 2*Mphi), 'contraction matrices do not intertwine')
+    require(KW.cols == 3 and SxyC.rank() == 3 and zero(MW*SxyC) and
+            sp.Matrix.hstack(KW,SxyC).rank() == 3,
+            'target distribution does not equal the transported plane')
+    ok('COMPUTED -> DEDUCED',
+       'D_[Tx] is the transported rho=3 rolling plane (quotient rank 2)')
+    return T, kap
+
+
+# ---------- Baez-Huerta ambient-lift compatibility ----------
+
+
+def chart_certificate(T):
+    x1,x2,x3,q0,q1,q2,q3 = sp.symbols('x1 x2 x3 q0 q1 q2 q3', real=True)
+    xs=(0,x1,x2,x3); qs=(q0,q1,q2,q3); r=qmul(xs,qs)
+    tau=sp.Matrix([x1,x2,x3,*r])
+    minus_tau=sp.Matrix([-x1,-x2,-x3,*qmul((0,-x1,-x2,-x3),qs)])
+    require(zero(qnorm2(r)-qnorm2(xs)*qnorm2(qs)),
+            'quaternion norm multiplicativity failed')
+    require(zero(minus_tau+tau), 'ambient lift does not respect x -> -x')
+    require(zero(T*tau-ccfu(tau)), 'T*tau_tilde != phi(x,xq)')
+    ok('COMPUTED | A4',
+       'T*tau_tilde(x,q)=phi(x,xq) as an ambient polynomial identity only')
+
+
+# ---------- entry point ----------
+
+
+def main():
+    global PASSED
+    PASSED = 0
+    print('='*79)
+    print('DIRECT ROLLING PUSHFORWARD — STRICT EXACT SECONDARY CERTIFICATE')
+    print(f'Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}; '
+          f'SymPy {sp.__version__}')
+    print('='*79)
+    print('ASSUMED: A1 algebra/bases; A2 Phi, rolling ansatz and physical rho;')
+    print('         A3 target CCFU data; A4 projective/chart interpretations.\\n')
+    x,yj,yk,phi,Mphi = source_certificate()
+    T,kap = target_certificate(x,yj,yk,phi,Mphi)
+    chart_certificate(T)
+    require(PASSED == TOTAL, f'internal test count {PASSED}/{TOTAL}')
+    print(f'\\nComputed: x={list(x)}, y_j={list(yj)}, y_k={list(yk)}')
+    print(f'Bridge: det(T)={T.det()}, Hitchin-density factor={kap}')
+    print('No projective-diffeomorphism or novelty/priority claim is certified here.')
+    print('='*79); print(f'SUMMARY: {PASSED}/{TOTAL} PASS'); print('='*79)
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except Exception as exc:
+        print(f'VERIFICATION FAILED: {exc}', file=sys.stderr)
+        raise SystemExit(1)`,
+    nft_url: `https://opensea.io/item/base/0x8a3ee2dbaa1c33f3cb3d927497f4ae798b598b65/7`,
+    tweet_url: ``
+  };
+  const canonicalString = [entry.id, entry.safecreative_url, entry.title, entry.date, entry.text, entry.nft_url, entry.tweet_url].join('\n---\n');
+  const data = new TextEncoder().encode(canonicalString);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashHex = [...new Uint8Array(hashBuffer)].map(b => b.toString(16).padStart(2, '0')).join('');
+  document.getElementById('hashResult').textContent = hashHex;
+  document.getElementById('copyHashBtn').addEventListener('click', () => { navigator.clipboard.writeText(hashHex); alert('Hash copied'); });
+})();
+</script>
+</body></html>

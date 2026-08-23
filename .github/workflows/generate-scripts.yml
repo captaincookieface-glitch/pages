@@ -23,6 +23,9 @@ jobs:
       - name: Generate CCFU Scripts pages
         run: node generate-ccfu-scripts.js .
 
+      - name: Ensure canonical URL
+        run: node .github/ensure-canonical.js scripts/index.html https://www.captaincookieface.com/scripts/
+  
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"

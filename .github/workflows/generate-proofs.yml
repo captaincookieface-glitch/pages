@@ -23,6 +23,9 @@ jobs:
       - name: Generate CCFU Proofs pages
         run: node generate-ccfu-proofs.js .
 
+      - name: Ensure canonical URL
+        run: node .github/ensure-canonical.js ccfu_proofs/index.html https://www.captaincookieface.com/ccfu_proofs/
+
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"

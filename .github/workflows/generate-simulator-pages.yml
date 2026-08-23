@@ -23,6 +23,9 @@ jobs:
       - name: Generate Simulator pages
         run: node generate-simulator-pages.js .
 
+      - name: Ensure canonical URL
+        run: node .github/ensure-canonical.js ccfu_simulators/index.html https://www.captaincookieface.com/ccfu_simulators/
+
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"

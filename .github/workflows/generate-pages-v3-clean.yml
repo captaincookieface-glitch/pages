@@ -23,6 +23,9 @@ jobs:
       - name: Generate CCF pages
         run: node generate-ccf-pages.js .
 
+      - name: Ensure canonical URL
+        run: node .github/ensure-canonical.js captain_cookie_face/index.html https://www.captaincookieface.com/captain_cookie_face/
+
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"

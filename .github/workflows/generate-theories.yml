@@ -22,6 +22,9 @@ jobs:
 
       - name: Generate theory pages
         run: node generate-theories.js .
+        
+      - name: Ensure canonical URL
+        run: node .github/ensure-canonical.js theories/index.html https://www.captaincookieface.com/theories/
 
       - name: Commit and push
         run: |
